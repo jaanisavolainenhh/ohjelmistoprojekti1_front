@@ -4,7 +4,7 @@ export default function Vastaus() {
 
     return (
         <div>
-            Moro
+            EN!
         </div>
     )
 }
