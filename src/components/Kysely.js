@@ -7,7 +7,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 export default function Kysely (){
 
-const[Kysymys, setKysymys] = React.useState([]);
+const [Kysymys, setKysymys] = React.useState([]);
 const [value, setValue] = React.useState('Yes');
 
 const getKysymys = () => {
