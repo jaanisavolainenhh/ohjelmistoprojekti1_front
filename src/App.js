@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Kysely from './components/Kysely';
 import Vastaus from './components/Vastaus';
@@ -14,12 +13,13 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6">
-            Kysely kysely kysely
+            Kysely kysely kysely!
           </Typography>
         </Toolbar>
       </AppBar>
-
+        <br/>
       <Kysely />
+        <br/>
       <Vastaus />
     </div>
   );

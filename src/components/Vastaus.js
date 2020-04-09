@@ -4,7 +4,7 @@ export default function Vastaus() {
 
     return (
         <div>
-            EN!
+            Vastausko?
         </div>
     )
 }
