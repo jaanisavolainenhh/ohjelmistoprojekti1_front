@@ -9,7 +9,7 @@ export default function Kysely (){
 
 const [kysymys, setKysymys] = React.useState('');    // state for the question... 
 const [vaihtoehto, setVaihtoehto] = React.useState(''); // and the options if needed.
-const [value, setValue] = React.useState('Yes');
+const [value, setValue] = React.useState('');
 
 
 React.useEffect(() => {
