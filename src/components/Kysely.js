@@ -23,12 +23,12 @@ React.useEffect(() => {
 
 const handleChange = (event) => {
     setValue(event.target.value);
-  };
+};
 
 async function postAnswer() {
 
     try{
-        let result = await fetch('https://webhook.site/21c707ff-73c5-48a1-848e-6c4b7356a1db', {     // Test api, change to ours asap
+        let result = await fetch('https://webhook.site/21c707ff-73c5-48a1-848e-6c4b7356a1db', {     // Test api for posting, change to ours (where we want to store the answers)
             method: 'post',
             mode: 'no-cors',
             headers:{
