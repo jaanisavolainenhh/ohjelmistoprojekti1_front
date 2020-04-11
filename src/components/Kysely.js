@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 export default function Kysely (){
 
 const [kysymys, setKysymys] = React.useState('');    // state for the question... 
-const [vaihtoehto, setVaihtoehto] = React.useState(''); // and the options if needed.
+// const [vaihtoehto, setVaihtoehto] = React.useState('');  ---> and the options if/when needed.
 const [value, setValue] = React.useState('');
 
 
@@ -24,19 +24,39 @@ React.useEffect(() => {
 const handleChange = (event) => {
     setValue(event.target.value);
   };
+
+async function postAnswer() {
+
+    try{
+        let result = await fetch('https://webhook.site/21c707ff-73c5-48a1-848e-6c4b7356a1db', {     // Test api, change to ours asap
+            method: 'post',
+            mode: 'no-cors',
+            headers:{
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                vastaus: {value}     // value refers to the value of our radio down below   
+            })                       // posting now json:  { "vastaus": {"value": "No/Yes" } } 
+        });
+        console.log('Result: ' + result)
+    } catch(e) {
+        console.log(e)
+    }
+}
  
-            // Returns "question" above simple radio option with yes/no 
+            // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
 return (
     <div>
         <FormControl component="fieldset">
             <p>{kysymys}</p>
-                <RadioGroup aria-label="kysymys" name="kysymys" value={value} onChange={handleChange}>
+                <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
                     <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
                     <FormControlLabel value="No" control={<Radio />} label="No" />
                 </RadioGroup>
         </FormControl>
 
-        <br/><br/><Button variant="contained" color="primary">Vastaa</Button>
+        <br/><br/><Button variant="contained" color="primary" onClick={ () => postAnswer() }>Vastaa</Button>
 
     </div>
 )
