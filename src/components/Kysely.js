@@ -7,18 +7,17 @@ import Button from '@material-ui/core/Button';
 
 export default function Kysely (){
 
-const [kysymys, setKysymys] = React.useState('');    // state for the question... 
+const [kysymys, setKysymys] = React.useState([]);    // state for the question... 
 // const [vaihtoehto, setVaihtoehto] = React.useState('');  ---> and the options if/when needed.
 const [value, setValue] = React.useState('');
 const [jaanintesti, setjaanintesti] = React.useState({vastaus: 'TESTIVASTAUS', kysymys:{id: 1}});
 
 React.useEffect(() => {
-    fetch('http://localhost:8080/api/kysymyses')  //'https://salenpalikatback.herokuapp.com/api/kysymyses'
-
-      // Using random api for testing (didn't know to drive ours)
-    .then(result => result.json())      // https://randomuser.me/api
+    fetch('https://salenpalikatback.herokuapp.com/api/kysymyses')  
+    .then(result => result.json())      
     .then(jsonresult => {
-        setKysymys(jsonresult._embedded.kysymyses[0].kysymys); // ._embedded.kysymyses[0].kysymys | results[0].name.first
+        //console.log(jsonresult) 
+        setKysymys(jsonresult._embedded.kysymyses[0].kysymys); // 
     })
     .catch(err => console.error(err))
 },[])
@@ -30,17 +29,17 @@ const handleChange = (event) => {
 async function postAnswer() {
 
     try{
-        let result = await fetch('http://salenpalikatback.herokuapp.com/palautakysymys', {     // Test api for posting, change to ours (where we want to store the answers)
-            method: 'POST',
-            // mode: 'no-cors',
+        let result = await fetch('https://salenpalikatback.herokuapp.com/api/vastauses', {     
+            method: 'post',     
+            mode: 'no-cors',
             headers:{
                 'Accept': 'application/json',
                 'Content-type': 'application/json',
             },
-            body: 
-            JSON.stringify(jaanintesti
-    
-            )                       // posting now json:  { "vastaus": {"value": "No/Yes" } } 
+            body: JSON.stringify({
+                vastauses: value,
+                "kysymys": {"id":1}     // here switch 1 to id of kysymys  
+            })                        
         });
         console.log('Result: ' + result);
         console.log("Stringify: "+ JSON.stringify(jaanintesti// value refers to the value of our radio down below   
@@ -57,8 +56,8 @@ return (
         <FormControl component="fieldset">
             <p>{kysymys}</p>
                 <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-                    <FormControlLabel value="Yes" control={<Radio />} label="Yes" />
-                    <FormControlLabel value="No" control={<Radio />} label="No" />
+                    <FormControlLabel value="Sininen" control={<Radio />} label="Sininen" />
+                    <FormControlLabel value="Punainen" control={<Radio />} label="Punainen" />
                 </RadioGroup>
         </FormControl>
 
