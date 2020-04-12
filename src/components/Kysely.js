@@ -10,36 +10,42 @@ export default function Kysely (){
 const [kysymys, setKysymys] = React.useState('');    // state for the question... 
 // const [vaihtoehto, setVaihtoehto] = React.useState('');  ---> and the options if/when needed.
 const [value, setValue] = React.useState('');
-
+const [jaanintesti, setjaanintesti] = React.useState({vastaus: 'TESTIVASTAUS', kysymys:{id: 1}});
 
 React.useEffect(() => {
-    fetch('https://randomuser.me/api')  // Using random api for testing (didn't know to drive ours)
+    fetch('http://localhost:8080/api/kysymyses')  //'https://salenpalikatback.herokuapp.com/api/kysymyses'
+
+      // Using random api for testing (didn't know to drive ours)
     .then(result => result.json())      // https://randomuser.me/api
     .then(jsonresult => {
-        setKysymys(jsonresult.results[0].name.first); // ._embedded.kysymyses[0].kysymys | results[0].name.first
+        setKysymys(jsonresult._embedded.kysymyses[0].kysymys); // ._embedded.kysymyses[0].kysymys | results[0].name.first
     })
     .catch(err => console.error(err))
 },[])
 
 const handleChange = (event) => {
-    setValue(event.target.value);
+    setValue(event.target.value); //muuta olion vastauksen arvoa jaanitestis
 };
 
 async function postAnswer() {
 
     try{
-        let result = await fetch('https://webhook.site/21c707ff-73c5-48a1-848e-6c4b7356a1db', {     // Test api for posting, change to ours (where we want to store the answers)
-            method: 'post',
-            mode: 'no-cors',
+        let result = await fetch('http://salenpalikatback.herokuapp.com/palautakysymys', {     // Test api for posting, change to ours (where we want to store the answers)
+            method: 'POST',
+            // mode: 'no-cors',
             headers:{
                 'Accept': 'application/json',
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify({
-                vastaus: {value}     // value refers to the value of our radio down below   
-            })                       // posting now json:  { "vastaus": {"value": "No/Yes" } } 
+            body: 
+            JSON.stringify(jaanintesti
+    
+            )                       // posting now json:  { "vastaus": {"value": "No/Yes" } } 
         });
-        console.log('Result: ' + result)
+        console.log('Result: ' + result);
+        console.log("Stringify: "+ JSON.stringify(jaanintesti// value refers to the value of our radio down below   
+        )); 
+        console.log("JEE: ")
     } catch(e) {
         console.log(e)
     }
