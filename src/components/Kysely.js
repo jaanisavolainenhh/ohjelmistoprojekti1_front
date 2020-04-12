@@ -7,48 +7,50 @@ import Button from '@material-ui/core/Button';
 
 export default function Kysely (){
 
-const [kysymys, setKysymys] = React.useState([]);    // state for the question... 
+const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
 // const [vaihtoehto, setVaihtoehto] = React.useState('');  ---> and the options if/when needed.
-const [value, setValue] = React.useState('');
-const [jaanintesti, setjaanintesti] = React.useState({vastaus: 'TESTIVASTAUS', kysymys:{id: 1}});
-
+const [value, setValue] = React.useState(''); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
+const [vastaus, setVastaus] = React.useState({vastaus: '', kysymys:{id: -1}}); //Raakile versio vastaus oliosta, olennainen löytyy.
+//KORJATKAA MAANANTAINA: Postanwerissa pitää asettaa jaanintestiin oikea arvo vastaukseen sekä kysymys olion id:n. Oikean idn saa  use effectissä kysymksestä.
 React.useEffect(() => {
     fetch('https://salenpalikatback.herokuapp.com/api/kysymyses')  
     .then(result => result.json())      
     .then(jsonresult => {
-        //console.log(jsonresult) 
-        setKysymys(jsonresult._embedded.kysymyses[0].kysymys); // 
+        
+        setKysymys(jsonresult._embedded.kysymyses[0].kysymys);
+        //Tällä saadaan kysymyksen ID selville, vähän kömpelö mutta menköön alkuun
+        let saato = jsonresult._embedded.kysymyses[0]._links.self.href;
+        saato = parseInt(saato.replace("https://salenpalikatback.herokuapp.com/api/kysymyses/",""));  //otetaan hreffistä pois alkuurli jotta jäljelle jää vain ID
+        setVastaus({ ...vastaus, kysymys : { id : saato}}); 
     })
     .catch(err => console.error(err))
 },[])
 
 const handleChange = (event) => {
-    setValue(event.target.value); //muuta olion vastauksen arvoa jaanitestis
+    setValue(event.target.value);
+    //Asetetaan myös vastaukseen jotta voidaan stringifytä tämä suoraan restillä postattavaksi
+    setVastaus({ ...vastaus, vastaus: event.target.value }); 
+
 };
 
-async function postAnswer() {
-
+//Otettu nyt ainakin alkuun tästä asyncronine versio pois,  en ole varma miksi tässä oli. Joel? 
+ function postAnswer() {
     try{
-        let result = await fetch('https://salenpalikatback.herokuapp.com/palautakysymys', {     
-            method: 'post',     
-            mode: 'no-cors',
+        fetch('https://salenpalikatback.herokuapp.com/palautakysymys', {     
+            method: 'POST',     
+           // mode: 'no-cors', //Miksi tämän poistaminen auttoi? :()
             headers:{
                 'Accept': 'application/json',
-                'Content-type': 'application/json',
+                'Content-type': 'application/json'
             },
-            body: JSON.stringify({
-                vastauses: value,
-                "kysymys": {"id":1}     // here switch 1 to id of kysymys  
-            })                        
+            body: JSON.stringify(vastaus)                        
         });
-        console.log('Result: ' + result);
-        console.log("Stringify: "+ JSON.stringify(jaanintesti// value refers to the value of our radio down below   
-        )); 
-        console.log("JEE: ")
+        console.log(JSON.stringify(vastaus)); 
     } catch(e) {
         console.log(e)
     }
 }
+
  
             // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
 return (
