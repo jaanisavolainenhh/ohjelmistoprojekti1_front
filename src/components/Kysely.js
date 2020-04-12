@@ -29,7 +29,7 @@ const handleChange = (event) => {
 async function postAnswer() {
 
     try{
-        let result = await fetch('https://salenpalikatback.herokuapp.com/api/vastauses', {     
+        let result = await fetch('https://salenpalikatback.herokuapp.com/palautakysymys', {     
             method: 'post',     
             mode: 'no-cors',
             headers:{
