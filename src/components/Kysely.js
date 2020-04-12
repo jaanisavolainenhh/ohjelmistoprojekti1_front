@@ -57,7 +57,7 @@ return (
             <p>{kysymys}</p>
                 <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
                     <FormControlLabel value="Sininen" control={<Radio />} label="Sininen" />
-                    <FormControlLabel value="Punainen" control={<Radio />} label="Punainen" />
+                    <FormControlLabel value="RUSKEA" control={<Radio />} label="RUSKEA" />
                 </RadioGroup>
         </FormControl>
 
