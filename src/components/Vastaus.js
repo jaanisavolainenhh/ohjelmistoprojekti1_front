@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Kysely from './Kysely';
 
 export default function Vastaus() {
 
@@ -12,8 +13,9 @@ export default function Vastaus() {
         fetch('http://localhost:8080/api/vastauses') //https://salenpalikatback.herokuapp.com/api/vastauses
         .then(response => response.json())
         .then(jsonresult => {
-          //  console.log(jsonresult) // Tarkistin että toi harjoitusapi toimii
-            setResults(jsonresult._embedded.vastauses[1].vastaus); // jsonresult._embedded.vastauses.vastaus
+
+            setResults(jsonresult._embedded.vastauses[0].vastaus); 
+            // Eli hakee tällä backendistä ensimmäisen kovakoodatun vastauksen, mutta halutaan taulun viimeisin vastaus
         })
         .catch(err => console.error(err))
     }

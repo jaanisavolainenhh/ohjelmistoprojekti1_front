@@ -30,7 +30,7 @@ React.useEffect(() => {
 
 React.useEffect(() => {
     
-    fetch('http://localhost:8080/api/kysymyses/1/vaihtoehdot')  // toimii demoa varten yhden kysymyksen tapauksessa. ( next lvl, /1/ --> korvaa haetun kysymyksen id:llä)
+    fetch('http://localhost:8080/api/kysymyses/1/vaihtoehdot')  // toimii demoa varten yhden kysymyksen tapauksessa. ( next lvl, korvaa /1/ --> haetun kysymyksen id:llä)
     .then(result => result.json())                              // jatkossa varmaan täytyisi tehdä function joka pystyisy yksilöimään vaihtoehdot -> kysymykseen
     .then(jsonresult => {                                       // ...mahdollisesti state, joka mapin avulla 'printtaisi' oikeat vaihtoehdot oikeiden kysymysten yhteyteen
 
@@ -71,9 +71,9 @@ return (
         <FormControl component="fieldset">
             <h3>{kysymys}</h3>
                 <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-                    <FormControlLabel value={vaihtoehtoA} control={<Radio />} label="Sininen" />
-                    <FormControlLabel value={vaihtoehtoB} control={<Radio />} label="Punainen" />
-                    <FormControlLabel value={vaihtoehtoC} control={<Radio />} label="Keltainen" />
+                    <FormControlLabel value={vaihtoehtoA} control={<Radio />} label={vaihtoehtoA} />
+                    <FormControlLabel value={vaihtoehtoB} control={<Radio />} label={vaihtoehtoB} />
+                    <FormControlLabel value={vaihtoehtoC} control={<Radio />} label={vaihtoehtoC} />
                 </RadioGroup>
         </FormControl>
 
