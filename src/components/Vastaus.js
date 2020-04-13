@@ -18,7 +18,7 @@ export default function Vastaus() {
         .catch(err => console.error(err))
     }
 
-    return ( // MUT MIKS TÄÄ EI TULOSTU
+    return ( 
         <div>
            <p>{results}</p> 
         </div>
