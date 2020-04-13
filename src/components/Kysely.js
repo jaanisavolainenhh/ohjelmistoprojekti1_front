@@ -8,37 +8,51 @@ import Button from '@material-ui/core/Button';
 export default function Kysely (){
 
 const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
-// const [vaihtoehto, setVaihtoehto] = React.useState('');  ---> and the options if/when needed.
-const [value, setValue] = React.useState(''); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
+const [vaihtoehtoA, setVaihtoehtoA] = React.useState('');
+const [vaihtoehtoB, setVaihtoehtoB] = React.useState('');
+const [vaihtoehtoC, setVaihtoehtoC] = React.useState('');  // and the options if/when needed.
+const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
 const [vastaus, setVastaus] = React.useState({vastaus: '', kysymys:{id: -1}}); //Raakile versio vastaus oliosta, olennainen löytyy.
 //KORJATKAA MAANANTAINA: Postanwerissa pitää asettaa jaanintestiin oikea arvo vastaukseen sekä kysymys olion id:n. Oikean idn saa  use effectissä kysymksestä.
 React.useEffect(() => {
-    fetch('https://salenpalikatback.herokuapp.com/api/kysymyses')  
+    fetch('http://localhost:8080/api/kysymyses')  
     .then(result => result.json())      
     .then(jsonresult => {
         
         setKysymys(jsonresult._embedded.kysymyses[0].kysymys);
         //Tällä saadaan kysymyksen ID selville, vähän kömpelö mutta menköön alkuun
         let saato = jsonresult._embedded.kysymyses[0]._links.self.href;
-        saato = parseInt(saato.replace("https://salenpalikatback.herokuapp.com/api/kysymyses/",""));  //otetaan hreffistä pois alkuurli jotta jäljelle jää vain ID
+        saato = parseInt(saato.replace("http://localhost:8080/api/kysymyses/",""));  //otetaan hreffistä pois alkuurli jotta jäljelle jää vain ID
         setVastaus({ ...vastaus, kysymys : { id : saato}}); 
     })
     .catch(err => console.error(err))
 },[])
 
+React.useEffect(() => {
+    
+    fetch('http://localhost:8080/api/kysymyses/1/vaihtoehdot')  // toimii demoa varten yhden kysymyksen tapauksessa. ( next lvl, /1/ --> korvaa haetun kysymyksen id:llä)
+    .then(result => result.json())                              // jatkossa varmaan täytyisi tehdä function joka pystyisy yksilöimään vaihtoehdot -> kysymykseen
+    .then(jsonresult => {                                       // ...mahdollisesti state, joka mapin avulla 'printtaisi' oikeat vaihtoehdot oikeiden kysymysten yhteyteen
+
+        setVaihtoehtoA(jsonresult._embedded.vaihtoehtoes[0].vaihtoehto);  
+        setVaihtoehtoB(jsonresult._embedded.vaihtoehtoes[1].vaihtoehto);
+        setVaihtoehtoC(jsonresult._embedded.vaihtoehtoes[2].vaihtoehto);    
+    }) 
+    .catch(err => console.error(err))
+},[])
+//console.log(vaihtoehtoB);
+
 const handleChange = (event) => {
     setValue(event.target.value);
     //Asetetaan myös vastaukseen jotta voidaan stringifytä tämä suoraan restillä postattavaksi
     setVastaus({ ...vastaus, vastaus: event.target.value }); 
-
 };
 
-//Otettu nyt ainakin alkuun tästä asyncronine versio pois,  en ole varma miksi tässä oli. Joel? 
+ 
  function postAnswer() {
     try{
-        fetch('https://salenpalikatback.herokuapp.com/palautakysymys', {     
+        fetch('http://localhost:8080/palautakysymys', {     
             method: 'POST',     
-           // mode: 'no-cors', //Miksi tämän poistaminen auttoi? :()
             headers:{
                 'Accept': 'application/json',
                 'Content-type': 'application/json'
@@ -48,18 +62,18 @@ const handleChange = (event) => {
         console.log(JSON.stringify(vastaus)); 
     } catch(e) {
         console.log(e)
-    }
+  }
 }
 
- 
             // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
 return (
     <div>
         <FormControl component="fieldset">
-            <p>{kysymys}</p>
+            <h3>{kysymys}</h3>
                 <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-                    <FormControlLabel value="Sininen" control={<Radio />} label="Sininen" />
-                    <FormControlLabel value="RUSKEA" control={<Radio />} label="RUSKEA" />
+                    <FormControlLabel value={vaihtoehtoA} control={<Radio />} label="Sininen" />
+                    <FormControlLabel value={vaihtoehtoB} control={<Radio />} label="Punainen" />
+                    <FormControlLabel value={vaihtoehtoC} control={<Radio />} label="Keltainen" />
                 </RadioGroup>
         </FormControl>
 
