@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Kysely from './Kysely';
 
-export default function Vastaus() {
+export default function Vastaus(props) {
 
     const [results, setResults] = useState([]);
 
@@ -10,7 +10,7 @@ export default function Vastaus() {
     },[])
 
     const getResults = () => {
-        fetch('http://localhost:8080/api/vastauses') //https://salenpalikatback.herokuapp.com/api/vastauses
+        fetch( props.urlit + 'api/vastauses') //https://salenpalikatback.herokuapp.com/api/vastauses
         .then(response => response.json())
         .then(jsonresult => {
 
@@ -22,6 +22,7 @@ export default function Vastaus() {
 
     return ( 
         <div>
+            <p>Kysymys: </p>
            <p>{results}</p> 
         </div>
     )
