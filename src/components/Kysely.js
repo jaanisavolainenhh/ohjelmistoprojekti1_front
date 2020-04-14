@@ -4,6 +4,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
 
 export default function Kysely(props) {
 
@@ -14,7 +15,10 @@ export default function Kysely(props) {
     const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
     const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
     const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
-    //KORJATKAA MAANANTAINA: Postanwerissa pitää asettaa jaanintestiin oikea arvo vastaukseen sekä kysymys olion id:n. Oikean idn saa  use effectissä kysymksestä.
+
+    //Snackbariin statet
+    const [open, setOpen] = React.useState(false);
+    const [msg, setmsg] = React.useState('')
     React.useEffect(() => {
         fetch(props.urlit + 'api/kysymyses')
             .then(result => result.json())
@@ -40,11 +44,7 @@ export default function Kysely(props) {
                 let lista2 = new Array();
                 lista.forEach(itemi => {
                     lista2.push(itemi.vaihtoehto);
-                    // setVaihtoehdot(...vaihtoehdot, itemi.vaihtoehto);  // Ei voi for loopilla lisätä itemeitä, ottaa ainoastaan viimeisimmän loopin itemin listaan :()
-                    // setVaihtoehdot([...vaihtoehdot, itemi.vaihtoehto]);
-                    console.log(itemi.vaihtoehto)
-                }
-                )
+                })
                 setVaihtoehdot(lista2);
 
                 //console.log(vaihtoehdot)
@@ -73,11 +73,17 @@ export default function Kysely(props) {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(vastaus)
-            });
-            console.log(JSON.stringify(vastaus));
+            })
+            .catch(err => console.error(err));
+            setmsg("Vastaus lähetetty!");
+            setOpen(true);
+            //console.log(JSON.stringify(vastaus));
         } catch (e) {
+            setOpen(true);
+            setmsg("Lähettäminen epäonnistui!");
             console.log(e)
         }
+        setValue();
     }
 
     function GeneroiVastaukset() { //Tätä ei nyt käytetä missään, kuiteskin mielenkiintonen toiminta
@@ -85,7 +91,7 @@ export default function Kysely(props) {
         return LuoVaihtoehdot();
         return (
             vaihtoehdot.map((value, index => {
-                return <FormControlLabel value={index} control={<Radio />} label={index} key={index} />  //miks helvetissä index näyttää oikeasti vastausarvoa tässä ja ei anna vaihtaa  mapin valueta johonkin muhun?
+                return <FormControlLabel value={index} control={<Radio />} label={index} key={index} />  //miks helvetissä index näyttää oikeasti vastausarvoa tässä ja ei anna vaihtaa  mapin valueta johonkin muhun? ## Note taitaa olla sen takia kun on  " index => {" eikä "index) => {" kuten Genervoivaihtoehdoissa()
             }))
         )
     }
@@ -94,11 +100,29 @@ export default function Kysely(props) {
     function LuoVaihtoehdot() {
         return (
             vaihtoehdot.map((jotain, index) => {
-                return <FormControlLabel value={jotain} control={<Radio />} label={jotain} key={index} />  
+                return <FormControlLabel value={jotain} control={<Radio />} label={jotain} key={index} />
             })
-         
+
         )
     }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    function SnackBarCompo() {
+        return (
+
+            <Snackbar
+                open={open}
+                autoHideDuration={3000}
+                onClose={handleClose}
+                message={msg}
+                />
+            )
+    }
+
+
 
     // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
     return (
@@ -116,7 +140,7 @@ export default function Kysely(props) {
             </FormControl>
 
             <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
-
+                    < SnackBarCompo />
         </div>
     )
 }
