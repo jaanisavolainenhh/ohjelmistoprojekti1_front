@@ -5,6 +5,7 @@ import Vastaus from './components/Vastaus';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 
 function App() {
   return (
@@ -18,11 +19,19 @@ function App() {
         </Toolbar>
       </AppBar>
       
+      <Router>
+        <div>
+          <Link to="/">Kysely</Link>{' '}
+          <Link to="/vastaukset">Vastaukset</Link>{' '}
+          <Switch>
+            <Route exact path="/" component={Kysely}/>
+            <Route path="/vastaukset"component={Vastaus}/>
+          </Switch>
+        </div>
+      </Router>
         <br/>
-      <Kysely />
         <br/>
-      <Vastaus />
-    </div>
+    </div> 
   );
 }
 
