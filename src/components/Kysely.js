@@ -5,6 +5,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
+import TextField from '@material-ui/core/TextField';
+import Slider from '@material-ui/core/Slider';
+import FormGroup from '@material-ui/core/FormGroup';
+import Checkbox from '@material-ui/core/Checkbox';
 
 export default function Kysely(props) {
 
@@ -34,6 +38,37 @@ export default function Kysely(props) {
             .catch(err => console.error(err))
     }, [])
 
+    //skaalan merkit 1-5 + en osaa vastata
+const marks = [
+    {
+      value: 1,
+      label: '1',
+    },
+    {
+      value: 2,
+      label: '2',
+    },
+    {
+      value: 3,
+      label: '3',
+    },
+    {
+      value: 4,
+      label: '4',
+    },
+    {
+      value: 5,
+      label: '5',
+    },
+    {
+      value: 6,
+      label: 'En osaa vastata',
+    },
+  ];
+  
+   
+     
+
     React.useEffect(() => {
 
         fetch(props.urlit + 'api/kysymyses/1/vaihtoehdot')  // toimii demoa varten yhden kysymyksen tapauksessa. ( next lvl, korvaa /1/ --> haetun kysymyksen id:llä)
@@ -62,6 +97,19 @@ export default function Kysely(props) {
         //Asetetaan myös vastaukseen jotta voidaan stringifytä tämä suoraan restillä postattavaksi
         setVastaus({ ...vastaus, vastaus: event.target.value });
     };
+    // checkboxit alkaa
+    const handlaaCheckboxei = event => {
+        setState({ ...state, [event.target.name]: event.target.checked });
+      };
+
+      const [state, setState] = React.useState({
+        vastaus1: false,
+        vastaus2: false,
+        vastaus3: false
+      });
+    
+      const { vastaus1, vastaus2, vastaus3 } = state;
+      //checkboxit loppuu
 
 
     function postAnswer() {
@@ -129,6 +177,8 @@ export default function Kysely(props) {
         <div>
 
             <FormControl component="fieldset">
+            <TextField id="outlined-basic" label="Nimi" variant="outlined" /> <br/>
+                <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br />
                 <h3>{kysymys}</h3>
                 <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
                     <LuoVaihtoehdot />
@@ -136,7 +186,41 @@ export default function Kysely(props) {
                     <FormControlLabel value={vaihtoehtoA} control={<Radio />} label={vaihtoehtoA} />
                     <FormControlLabel value={vaihtoehtoB} control={<Radio />} label={vaihtoehtoB} />
                     <FormControlLabel value={vaihtoehtoC} control={<Radio />} label={vaihtoehtoC} /> */}
-                </RadioGroup>
+                </RadioGroup><br />
+                <h3>{kysymys}</h3> 
+                <Slider
+            valueLabelDisplay="auto"
+            step={1}
+            marks={marks}
+            min={1}
+            max={6}
+            color='primary'
+            /><br />
+
+        <h3>{kysymys}</h3>
+        <FormControl component="fieldset">
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox checked={vastaus1} onChange={handlaaCheckboxei} name='vastaus1' />}
+            label="Haluatko tämän"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={vastaus2} onChange={handlaaCheckboxei} name='vastaus2'/>}
+            label="Ja tämän"
+          />
+          <FormControlLabel
+            control={<Checkbox checked={vastaus3} onChange={handlaaCheckboxei} name='vastaus3' />}
+            label="Ja lisäksi tämän?"
+          />
+        </FormGroup>
+      </FormControl>
+
+            
+               
+                
+                
+
+
             </FormControl>
 
             <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
