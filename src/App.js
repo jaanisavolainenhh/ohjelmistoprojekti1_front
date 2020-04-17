@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Kysely from './components/Kysely';
+import Kysymys from './components/Kysymys';
 import Vastaus from './components/Vastaus';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -27,16 +28,20 @@ function App() {
 
       <Router>
         <div>
-          <Link to="/">Kysely</Link>{' '}
+          <Link to="/">Kysymys</Link>{' '}
           <Link to="/vastaukset">Vastaukset</Link>{' '}
+          <Link to="/Kysely">Kysely</Link>{' '}
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
             <Route exact path="/"
-              render={(props) => <Kysely {...props} urlit={urlit} />} />
+              render={(props) => <Kysymys {...props} urlit={urlit} />} />
 
             <Route exact path="/vastaukset"
               render={(props) => <Vastaus {...props} urlit={urlit}  />} />
+
+            <Route path="/kysely"
+              render={(props) => <Kysely {...props} urlit={urlit} />} />
           </Switch>
         </div>
       </Router>
