@@ -9,9 +9,9 @@ import Snackbar from '@material-ui/core/Snackbar';
 export default function Kysely(props) {
 
     const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
-    const [vaihtoehtoA, setVaihtoehtoA] = React.useState('');
-    const [vaihtoehtoB, setVaihtoehtoB] = React.useState('');
-    const [vaihtoehtoC, setVaihtoehtoC] = React.useState('');  // and the options if/when needed.
+    // const [vaihtoehtoA, setVaihtoehtoA] = React.useState('');
+    // const [vaihtoehtoB, setVaihtoehtoB] = React.useState('');
+    // const [vaihtoehtoC, setVaihtoehtoC] = React.useState('');  // and the options if/when needed.
     const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
     const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
     const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
@@ -47,11 +47,6 @@ export default function Kysely(props) {
                 })
                 setVaihtoehdot(lista2);
 
-                //console.log(vaihtoehdot)
-
-                setVaihtoehtoA(jsonresult._embedded.vaihtoehtoes[0].vaihtoehto);
-                setVaihtoehtoB(jsonresult._embedded.vaihtoehtoes[1].vaihtoehto);
-                setVaihtoehtoC(jsonresult._embedded.vaihtoehtoes[2].vaihtoehto);
             })
             .catch(err => console.error(err))
     }, [])
@@ -132,10 +127,6 @@ export default function Kysely(props) {
                 <h3>{kysymys}</h3>
                 <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
                     <LuoVaihtoehdot />
-                    {/* 
-                    <FormControlLabel value={vaihtoehtoA} control={<Radio />} label={vaihtoehtoA} />
-                    <FormControlLabel value={vaihtoehtoB} control={<Radio />} label={vaihtoehtoB} />
-                    <FormControlLabel value={vaihtoehtoC} control={<Radio />} label={vaihtoehtoC} /> */}
                 </RadioGroup>
             </FormControl>
 
