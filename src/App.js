@@ -56,6 +56,5 @@ export default App;
 // https://medium.com/alturasoluciones/how-to-pass-props-to-routes-components-29f5443eee94
 {/* <Route exact path="/props-through-render"
   render={(props) => <Kysely {...props} urlit={urlit} />} />
-
   <Route exact path="/props-through-render"
     render={(props) => <Vastaus {...props} urlit={urlit} />} /> */}
