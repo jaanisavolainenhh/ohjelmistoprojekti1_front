@@ -13,7 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 export default function Kysely(props) {
 
-  const [kysely, setKysely] = React.useState([{kysymykset: []}]);
+  const [kysely, setKysely] = React.useState([{ kysymykset: [] }]);
   //const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
   const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
   const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
@@ -27,36 +27,11 @@ export default function Kysely(props) {
   }, [])
 
   //skaalan merkit 1-5 + en osaa vastata
-  const marks = [
-    {
-      value: 1,
-      label: '1',
-    },
-    {
-      value: 2,
-      label: '2',
-    },
-    {
-      value: 3,
-      label: '3',
-    },
-    {
-      value: 4,
-      label: '4',
-    },
-    {
-      value: 5,
-      label: '5',
-    },
-    {
-      value: 6,
-      label: 'En osaa vastata',
-    },
-  ];
+
 
 
   React.useEffect(() => {
-
+    //return; Tää menee nyt ruskea oranssi pinkkiin jee
     fetch(props.urlit + 'api/kysymyses/1/vaihtoehdot')  // toimii demoa varten yhden kysymyksen tapauksessa. ( next lvl, korvaa /1/ --> haetun kysymyksen id:llä)
       .then(result => result.json())                              // jatkossa varmaan täytyisi tehdä function joka pystyisy yksilöimään vaihtoehdot -> kysymykseen
       .then(jsonresult => {                                       // ...mahdollisesti state, joka mapin avulla 'printtaisi' oikeat vaihtoehdot oikeiden kysymysten yhteyteen
@@ -139,43 +114,18 @@ export default function Kysely(props) {
     )
   }
 
-  function TextFieldVastausJotain(props) {
-    const [BBB, AAA] = React.useState(''); //vittu, näähän toimii. JEE!
   
-    const handleCloseTFC = (event) => {
-     AAA(event.target.value);
-    }
-
-    return (
-
-      <div>
-        <TextField id="outlined-basic" label="Vastauksesi" variant="outlined" value={BBB} onChange={handleCloseTFC} /> <br />
-        {/* <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br /> */}
-      </div>
-
-    )
-  }
-
-  function RadioGroupVastaus(props) {
-    return (
-      <div>
-        <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-          <LuoVaihtoehdot />
-        </RadioGroup><br />
-      </div>
-    )
-  }
-
+  
   function JaaninUseEffecti() {
     fetch('http://localhost:8080/kyselyt')
-      .then(response => response.json())
-      .then(res => {
-        setKysely(res)
-      })
-      .catch(err => console.log(err))
+    .then(response => response.json())
+    .then(res => {
+      setKysely(res)
+    })
+    .catch(err => console.log(err))
   }
-
-
+  
+  
   function KokoRoska() {
     return (
       <div>
@@ -184,9 +134,9 @@ export default function Kysely(props) {
                 Kyselyn päättyminen
       </div>
     )
-
+    
   }
-
+  
   function PrinttaaKysymyksetJaVastaukset() {
     return (
       <div>
@@ -202,35 +152,71 @@ export default function Kysely(props) {
         }
       </div>
 
-    )
+)
 
-  }
+}
 
-  function PrinttaaKysymys(props) {
-    return (
-      props.kysymykset.map((kysymys, index) => {
-        return (
-          <div>
+function PrinttaaKysymys(props) {
+  return (
+    props.kysymykset.map((kysymys, index) => {
+      return (
+        <div>
             {kysymys.kysymys}
             <PrinttaaVaihtoehdot vaihtoehdot={kysymys.vaihtoehdot} kysymystyyppi={kysymys.tyyppi} />
           </div>)
       })
-    )
-  }
-
-  function PrinttaaVaihtoehdot(props) { //tyyppi propilla voidaan valita elinen componentti tähän switchin kautta.
-
-    return (
-      props.vaihtoehdot.map((vaihtoehto, index) => {
-        return (
-          <div>
+      )
+    }
+    
+    function PrinttaaVaihtoehdot(props) { //tyyppi propilla voidaan valita elinen componentti tähän switchin kautta.
+      
+      return (
+        props.vaihtoehdot.map((vaihtoehto, index) => {
+          return (
+            <div>
             {vaihtoehto.vaihtoehto}
           </div>)
       })
+      )
+    }
+    
+    function RadioGroupVastaus(props) {
+      return (
+        <div>
+        <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
+          <LuoVaihtoehdot />
+        </RadioGroup><br />
+      </div>
     )
   }
-
+  
   function SliderVastaus(props) {
+    const marks = [
+      {
+        value: 1,
+        label: '1',
+      },
+      {
+        value: 2,
+        label: '2',
+      },
+      {
+        value: 3,
+        label: '3',
+      },
+      {
+        value: 4,
+        label: '4',
+      },
+      {
+        value: 5,
+        label: '5',
+      },
+      {
+        value: 6,
+        label: 'En osaa vastata',
+      },
+    ];
     return (
       <div>
         <Slider
@@ -240,12 +226,29 @@ export default function Kysely(props) {
           min={1}
           max={6}
           color='primary'
-        />
+          />
       </div>
     )
   }
+  
+  function TextFieldVastausJotain(props) {
+    const [BBB, AAA] = React.useState(''); //vittu, näähän toimii. JEE!
+  
+    const handleCloseTFC = (event) => {
+      AAA(event.target.value);
+    }
+  
+    return (
+  
+      <div>
+        <TextField id="outlined-basic" label="Vastauksesi" variant="outlined" value={BBB} onChange={handleCloseTFC} /> <br />
+        {/* <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br /> */}
+      </div>
+  
+    )
+  }
 
-  function MonivalintaVastaus(props) {
+  function MonivalintaVastaus(props) { //tähän mapilla formcontrollabelit
     return (
       <div>
         <FormControl component="fieldset">
@@ -253,7 +256,7 @@ export default function Kysely(props) {
             <FormControlLabel
               control={<Checkbox checked={vastaus1} onChange={handlaaCheckboxei} name='vastaus1' />}
               label="Haluatko tämän"
-            />
+              />
             <FormControlLabel
               control={<Checkbox checked={vastaus2} onChange={handlaaCheckboxei} name='vastaus2' />}
               label="Ja tämän"
@@ -274,8 +277,6 @@ export default function Kysely(props) {
       <FormControl component="fieldset">
         <KokoRoska />
         < TextFieldVastausJotain />
-        < TextFieldVastausJotain />
-
         < RadioGroupVastaus />
         <SliderVastaus />
         <MonivalintaVastaus />
@@ -286,4 +287,3 @@ export default function Kysely(props) {
   )
 
 }
-
