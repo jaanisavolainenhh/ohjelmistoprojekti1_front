@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
 import Kysely from './components/Kysely';
-import Kysymys from './components/Kysymys';
 import Vastaus from './components/Vastaus';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
@@ -28,20 +28,19 @@ function App() {
 
       <Router>
         <div>
-          <Link to="/">Kysymys</Link>{' '}
+          <Link to="/">Kysely</Link>{' '}
           <Link to="/vastaukset">Vastaukset</Link>{' '}
-          <Link to="/Kysely">Kysely</Link>{' '}
+          <Link to="/uusikysely">Uusi kysely</Link>{' '}
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
             <Route exact path="/"
-              render={(props) => <Kysymys {...props} urlit={urlit} />} />
+              render={(props) => <Kysely {...props} urlit={urlit} />} />
 
             <Route exact path="/vastaukset"
               render={(props) => <Vastaus {...props} urlit={urlit}  />} />
-
-            <Route path="/kysely"
-              render={(props) => <Kysely {...props} urlit={urlit} />} />
+              <Route exact path="/uusikysely"
+              render={(props) => <Uusikysely {...props} urlit={urlit}  />} />
           </Switch>
         </div>
       </Router>

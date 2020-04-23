@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Divider } from 'react';
 import Kysymys from './Kysymys';
 export default function Kysely(props) {
 
@@ -36,12 +36,6 @@ export default function Kysely(props) {
         return (
             <div>
                 Kyselyn otsikko vaikka
-                {
-                    // kysely.map((tulos, index) => {
-                    //     console.log(tulos)
-                    //     return <PrinttaaKysymys kysymykset={tulos.kysymykset} />
-                    // })
-                }
                 <PrinttaaKysymyksetJaVastaukset />
                 Kyselyn päättyminen
 
@@ -49,15 +43,23 @@ export default function Kysely(props) {
         )
 
     }
+
+    //setKysely(...kysely, )
     //55 divi ja 56 sulku on esim turha potentiaalisesti, testin takia mukana
     function PrinttaaKysymyksetJaVastaukset() {
-        return ( 
-            <div> 
+        return (
+            <div>
                 {
                     kysely.map((tulos, index) => {
                         console.log(tulos)
-                          return  < PrinttaaKysymys kysymykset = { tulos.kysymykset } />
-                     })
+                        return (
+                            <div> 
+                                {/* <Divider light /> */}
+                                < PrinttaaKysymys kysymykset={tulos.kysymykset} />
+                                {/* <Divider light /> */}
+                            </div>
+                        )
+                    })
                 }
             </div>
 
@@ -89,18 +91,23 @@ export default function Kysely(props) {
         )
     }
 
+
+    //Jaanin Testailua
     function Testi1(props) {
         return (<div><Testi2 /> <Testi3 /> {props.viesti} </div>)
     }
+    //Jaanin Testailua
 
     function Testi2() {
         return (<div> Testi 2 func</div>)
     }
+    //Jaanin Testailua
 
     function Testi3() {
         return (<div> Testi 3 func</div>)
     }
 
+    //Megahärpäke miten ei ihan kannata tehdä. Jos lisää divejä ja {} niin sitten tääkin lopulta toimis. Pilkottu paloihin
     function LuoKysymykset() {
         return (
             kysely.map((item, index) => {
