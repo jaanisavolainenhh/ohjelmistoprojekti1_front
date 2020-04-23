@@ -20,39 +20,85 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Uusikysely(props) {
+    //kysely
+    const [valmisKysely, setValmiskysely] = React.useState({});
+    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ tyyppi: "Radio", kysymys: "Tämä on testikysymys", vaihtoehdot: ["asd", "asdqweqweqwef"] }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
 
-    const [uusiKysymys, setUusikysymys] = React.useState({}); //tallennetaan nykyisen luotavan kysymyksen vaihtoehdot
-    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "Tämä on testikysymys" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
+    //lisättävän kysymyksen tietoa
+    const [uusiKysymys, setUusikysymys] = React.useState(""); //tallennetaan nykyisen luotavan kysymyksen vaihtoehdot
     const [kysymyksenVaihtoehdot, setKysymyksenVaihtoehdot] = React.useState(["Vaihtoehto 1", "Vaihtoehto 2"]); //lisättävän kysymyksen vaihtoehdot
     const [kysymyksenTyyppi, setKysymyksentyyppi] = React.useState(""); //textfield, radio blabla, bindaa vetovalikkoon
+    //uusi vaihtoehto kysymykseen
     const [uusiVaihtoehto, setUusivaihtoehto] = React.useState("asd");
 
     const classes = useStyles();
 
 
-
-    function NykyinenKysymys() {
-        return (
-
-            <div>
-                <ListaaVaihtoehdot />
-            </div>
-
-        )
-    }
-
-    const handleChange = (event) => {
+    const handleChangeKysymykysenTyyppi = (event) => {
         setKysymyksentyyppi(event.target.value);
     };
 
 
+    const handleChangeVaihtoehtoChanged = (event) => {
+        setUusivaihtoehto(event.target.value);
+    };
+
+
+    const handgleChangeKysymysChanged = (event) => {
+        setUusikysymys(event.target.value);
+    };
+    const tallennaKysymys = (event) => {
+        if (uusiKysymys == "")
+            return;
+
+            let kysymys;
+            switch (kysymyksenTyyppi) {
+                case 0:
+                    kysymys = "";
+                    break;
+                case 10:
+                    kysymys = "Radio";
+                    break;
+                case 20:
+                    kysymys = "Teksti";
+                    break;
+                case 30:
+                    kysymys = "Skaala";
+                    break;
+                case 40:
+                    kysymys = "Monivalinta";
+                    break;
+            }
+
+       
+        let kyssari = { kysymys: uusiKysymys, vaihtoehdot: kysymyksenVaihtoehdot, tyyppi: kysymys };
+        setKyselynKysymykset([...kyselynKysymykset, kyssari]);
+        setUusikysymys("")
+        setKysymyksenVaihtoehdot([]);
+    };
+
     const lisaaVaihtoehto = (event) => {
-        console.log("ASD")
+        if (uusiVaihtoehto == "") //tyhjää ei lisätä
+            return;
         setKysymyksenVaihtoehdot([...kysymyksenVaihtoehdot, uusiVaihtoehto]);
         setUusivaihtoehto("");
     };
 
 
+    const tallennaKysely = () => {
+        
+
+        setValmiskysely({name: "Kyselynnimi", kysymykset: kyselynKysymykset})
+    };
+
+    // ## Komponentti funktioita
+    function NykyinenKysymys() {
+        return (
+            <div>
+                <ListaaVaihtoehdot />
+            </div>
+        )
+    }
 
     function ListaaVaihtoehdot() {
         return (
@@ -66,26 +112,25 @@ export default function Uusikysely(props) {
     }
 
     function Vetovalikko() {
-        return (<div>
-
-            <TextField id="standard-basic" label="Kysymys" />
-            <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-filled-label">Kysymystyyppi</InputLabel>
-                <Select
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    value={kysymyksenTyyppi}
-                    onChange={handleChange}
-                >
-
-                    <MenuItem value={10}>Radio</MenuItem>
-                    <MenuItem value={20}>Tekstikenttä</MenuItem>
-                    <MenuItem value={30}>Skaala</MenuItem>
-                    <MenuItem value={40}>Checkbox</MenuItem>
-                </Select>
-            </FormControl>
-            <Button variant="contained" >Tallenna kysymys</Button>
-        </div>)
+        return (
+            <div>
+                <FormControl variant="filled" className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-filled-label">Kysymystyyppi</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-filled-label"
+                        id="demo-simple-select-filled"
+                        value={kysymyksenTyyppi}
+                        onChange={handleChangeKysymykysenTyyppi}
+                    >
+                        <MenuItem hidden selected value={0}>-</MenuItem>
+                        <MenuItem value={10}>Radio</MenuItem>
+                        <MenuItem value={20}>Tekstikenttä</MenuItem>
+                        <MenuItem value={30}>Skaala</MenuItem>
+                        <MenuItem value={40}>Monivalinta</MenuItem>
+                    </Select>
+                </FormControl>
+                <Button variant="contained" onClick={tallennaKysymys}>Tallenna kysymys</Button>
+            </div>)
     }
 
     function Kysymykset() {
@@ -94,7 +139,11 @@ export default function Uusikysely(props) {
                 return (
                     <div>
                         {kysymys.kysymys} <Button variant="contained">Poista</Button>
-                        <div> tähän childina vaihtoehdot</div>
+                        {
+                            kysymys.vaihtoehdot.map((vaihtoehto, index2) => {
+                                return (<div>{vaihtoehto} <Button variant="contained">Poista</Button></div>)
+                            })
+                        }
                     </div>)
             })
         )
@@ -103,31 +152,25 @@ export default function Uusikysely(props) {
     return (
 
         <div>
+            <TextField label="Kysymys" value={uusiKysymys} onChange={handgleChangeKysymysChanged} />
             <Vetovalikko />
             <br></br>
             <div>
-                {/* bindaa tää textfield johonkin */}
-                <TextField id="standard-basic" label="Uusi vaihtoehto" />
+                <TextField label="Uusi vaihtoehto" value={uusiVaihtoehto} onChange={handleChangeVaihtoehtoChanged} />
                 <Button variant="contained" onClick={lisaaVaihtoehto}>Lisää uusi vaihtoehto</Button>
-                </div>
-
-
+            </div>
             <NykyinenKysymys />
-
             <br></br>
             <br></br>
-
-            __________________________________________________________
+            ________________________________________________________
             <br></br>
-            <Button variant="contained">Tallenna kysely</Button>
+            <Button variant="contained" onClick={tallennaKysely}>Tallenna kysely</Button>
             <br></br>
-             __________________________________________________________
+             _______________________________________________________
             <br></br>
-
             {/* <Testi1 viesti="viestiteksti" /> */}
             <h1>Kyselyn kysymykset:</h1>
             <Kysymykset />
-
         </div>
     )
 }
