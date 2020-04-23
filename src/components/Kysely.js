@@ -10,12 +10,12 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
-
+import Kysymys from './Kysymys';
 export default function Kysely(props) {
 
   const [kysely, setKysely] = React.useState([{ kysymykset: [] }]);
   //const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
-  const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
+  const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
   const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
 
@@ -114,18 +114,18 @@ export default function Kysely(props) {
     )
   }
 
-  
-  
+
+
   function JaaninUseEffecti() {
     fetch('http://localhost:8080/kyselyt')
-    .then(response => response.json())
-    .then(res => {
-      setKysely(res)
-    })
-    .catch(err => console.log(err))
+      .then(response => response.json())
+      .then(res => {
+        setKysely(res)
+      })
+      .catch(err => console.log(err))
   }
-  
-  
+
+
   function KokoRoska() {
     return (
       <div>
@@ -134,9 +134,9 @@ export default function Kysely(props) {
                 Kyselyn päättyminen
       </div>
     )
-    
+
   }
-  
+
   function PrinttaaKysymyksetJaVastaukset() {
     return (
       <div>
@@ -152,44 +152,44 @@ export default function Kysely(props) {
         }
       </div>
 
-)
+    )
 
-}
+  }
 
-function PrinttaaKysymys(props) {
-  return (
-    props.kysymykset.map((kysymys, index) => {
-      return (
-        <div>
+  function PrinttaaKysymys(props) {
+    return (
+      props.kysymykset.map((kysymys, index) => {
+        return (
+          <div>
             {kysymys.kysymys}
             <PrinttaaVaihtoehdot vaihtoehdot={kysymys.vaihtoehdot} kysymystyyppi={kysymys.tyyppi} />
           </div>)
       })
-      )
-    }
-    
-    function PrinttaaVaihtoehdot(props) { //tyyppi propilla voidaan valita elinen componentti tähän switchin kautta.
-      
-      return (
-        props.vaihtoehdot.map((vaihtoehto, index) => {
-          return (
-            <div>
+    )
+  }
+
+  function PrinttaaVaihtoehdot(props) { //tyyppi propilla voidaan valita elinen componentti tähän mhin kautta.
+
+    return (
+      props.vaihtoehdot.map((vaihtoehto, index) => {
+        return (
+          <div>
             {vaihtoehto.vaihtoehto}
           </div>)
       })
-      )
-    }
-    
-    function RadioGroupVastaus(props) {
-      return (
-        <div>
+    )
+  }
+
+  function RadioGroupVastaus(props) {
+    return (
+      <div>
         <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
           <LuoVaihtoehdot />
         </RadioGroup><br />
       </div>
     )
   }
-  
+
   function SliderVastaus(props) {
     const marks = [
       {
@@ -226,25 +226,25 @@ function PrinttaaKysymys(props) {
           min={1}
           max={6}
           color='primary'
-          />
+        />
       </div>
     )
   }
-  
+
   function TextFieldVastausJotain(props) {
     const [BBB, AAA] = React.useState(''); //vittu, näähän toimii. JEE!
-  
+
     const handleCloseTFC = (event) => {
       AAA(event.target.value);
     }
-  
+
     return (
-  
+
       <div>
         <TextField id="outlined-basic" label="Vastauksesi" variant="outlined" value={BBB} onChange={handleCloseTFC} /> <br />
         {/* <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br /> */}
       </div>
-  
+
     )
   }
 
@@ -256,7 +256,7 @@ function PrinttaaKysymys(props) {
             <FormControlLabel
               control={<Checkbox checked={vastaus1} onChange={handlaaCheckboxei} name='vastaus1' />}
               label="Haluatko tämän"
-              />
+            />
             <FormControlLabel
               control={<Checkbox checked={vastaus2} onChange={handlaaCheckboxei} name='vastaus2' />}
               label="Ja tämän"
@@ -271,15 +271,40 @@ function PrinttaaKysymys(props) {
     )
   }
 
+
+  function MappaaKysymykset() {
+    return (
+      <div>
+        {
+          kysely.map((tulos, index) => {
+            return (
+              tulos.kysymykset.map((kysymys, index2) => {
+                return (
+                  <div key={index2}>
+                    <Kysymys kysymys={kysymys} />
+                  </div>
+                )
+              })
+
+            )
+          })
+        }
+      </div>
+    )
+  }
+
   // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
   return (
     <div>
       <FormControl component="fieldset">
-        <KokoRoska />
+
+        <MappaaKysymykset />
+
+        {/* <KokoRoska />
         < TextFieldVastausJotain />
         < RadioGroupVastaus />
         <SliderVastaus />
-        <MonivalintaVastaus />
+        <MonivalintaVastaus /> */}
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
       </FormControl>
