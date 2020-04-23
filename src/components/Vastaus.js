@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import Kysely from './Kysely';
+import Kysymys from './Kysymys';
 
 export default function Vastaus(props) {
 
@@ -32,7 +32,7 @@ export default function Vastaus(props) {
     {
         return(
           
-            results.map((tulos,index) => {
+            results.map((tulos, index) => {
                 return <div>{tulos}</div>
             })
 
