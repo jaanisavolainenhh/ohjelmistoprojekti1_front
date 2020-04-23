@@ -140,12 +140,17 @@ export default function Kysely(props) {
   }
 
   function TextFieldVastausJotain(props) {
-    const [BBB, AAA] = React.useState('');
+    const [BBB, AAA] = React.useState(''); //vittu, näähän toimii. JEE!
+  
+    const handleCloseTFC = (event) => {
+     AAA(event.target.value);
+    }
+
     return (
 
       <div>
-        <TextField id="outlined-basic" label="Nimi" variant="outlined" /> <br />
-        <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br />
+        <TextField id="outlined-basic" label="Vastauksesi" variant="outlined" value={BBB} onChange={handleCloseTFC} /> <br />
+        {/* <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br /> */}
       </div>
 
     )
@@ -263,27 +268,22 @@ export default function Kysely(props) {
     )
   }
 
-
-
   // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
   return (
     <div>
       <FormControl component="fieldset">
         <KokoRoska />
+        < TextFieldVastausJotain />
+        < TextFieldVastausJotain />
 
-
-
-        {/* < TextFieldVastausJotain />
         < RadioGroupVastaus />
         <SliderVastaus />
-        <MonivalintaVastaus /> */}
+        <MonivalintaVastaus />
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
       </FormControl>
     </div>
   )
-
-
 
 }
 
