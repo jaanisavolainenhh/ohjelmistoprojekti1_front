@@ -171,7 +171,7 @@ export default function Kysely(props) {
   }
 
   function TextFieldVastausJotain(props) {
-
+    const [BBB, AAA] = React.useState('');
     return (
       
       <div>
@@ -243,56 +243,14 @@ export default function Kysely(props) {
   // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
   return (
     <div>
-   
-      <FormControl component="fieldset">
-
-        <TextField id="outlined-basic" label="Nimi" variant="outlined" /> <br />
-        <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br />
-
-        <h3>{kysymys}</h3>
-        <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-          <LuoVaihtoehdot />
-          {/* 
-                    <FormControlLabel value={vaihtoehtoA} control={<Radio />} label={vaihtoehtoA} />
-                    <FormControlLabel value={vaihtoehtoB} control={<Radio />} label={vaihtoehtoB} />
-                    <FormControlLabel value={vaihtoehtoC} control={<Radio />} label={vaihtoehtoC} /> */}
-        </RadioGroup><br />
-
-        <h3>{kysymys}</h3>
-        <Slider
-          valueLabelDisplay="auto"
-          step={1}
-          marks={marks}
-          min={1}
-          max={6}
-          color='primary'
-        /><br />
-
-        <h3>{kysymys}</h3>
         <FormControl component="fieldset">
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox checked={vastaus1} onChange={handlaaCheckboxei} name='vastaus1' />}
-              label="Haluatko tämän"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={vastaus2} onChange={handlaaCheckboxei} name='vastaus2' />}
-              label="Ja tämän"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={vastaus3} onChange={handlaaCheckboxei} name='vastaus3' />}
-              label="Ja lisäksi tämän?"
-            />
-          </FormGroup>
-        </FormControl>
-
-
-
-
-      </FormControl>
-
+    < TextFieldVastausJotain />
+    < RadioGroupVastaus />
+    <SliderVastaus />
+      <MonivalintaVastaus />
       <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
       < SnackBarCompo />
+      </FormControl>
     </div>
   )
 }
