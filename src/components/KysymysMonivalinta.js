@@ -10,7 +10,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextfieldVastaus from './Testicompo'
 
-export default function Kysymys(props) {
+export default function KysymysMonivalinta(props) {
 
 
   const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
@@ -24,73 +24,7 @@ export default function Kysymys(props) {
   };
 
 
-  function RadioGroupVastaus() {
-    return (
-      <div>
-        <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-          <LuoVaihtoehdot />
-        </RadioGroup><br />
-      </div>
-    )
-  }
 
-  function LuoVaihtoehdot() {
-    return (
-      //vaihtoehdot.map((jotain, index) => {
-      props.kysymys.vaihtoehdot.map((jotain, index) => {
-        return <FormControlLabel key={index} value={jotain.vaihtoehto} control={<Radio />} label={jotain.vaihtoehto} />
-      })
-
-    )
-  }
-  //Tarvitaan jokin slideriin bindattu shitti että saadaan vastaus
-  function SliderVastaus() {
-    const marks = [
-      {
-        value: 1,
-        label: '1',
-      },
-      {
-        value: 2,
-        label: '2',
-      },
-      {
-        value: 3,
-        label: '3',
-      },
-      {
-        value: 4,
-        label: '4',
-      },
-      {
-        value: 5,
-        label: '5',
-      },
-      {
-        value: 6,
-        label: 'En osaa vastata',
-      },
-    ];
-    return (
-      <div>
-        <Slider
-          valueLabelDisplay="auto"
-          step={1}
-          marks={marks}
-          min={1}
-          max={6}
-          color='primary'
-        />
-      </div>
-    )
-  }
-
-  function TextFieldVastausJotain() {
-    //Tää nyt menettää focuksen aina jokaisen kirjaimen jälkeen?
-    return (
-        <TextfieldVastaus parentvalue={value} parenthandleChange={handleChange} />
-    )
-  }
 
   function MonivalintaVastaus(props) { //tähän mapilla formcontrollabelit
 
@@ -129,35 +63,13 @@ export default function Kysymys(props) {
   }
 
 
-  function SelectCorrectCompo() //switchillä elinan componentit
-  {
-    //switch (props.kysymys.tyyppi) {
-    switch ("Teksti") {
-
-      case "Radio":
-        return (<RadioGroupVastaus />)
-      case "Teksti":
-        return (<TextfieldVastaus parentvalue={value} parenthandleChange={handleChange} />
-        )
-      case "Skaala":
-        return (<SliderVastaus />)
-      case "Monivalinta":
-        return (<MonivalintaVastaus />)
-      default:
-        return (<div> Default </div>)
-    }
-  }
-
   function RenderKysymys() {
     return (<div> {props.kysymys.kysymys} </div>)
   }
   return (
     <div>
       <RenderKysymys />
-      {/* <SelectCorrectCompo  key="selectCompo"/> */}
-      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} />
-      <TextfieldVastaus parentvalue={value} parenthandleChange={handleChange} />
-      <TextFieldVastausJotain />
+      <MonivalintaVastaus />
     </div>
   )
 }

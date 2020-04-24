@@ -4,6 +4,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Kysymys from './Kysymys';
+import KysymysTextfield from './KysymysTextfield'
+import KysymysRadio from './KysymysRadio'
+import KysymysSkaala from './KysymysSkaala'
+import KysymysMonivalinta from './KysymysMonivalinta'
+
 export default function Kysely(props) {
 
   const [kysely, setKysely] = React.useState([{ kysymykset: [] }]);
@@ -74,16 +79,26 @@ export default function Kysely(props) {
 
   function MappaaKysymykset() {
     return (
-      <div>
+      <div key="MapatutKysymykset">
         {
           kysely.map((tulos, index) => {
             return (
               tulos.kysymykset.map((kysymys, index2) => {
-                return (
-                  <div key={index2}>
-                    <Kysymys kysymys={kysymys} />
-                  </div>
-                )
+                switch (kysymys.tyyppi) {
+
+                  case "Radio":
+                    return (<KysymysRadio key={index2} kysymys={kysymys} />)
+                  case "Teksti":
+                    return (<KysymysTextfield key={index2} kysymys={kysymys} />)
+                  case "Skaala":
+                    return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+                  case "Monivalinta":
+                    return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+                  default:
+                    return (<div> Default </div>)
+                }
+                // <KysymysTextfield key={index2} kysymys={kysymys} />
+
               })
 
             )
