@@ -1,24 +1,22 @@
 
 import React from 'react';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-import TextField from '@material-ui/core/TextField';
-import Slider from '@material-ui/core/Slider';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
+import Kysymys from './Kysymys';
+import KysymysTextfield from './KysymysTextfield'
+import KysymysRadio from './KysymysRadio'
+import KysymysSkaala from './KysymysSkaala'
+import KysymysMonivalinta from './KysymysMonivalinta'
 
 export default function Kysely(props) {
 
-  const [kysely, setKysely] = React.useState([{kysymykset: []}]);
+  const [kysely, setKysely] = React.useState([{ kysymykset: [] }]);
   //const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
-  const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
-  const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
+  //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
+  //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
-
+  const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
   //Snackbariin statet
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState('')
@@ -26,74 +24,8 @@ export default function Kysely(props) {
     JaaninUseEffecti();
   }, [])
 
-  //skaalan merkit 1-5 + en osaa vastata
-  const marks = [
-    {
-      value: 1,
-      label: '1',
-    },
-    {
-      value: 2,
-      label: '2',
-    },
-    {
-      value: 3,
-      label: '3',
-    },
-    {
-      value: 4,
-      label: '4',
-    },
-    {
-      value: 5,
-      label: '5',
-    },
-    {
-      value: 6,
-      label: 'En osaa vastata',
-    },
-  ];
 
-
-  React.useEffect(() => {
-
-    fetch(props.urlit + 'api/kysymyses/1/vaihtoehdot')  // toimii demoa varten yhden kysymyksen tapauksessa. ( next lvl, korvaa /1/ --> haetun kysymyksen id:llä)
-      .then(result => result.json())                              // jatkossa varmaan täytyisi tehdä function joka pystyisy yksilöimään vaihtoehdot -> kysymykseen
-      .then(jsonresult => {                                       // ...mahdollisesti state, joka mapin avulla 'printtaisi' oikeat vaihtoehdot oikeiden kysymysten yhteyteen
-
-        let lista = jsonresult._embedded.vaihtoehtoes;
-        let lista2 = new Array();
-        lista.forEach(itemi => {
-          lista2.push(itemi.vaihtoehto);
-        })
-        setVaihtoehdot(lista2);
-
-      })
-      .catch(err => console.error(err))
-  }, [])
-  //console.log(vaihtoehtoB);
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-    //Asetetaan myös vastaukseen jotta voidaan stringifytä tämä suoraan restillä postattavaksi
-    setVastaus({ ...vastaus, vastaus: event.target.value });
-  };
-  // checkboxit alkaa
-  const handlaaCheckboxei = event => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
-
-  const [state, setState] = React.useState({
-    vastaus1: false,
-    vastaus2: false,
-    vastaus3: false
-  });
-
-  const { vastaus1, vastaus2, vastaus3 } = state;
-  //checkboxit loppuu
-
-
-  function postAnswer() {
+  function postAnswer() { //Tätä pitää muokata että lähettää kysely olion eikä vastaus oliota
     try {
       fetch(props.urlit + 'palautakysymys', {
         method: 'POST',
@@ -112,16 +44,7 @@ export default function Kysely(props) {
       setmsg("Lähettäminen epäonnistui!");
       console.log(e)
     }
-    setValue();
-  }
-
-  function LuoVaihtoehdot() {
-    return (
-      vaihtoehdot.map((jotain, index) => {
-        return <FormControlLabel value={jotain} control={<Radio />} label={jotain} key={index} />
-      })
-
-    )
+    //setValue();
   }
 
   const handleClose = () => {
@@ -139,35 +62,8 @@ export default function Kysely(props) {
     )
   }
 
-  function TextFieldVastausJotain(props) {
-    const [BBB, AAA] = React.useState(''); //vittu, näähän toimii. JEE!
-  
-    const handleCloseTFC = (event) => {
-     AAA(event.target.value);
-    }
-
-    return (
-
-      <div>
-        <TextField id="outlined-basic" label="Vastauksesi" variant="outlined" value={BBB} onChange={handleCloseTFC} /> <br />
-        {/* <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br /> */}
-      </div>
-
-    )
-  }
-
-  function RadioGroupVastaus(props) {
-    return (
-      <div>
-        <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-          <LuoVaihtoehdot />
-        </RadioGroup><br />
-      </div>
-    )
-  }
-
   function JaaninUseEffecti() {
-    fetch('http://localhost:8080/kyselyt')
+    fetch(props.urlit + 'kyselyt')
       .then(response => response.json())
       .then(res => {
         setKysely(res)
@@ -175,110 +71,54 @@ export default function Kysely(props) {
       .catch(err => console.log(err))
   }
 
-
-  function KokoRoska() {
-    return (
-      <div>
-        Kyselyn otsikko vaikka
-        <PrinttaaKysymyksetJaVastaukset />
-                Kyselyn päättyminen
-      </div>
-    )
+  const TestiEventti = (event) => {
+   //console.log(event.target.value)
+//   SetDummystate(event.target.value)
+   SetDummystate(event.target.value)
 
   }
 
-  function PrinttaaKysymyksetJaVastaukset() {
+  function MappaaKysymykset() { //miks helvetissä nää ei toimi ## EI TOIMI koska tää on Kysely componentin sisällä, ja kun se rerenderaantuu niin nää on uusia. Korjattu siirtämällä tää Kyselyn ulkopuolelle, tiedoston loppuun.
     return (
-      <div>
+      <div key="MapatutKysymykset">
         {
           kysely.map((tulos, index) => {
-            console.log(tulos)
             return (
-              <div>
-                < PrinttaaKysymys kysymykset={tulos.kysymykset} />
-              </div>
+              tulos.kysymykset.map((kysymys, index2) => {
+                switch (kysymys.tyyppi) {
+
+                  case "Radio":
+                    return (<KysymysRadio key={index2} kysymys={kysymys} />)
+                  case "Teksti":
+                    return (<KysymysTextfield df={TestiEventti} dv={dummystate} key={index2} kysymys={kysymys} />)
+                  case "Skaala":
+                    return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+                  case "Monivalinta":
+                    return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+                  default:
+                    return (<div> Default </div>)
+                }
+                // <KysymysTextfield key={index2} kysymys={kysymys} />
+
+              })
+
             )
           })
         }
       </div>
-
-    )
-
-  }
-
-  function PrinttaaKysymys(props) {
-    return (
-      props.kysymykset.map((kysymys, index) => {
-        return (
-          <div>
-            {kysymys.kysymys}
-            <PrinttaaVaihtoehdot vaihtoehdot={kysymys.vaihtoehdot} kysymystyyppi={kysymys.tyyppi} />
-          </div>)
-      })
     )
   }
 
-  function PrinttaaVaihtoehdot(props) { //tyyppi propilla voidaan valita elinen componentti tähän switchin kautta.
 
-    return (
-      props.vaihtoehdot.map((vaihtoehto, index) => {
-        return (
-          <div>
-            {vaihtoehto.vaihtoehto}
-          </div>)
-      })
-    )
-  }
-
-  function SliderVastaus(props) {
-    return (
-      <div>
-        <Slider
-          valueLabelDisplay="auto"
-          step={1}
-          marks={marks}
-          min={1}
-          max={6}
-          color='primary'
-        />
-      </div>
-    )
-  }
-
-  function MonivalintaVastaus(props) {
-    return (
-      <div>
-        <FormControl component="fieldset">
-          <FormGroup>
-            <FormControlLabel
-              control={<Checkbox checked={vastaus1} onChange={handlaaCheckboxei} name='vastaus1' />}
-              label="Haluatko tämän"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={vastaus2} onChange={handlaaCheckboxei} name='vastaus2' />}
-              label="Ja tämän"
-            />
-            <FormControlLabel
-              control={<Checkbox checked={vastaus3} onChange={handlaaCheckboxei} name='vastaus3' />}
-              label="Ja lisäksi tämän?"
-            />
-          </FormGroup>
-        </FormControl>
-      </div>
-    )
-  }
 
   // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
+  //Mappaakysymykset2 pitää syöttää proppeina kaikki funkkarit joita tarvitaan lopullisen kyselyn täyttämiseen. 
+  //Pääpointti kai   vielä luomattoman kysely-staten  vastausten manipulointi.
   return (
     <div>
       <FormControl component="fieldset">
-        <KokoRoska />
-        < TextFieldVastausJotain />
-        < TextFieldVastausJotain />
+        <MappaaKysymykset2 kysely={kysely} dv={dummystate} changeevent={TestiEventti} />
 
-        < RadioGroupVastaus />
-        <SliderVastaus />
-        <MonivalintaVastaus />
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
       </FormControl>
@@ -287,3 +127,32 @@ export default function Kysely(props) {
 
 }
 
+
+function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
+  return (
+    <div key="MapatutKysymykset">
+      {
+        props.kysely.map((tulos, index) => {
+          return (
+            tulos.kysymykset.map((kysymys, index2) => {
+              switch (kysymys.tyyppi) {
+
+                case "Radio":
+                  return (<KysymysRadio kysymys={kysymys} />)
+                case "Teksti":
+                  return (<KysymysTextfield df={props.changeevent} dv={props.dv} kysymys={kysymys} />)
+                case "Skaala":
+                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+                case "Monivalinta":
+                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+                default:
+                  return (<div> Default </div>)
+              }
+            })
+
+          )
+        })
+      }
+    </div>
+  )
+}
