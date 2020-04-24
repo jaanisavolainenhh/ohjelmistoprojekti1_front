@@ -112,6 +112,8 @@ export default function Kysely(props) {
 
 
   // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
+  //Mappaakysymykset2 pitää syöttää proppeina kaikki funkkarit joita tarvitaan lopullisen kyselyn täyttämiseen. 
+  //Pääpointti kai   vielä luomattoman kysely-staten  vastausten manipulointi.
   return (
     <div>
       <FormControl component="fieldset">
