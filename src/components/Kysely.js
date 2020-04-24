@@ -78,7 +78,7 @@ export default function Kysely(props) {
 
   }
 
-  function MappaaKysymykset() { //miks helvetissä nää ei toimi
+  function MappaaKysymykset() { //miks helvetissä nää ei toimi ## EI TOIMI koska tää on Kysely componentin sisällä, ja kun se rerenderaantuu niin nää on uusia. Korjattu siirtämällä tää Kyselyn ulkopuolelle, tiedoston loppuun.
     return (
       <div key="MapatutKysymykset">
         {
@@ -115,32 +115,7 @@ export default function Kysely(props) {
   return (
     <div>
       <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely} changeevent={TestiEventti} />
-
-
-        {
-        kysely.map((tulos, index) => {
-            return (
-              tulos.kysymykset.map((kysymys, index2) => {
-                switch (kysymys.tyyppi) {
-
-                  case "Radio":
-                    return (<KysymysRadio key={index2} kysymys={kysymys} />)
-                  case "Teksti":
-                    return (<KysymysTextfield df={TestiEventti} dv={dummystate} key={index2} kysymys={kysymys} />)
-                  case "Skaala":
-                    return (<KysymysSkaala key={index2} kysymys={kysymys} />)
-                  case "Monivalinta":
-                    return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
-                  default:
-                    return (<div> Default </div>)
-                }
-
-              })
-            )
-          })
-}
-
+        <MappaaKysymykset2 kysely={kysely} dv={dummystate} changeevent={TestiEventti} />
 
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
@@ -161,9 +136,9 @@ function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
               switch (kysymys.tyyppi) {
 
                 case "Radio":
-                  return (<KysymysRadio key={index2} kysymys={kysymys} />)
+                  return (<KysymysRadio kysymys={kysymys} />)
                 case "Teksti":
-                  return (<KysymysTextfield df={props.changeevent} dv={props.value} key={index2} kysymys={kysymys} />)
+                  return (<KysymysTextfield df={props.changeevent} dv={props.dv} kysymys={kysymys} />)
                 case "Skaala":
                   return (<KysymysSkaala key={index2} kysymys={kysymys} />)
                 case "Monivalinta":
@@ -171,8 +146,6 @@ function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
                 default:
                   return (<div> Default </div>)
               }
-              // <KysymysTextfield key={index2} kysymys={kysymys} />
-
             })
 
           )

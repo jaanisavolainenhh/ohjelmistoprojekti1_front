@@ -28,7 +28,7 @@ export default function KysymysTextfield(props) {
     setValue(event.target.value);
     //props.df(event);
     //setVastaus({ ...vastaus, vastaus: event.target.value });
-    
+
   };
 
   function RenderKysymys() {
@@ -38,15 +38,7 @@ export default function KysymysTextfield(props) {
     <div>
       <RenderKysymys />
       <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={props.dv} onChange={props.df} />
-      {/* <Vittu  parentarvo={props.ds} change={handleChange}/> */}
     </div>
   )
 }
 
-function Vittu(props) {
-  return (
-    <div>
-      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={props.dv} onChange={props.change} />
-    </div>
-  )
-}
