@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
-import TextfieldVastaus from './Testicompo'
 
 export default function Kysymys(props) {
 
@@ -88,7 +87,10 @@ export default function Kysymys(props) {
   function TextFieldVastausJotain() {
     //Tää nyt menettää focuksen aina jokaisen kirjaimen jälkeen?
     return (
-        <TextfieldVastaus parentvalue={value} parenthandleChange={handleChange} />
+      <div>
+
+      </div>
+        // <TextfieldVastaus parentvalue={value} parenthandleChange={handleChange} />
     )
   }
 
@@ -137,8 +139,8 @@ export default function Kysymys(props) {
       case "Radio":
         return (<RadioGroupVastaus />)
       case "Teksti":
-        return (<TextfieldVastaus parentvalue={value} parenthandleChange={handleChange} />
-        )
+        return (<TextFieldVastausJotain/>)
+        
       case "Skaala":
         return (<SliderVastaus />)
       case "Monivalinta":
@@ -156,7 +158,6 @@ export default function Kysymys(props) {
       <RenderKysymys />
       {/* <SelectCorrectCompo  key="selectCompo"/> */}
       <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} />
-      <TextfieldVastaus parentvalue={value} parenthandleChange={handleChange} />
       <TextFieldVastausJotain />
     </div>
   )

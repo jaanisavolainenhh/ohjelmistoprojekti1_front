@@ -16,7 +16,7 @@ export default function Kysely(props) {
   //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
   //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
-
+  const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
   //Snackbariin statet
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState('')
@@ -47,8 +47,6 @@ export default function Kysely(props) {
     //setValue();
   }
 
-
-
   const handleClose = () => {
     setOpen(false);
   }
@@ -64,8 +62,6 @@ export default function Kysely(props) {
     )
   }
 
-
-
   function JaaninUseEffecti() {
     fetch(props.urlit + 'kyselyt')
       .then(response => response.json())
@@ -75,9 +71,14 @@ export default function Kysely(props) {
       .catch(err => console.log(err))
   }
 
+  const TestiEventti = (event) => {
+   //console.log(event.target.value)
+//   SetDummystate(event.target.value)
+   SetDummystate(event.target.value)
 
+  }
 
-  function MappaaKysymykset() {
+  function MappaaKysymykset() { //miks helvetissä nää ei toimi
     return (
       <div key="MapatutKysymykset">
         {
@@ -89,7 +90,7 @@ export default function Kysely(props) {
                   case "Radio":
                     return (<KysymysRadio key={index2} kysymys={kysymys} />)
                   case "Teksti":
-                    return (<KysymysTextfield key={index2} kysymys={kysymys} />)
+                    return (<KysymysTextfield df={TestiEventti} dv={dummystate} key={index2} kysymys={kysymys} />)
                   case "Skaala":
                     return (<KysymysSkaala key={index2} kysymys={kysymys} />)
                   case "Monivalinta":
@@ -108,16 +109,75 @@ export default function Kysely(props) {
     )
   }
 
+
+
   // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
   return (
     <div>
       <FormControl component="fieldset">
+        <MappaaKysymykset2 kysely={kysely} changeevent={TestiEventti} />
 
-        <MappaaKysymykset />
+
+        {
+        kysely.map((tulos, index) => {
+            return (
+              tulos.kysymykset.map((kysymys, index2) => {
+                switch (kysymys.tyyppi) {
+
+                  case "Radio":
+                    return (<KysymysRadio key={index2} kysymys={kysymys} />)
+                  case "Teksti":
+                    return (<KysymysTextfield df={TestiEventti} dv={dummystate} key={index2} kysymys={kysymys} />)
+                  case "Skaala":
+                    return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+                  case "Monivalinta":
+                    return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+                  default:
+                    return (<div> Default </div>)
+                }
+
+              })
+            )
+          })
+}
+
+
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
       </FormControl>
     </div>
   )
 
+}
+
+
+function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
+  return (
+    <div key="MapatutKysymykset">
+      {
+        props.kysely.map((tulos, index) => {
+          return (
+            tulos.kysymykset.map((kysymys, index2) => {
+              switch (kysymys.tyyppi) {
+
+                case "Radio":
+                  return (<KysymysRadio key={index2} kysymys={kysymys} />)
+                case "Teksti":
+                  return (<KysymysTextfield df={props.changeevent} dv={props.value} key={index2} kysymys={kysymys} />)
+                case "Skaala":
+                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+                case "Monivalinta":
+                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+                default:
+                  return (<div> Default </div>)
+              }
+              // <KysymysTextfield key={index2} kysymys={kysymys} />
+
+            })
+
+          )
+        })
+      }
+    </div>
+  )
 }

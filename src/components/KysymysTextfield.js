@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
-import TextfieldVastaus from './Testicompo'
 
 export default function KysymysTextfield(props) {
 
@@ -16,11 +15,20 @@ export default function KysymysTextfield(props) {
   const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
 
+  React.useEffect(() => {
+    //props.df(value);
+  }, [value])
+
+  React.useEffect(() => {
+    //setValue(props.dv);
+  }, [])
 
   const handleChange = (event) => {
     console.log(event.target.value);
     setValue(event.target.value);
-    setVastaus({ ...vastaus, vastaus: event.target.value });
+    //props.df(event);
+    //setVastaus({ ...vastaus, vastaus: event.target.value });
+    
   };
 
   function RenderKysymys() {
@@ -29,8 +37,16 @@ export default function KysymysTextfield(props) {
   return (
     <div>
       <RenderKysymys />
-      {/* <SelectCorrectCompo  key="selectCompo"/> */}
-      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} />
+      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={props.dv} onChange={props.df} />
+      {/* <Vittu  parentarvo={props.ds} change={handleChange}/> */}
+    </div>
+  )
+}
+
+function Vittu(props) {
+  return (
+    <div>
+      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={props.dv} onChange={props.change} />
     </div>
   )
 }

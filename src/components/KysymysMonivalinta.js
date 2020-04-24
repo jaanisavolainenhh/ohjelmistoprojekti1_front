@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
-import TextfieldVastaus from './Testicompo'
 
 export default function KysymysMonivalinta(props) {
 
