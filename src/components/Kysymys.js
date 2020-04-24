@@ -13,7 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 export default function Kysymys(props) {
 
   //const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
-  const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
+  //const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
   const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
 
@@ -24,21 +24,14 @@ export default function Kysymys(props) {
     console.log(props.kysymys.vaihtoehdot)
     console.log(props.kysymys.kysymys)
   }, [])
+
+
   const handleChange = (event) => {
     setValue(event.target.value);
     //Asetetaan myös vastaukseen jotta voidaan stringifytä tämä suoraan restillä postattavaksi
     setVastaus({ ...vastaus, vastaus: event.target.value });
   };
 
-  function LuoVaihtoehdot() {
-    return (
-      //vaihtoehdot.map((jotain, index) => {
-      props.kysymys.vaihtoehdot.map((jotain, index) => {
-        return <FormControlLabel key={index} value={jotain.vaihtoehto} control={<Radio />} label={jotain.vaihtoehto} />
-      })
-
-    )
-  }
 
   function RadioGroupVastaus(props) {
     return (
@@ -50,6 +43,15 @@ export default function Kysymys(props) {
     )
   }
 
+  function LuoVaihtoehdot() {
+    return (
+      //vaihtoehdot.map((jotain, index) => {
+      props.kysymys.vaihtoehdot.map((jotain, index) => {
+        return <FormControlLabel key={index} value={jotain.vaihtoehto} control={<Radio />} label={jotain.vaihtoehto} />
+      })
+
+    )
+  }
   //Tarvitaan jokin slideriin bindattu shitti että saadaan vastaus
   function SliderVastaus(props) {
     const marks = [
@@ -100,10 +102,8 @@ export default function Kysymys(props) {
     }
 
     return (
-
       <div>
         <TextField id="outlined-basic" label="Vastauksesi" variant="outlined" value={BBB} onChange={handleCloseTFC} /> <br />
-        {/* <TextField id="outlined-basic" label="Sähköposti" variant="outlined" />< br /> */}
       </div>
 
     )
@@ -116,6 +116,8 @@ export default function Kysymys(props) {
       vastaus2: false,
       vastaus3: false
     });
+
+
     const { vastaus1, vastaus2, vastaus3 } = state;
     const handlaaCheckboxei = event => {
       setState({ ...state, [event.target.name]: event.target.checked });
