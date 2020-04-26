@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 export default function Uusikysely(props) {
     //kysely
     const [valmisKysely, setValmiskysely] = React.useState({});
-    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ tyyppi: "", kysymys: "", vaihtoehdot: [] }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
+    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([]); // Tähän listana kaikki kyselyyn tulevat kysymykset
 
     //lisättävän kysymyksen tietoa
     const [uusiKysymys, setUusikysymys] = React.useState(""); //tallennetaan nykyisen luotavan kysymyksen vaihtoehdot
@@ -146,6 +146,7 @@ export default function Uusikysely(props) {
     function Kysymykset() {
         // En keksinyt vielä miten nämä olisi saanut järkevästi näkymään sivulla... ja jotenkin onnistuin saamaan ne renderöitymään vierekkäin (rivi: -kysymys -vaih -toe -hto)
         return (
+            
             kyselynKysymykset.map((kysymys, index) => {
                 
                 return (
@@ -166,8 +167,8 @@ export default function Uusikysely(props) {
                         }
                        
                     </div>)
-           
-            })
+            }
+            )
         )
               
     }
