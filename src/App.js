@@ -5,6 +5,7 @@ import Vastaus from './components/Vastaus';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
   return (
     <div className="App">
 
+    {/* <Kysely urlit={urlit} /> */}
+
+    
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6">
@@ -29,6 +33,7 @@ function App() {
         <div>
           <Link to="/">Kysely</Link>{' '}
           <Link to="/vastaukset">Vastaukset</Link>{' '}
+          <Link to="/uusikysely">Uusi kysely</Link>{' '}
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
@@ -37,6 +42,8 @@ function App() {
 
             <Route exact path="/vastaukset"
               render={(props) => <Vastaus {...props} urlit={urlit}  />} />
+              <Route exact path="/uusikysely"
+              render={(props) => <Uusikysely {...props} urlit={urlit}  />} />
           </Switch>
         </div>
       </Router>
@@ -52,6 +59,5 @@ export default App;
 // https://medium.com/alturasoluciones/how-to-pass-props-to-routes-components-29f5443eee94
 {/* <Route exact path="/props-through-render"
   render={(props) => <Kysely {...props} urlit={urlit} />} />
-
   <Route exact path="/props-through-render"
     render={(props) => <Vastaus {...props} urlit={urlit} />} /> */}

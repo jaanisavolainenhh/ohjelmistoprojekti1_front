@@ -1,122 +1,173 @@
+
 import React from 'react';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import Kysymys from './Kysymys';
+import KysymysTextfield from './KysymysTextfield'
+import KysymysRadio from './KysymysRadio'
+import KysymysSkaala from './KysymysSkaala'
+import KysymysMonivalinta from './KysymysMonivalinta'
 
 export default function Kysely(props) {
 
-    const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
-    const [vaihtoehtoA, setVaihtoehtoA] = React.useState('');
-    const [vaihtoehtoB, setVaihtoehtoB] = React.useState('');
-    const [vaihtoehtoC, setVaihtoehtoC] = React.useState('');  // and the options if/when needed.
-    const [vaihtoehdot, setVaihtoehdot] = React.useState([]);
-    const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-    const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
-    //KORJATKAA MAANANTAINA: Postanwerissa pitää asettaa jaanintestiin oikea arvo vastaukseen sekä kysymys olion id:n. Oikean idn saa  use effectissä kysymksestä.
-    React.useEffect(() => {
-        fetch(props.urlit + 'api/kysymyses')
-            .then(result => result.json())
-            .then(jsonresult => {
+  const [kysely, setKysely] = React.useState([]);
 
-                setKysymys(jsonresult._embedded.kysymyses[0].kysymys);
-                //Tällä saadaan kysymyksen ID selville, vähän kömpelö mutta menköön alkuun
-                let saato = jsonresult._embedded.kysymyses[0]._links.self.href;
-                saato = parseInt(saato.replace(props.urlit + 'api/kysymyses/', ""));  //otetaan hreffistä pois alkuurli jotta jäljelle jää vain ID
-                setVastaus({ ...vastaus, kysymys: { id: saato } });
-                //console.log(props.urlit)
-            })
-            .catch(err => console.error(err))
-    }, [])
-
-    React.useEffect(() => {
-
-        fetch(props.urlit + 'api/kysymyses/1/vaihtoehdot')  // toimii demoa varten yhden kysymyksen tapauksessa. ( next lvl, korvaa /1/ --> haetun kysymyksen id:llä)
-            .then(result => result.json())                              // jatkossa varmaan täytyisi tehdä function joka pystyisy yksilöimään vaihtoehdot -> kysymykseen
-            .then(jsonresult => {                                       // ...mahdollisesti state, joka mapin avulla 'printtaisi' oikeat vaihtoehdot oikeiden kysymysten yhteyteen
-
-                let lista = jsonresult._embedded.vaihtoehtoes;
-                let lista2 = new Array();
-                lista.forEach(itemi => {
-                    lista2.push(itemi.vaihtoehto);
-                    // setVaihtoehdot(...vaihtoehdot, itemi.vaihtoehto);  // Ei voi for loopilla lisätä itemeitä, ottaa ainoastaan viimeisimmän loopin itemin listaan :()
-                    // setVaihtoehdot([...vaihtoehdot, itemi.vaihtoehto]);
-                    console.log(itemi.vaihtoehto)
-                }
-                )
-                setVaihtoehdot(lista2);
-
-                //console.log(vaihtoehdot)
-
-                setVaihtoehtoA(jsonresult._embedded.vaihtoehtoes[0].vaihtoehto);
-                setVaihtoehtoB(jsonresult._embedded.vaihtoehtoes[1].vaihtoehto);
-                setVaihtoehtoC(jsonresult._embedded.vaihtoehtoes[2].vaihtoehto);
-            })
-            .catch(err => console.error(err))
-    }, [])
-    //console.log(vaihtoehtoB);
-
-    const handleChange = (event) => {
-        setValue(event.target.value);
-        //Asetetaan myös vastaukseen jotta voidaan stringifytä tämä suoraan restillä postattavaksi
-        setVastaus({ ...vastaus, vastaus: event.target.value });
-    };
+  //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
+  //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
+  const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
+  const [open, setOpen] = React.useState(false);
+  const [msg, setmsg] = React.useState('')
+  React.useEffect(() => {
+    JaaninUseEffecti();
+  }, [])
 
 
-    function postAnswer() {
-        try {
-            fetch(props.urlit + 'palautakysymys', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(vastaus)
-            });
-            console.log(JSON.stringify(vastaus));
-        } catch (e) {
-            console.log(e)
-        }
+  function postAnswer() { //Tätä pitää muokata että lähettää kysely olion eikä vastaus oliota
+    try {
+      fetch(props.urlit + 'kyselyt', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify(kysely[0])
+      })
+        .catch(err => console.error(err));
+      setmsg("Vastaus lähetetty!");
+      setOpen(true);
+      console.log(JSON.stringify(kysely[0]));
+    } catch (e) {
+      setOpen(true);
+      setmsg("Lähettäminen epäonnistui!");
+      console.log(e)
     }
+    //setValue();
+  }
 
-    function GeneroiVastaukset() { //Tätä ei nyt käytetä missään, kuiteskin mielenkiintonen toiminta
+  const handleClose = () => {
+    setOpen(false);
+  }
 
-        return LuoVaihtoehdot();
-        return (
-            vaihtoehdot.map((value, index => {
-                return <FormControlLabel value={index} control={<Radio />} label={index} key={index} />  //miks helvetissä index näyttää oikeasti vastausarvoa tässä ja ei anna vaihtaa  mapin valueta johonkin muhun?
-            }))
-        )
-    }
-
-
-    function LuoVaihtoehdot() {
-        return (
-            vaihtoehdot.map((jotain, index) => {
-                return <FormControlLabel value={jotain} control={<Radio />} label={jotain} key={index} />  
-            })
-         
-        )
-    }
-
-    // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
+  function SnackBarCompo() {
     return (
-        <div>
-
-            <FormControl component="fieldset">
-                <h3>{kysymys}</h3>
-                <RadioGroup aria-label="kys" name="kys" value={value} onChange={handleChange}>
-                    <LuoVaihtoehdot />
-                    {/* 
-                    <FormControlLabel value={vaihtoehtoA} control={<Radio />} label={vaihtoehtoA} />
-                    <FormControlLabel value={vaihtoehtoB} control={<Radio />} label={vaihtoehtoB} />
-                    <FormControlLabel value={vaihtoehtoC} control={<Radio />} label={vaihtoehtoC} /> */}
-                </RadioGroup>
-            </FormControl>
-
-            <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
-
-        </div>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        message={msg}
+      />
     )
+  }
+
+  function JaaninUseEffecti() {
+    console.log(props.urlit + 'kyselyt')
+    fetch(props.urlit + 'kyselyt', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(res => {
+        setKysely(res)
+      })
+      .catch(err => console.log(err))
+  }
+
+  const TestiEventti = (event) => {
+    //console.log(event.target.value)
+    //   SetDummystate(event.target.value)
+    //SetDummystate(event.target.value)
+
+  }
+
+
+
+  function MuokkaaKyselynVastauksia(kysymys, kysymyksenvastaus) //palautetaan kysymyksenvastauksessa suoraan olio.
+  {
+    console.log(kysymyksenvastaus)
+    let muokattavakysely = kysely;
+
+    muokattavakysely.map((tulos, index) => {
+      tulos.kysymykset.map((kysymysloop, index2) => {
+        console.log(kysymysloop)
+        //console.log(kysymys.)
+        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
+        {
+          let loopvastaukset = [{vastaus: kysymyksenvastaus.vaihtoehto}];
+          kysymysloop.vastaus = loopvastaukset;
+          console.log("löytyi!")
+        }
+      })
+    })
+    setKysely(muokattavakysely);
+  }
+
+  function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus)
+  {
+
+    console.log(kysymyksenvastaus)
+    let muokattavakysely = kysely;
+
+    muokattavakysely.map((tulos, index) => {
+      tulos.kysymykset.map((kysymysloop, index2) => {
+        console.log(kysymysloop)
+        //console.log(kysymys.)
+        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
+        {
+          let loopvastaukset = [{vastaus: kysymyksenvastaus}];
+          kysymysloop.vastaus = loopvastaukset;
+          console.log("löytyi!")
+        }
+      })
+    })
+    setKysely(muokattavakysely);
+
+  }
+
+  // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
+  //Mappaakysymykset2 pitää syöttää proppeina kaikki funkkarit joita tarvitaan lopullisen kyselyn täyttämiseen. 
+  //Pääpointti kai   vielä luomattoman kysely-staten  vastausten manipulointi.
+  return (
+    <div>
+      <FormControl component="fieldset">
+        <MappaaKysymykset2 kysely={kysely}  MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
+
+        <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
+        < SnackBarCompo />
+      </FormControl>
+    </div>
+  )
+}
+
+
+function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
+  return (
+    <div key="MapatutKysymykset">
+      {
+        props.kysely.map((tulos, index) => {
+          return (
+            tulos.kysymykset.map((kysymys, index2) => {
+              switch (kysymys.tyyppi) {
+
+                case "Radio":
+                  return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
+                case "Teksti":
+                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
+                case "Skaala":
+                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+                case "Monivalinta":
+                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+                default:
+                  return (<div> Default </div>)
+              }
+            })
+
+          )
+        })
+      }
+    </div>
+  )
 }
