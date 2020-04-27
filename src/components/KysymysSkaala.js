@@ -24,7 +24,7 @@ export default function KysymysSkaala(props) {
 
 
   //Tarvitaan jokin slideriin bindattu shitti että saadaan vastaus
-  function SliderVastaus() {
+  function SliderVastaus() { 
     const marks = [
       {
         value: 1,

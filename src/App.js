@@ -11,8 +11,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 function App() {
 
   //passataan tää propsinsa niin voidaan käyttää ilman 30 eri paikan muokkaamista. Ehkä joku global variable tms
- //const [urlit, setUrlit] = React.useState('https://salenpalikatback.herokuapp.com/'); //http://localhost:8080/
-  const [urlit, setUrlit] = React.useState('http://localhost:8080/'); //http://localhost:8080/
+ const [urlit, setUrlit] = React.useState('https://salenpalikatback.herokuapp.com/'); //http://localhost:8080/
+ // const [urlit, setUrlit] = React.useState('http://localhost:8080/'); //http://localhost:8080/
 
 
   return (
