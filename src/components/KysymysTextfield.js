@@ -12,14 +12,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 export default function KysymysTextfield(props) {
 
 
-  // const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
+   const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   // const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
 
 
    const handleChange = (event) => {
-    
+      setValue(event.target.value)
       props.MuokkaaKyselynVastauksiaTextfield(props.kysymys, event.target.value)
-      props.df(event);
+      //props.df(event);
   //   console.log(event.target.value);
   //   //setValue(event.target.value);
   //   //props.df(event);
@@ -33,7 +33,7 @@ export default function KysymysTextfield(props) {
   return (
     <div>
       <RenderKysymys />
-      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={props.dv} onChange={handleChange} />
+      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} />
     </div>
   )
 }

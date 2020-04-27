@@ -79,7 +79,7 @@ export default function Kysely(props) {
   const TestiEventti = (event) => {
     //console.log(event.target.value)
     //   SetDummystate(event.target.value)
-    SetDummystate(event.target.value)
+    //SetDummystate(event.target.value)
 
   }
 
@@ -133,7 +133,7 @@ export default function Kysely(props) {
   return (
     <div>
       <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely} dv={dummystate} changeevent={TestiEventti} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
+        <MappaaKysymykset2 kysely={kysely}  MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
 
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
@@ -155,7 +155,7 @@ function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
                 case "Radio":
                   return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
                 case "Teksti":
-                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} df={props.changeevent} dv={props.dv} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
+                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
                 case "Skaala":
                   return (<KysymysSkaala key={index2} kysymys={kysymys} />)
                 case "Monivalinta":
