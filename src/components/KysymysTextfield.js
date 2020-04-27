@@ -16,13 +16,16 @@ export default function KysymysTextfield(props) {
   // const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
 
 
-  // const handleChange = (event) => {
+   const handleChange = (event) => {
+    
+      props.MuokkaaKyselynVastauksiaTextfield(props.kysymys, event.target.value)
+      props.df(event);
   //   console.log(event.target.value);
   //   //setValue(event.target.value);
   //   //props.df(event);
   //   //setVastaus({ ...vastaus, vastaus: event.target.value });
 
-  // };
+   };
 
   function RenderKysymys() {
     return (<div> {props.kysymys.kysymys} </div>)
@@ -30,7 +33,7 @@ export default function KysymysTextfield(props) {
   return (
     <div>
       <RenderKysymys />
-      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={props.dv} onChange={props.df} />
+      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={props.dv} onChange={handleChange} />
     </div>
   )
 }

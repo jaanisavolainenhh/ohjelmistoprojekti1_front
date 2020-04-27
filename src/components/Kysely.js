@@ -98,13 +98,33 @@ export default function Kysely(props) {
         //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
-          let loopvastaukset = [kysymyksenvastaus];
+          let loopvastaukset = [{vastaus: kysymyksenvastaus.vaihtoehto}];
           kysymysloop.vastaus = loopvastaukset;
           console.log("löytyi!")
         }
       })
     })
+    setKysely(muokattavakysely);
+  }
 
+  function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus)
+  {
+
+    console.log(kysymyksenvastaus)
+    let muokattavakysely = kysely;
+
+    muokattavakysely.map((tulos, index) => {
+      tulos.kysymykset.map((kysymysloop, index2) => {
+        console.log(kysymysloop)
+        //console.log(kysymys.)
+        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
+        {
+          let loopvastaukset = [{vastaus: kysymyksenvastaus}];
+          kysymysloop.vastaus = loopvastaukset;
+          console.log("löytyi!")
+        }
+      })
+    })
     setKysely(muokattavakysely);
 
   }
@@ -115,14 +135,13 @@ export default function Kysely(props) {
   return (
     <div>
       <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely} dv={dummystate} changeevent={TestiEventti} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
+        <MappaaKysymykset2 kysely={kysely} dv={dummystate} changeevent={TestiEventti} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
 
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
       </FormControl>
     </div>
   )
-
 }
 
 
@@ -138,7 +157,7 @@ function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
                 case "Radio":
                   return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
                 case "Teksti":
-                  return (<KysymysTextfield df={props.changeevent} dv={props.dv} kysymys={kysymys} />)
+                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} df={props.changeevent} dv={props.dv} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
                 case "Skaala":
                   return (<KysymysSkaala key={index2} kysymys={kysymys} />)
                 case "Monivalinta":

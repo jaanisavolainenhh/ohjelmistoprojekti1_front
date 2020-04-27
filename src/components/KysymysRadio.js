@@ -24,8 +24,6 @@ export default function KysymysRadio(props) {
       if(i.vaihtoehto == event.target.value)
       {
         props.MuokkaaKyselynVastauksia(props.kysymys, i);
-
-        //console.log("Löydettiin oikea "+ event.target.value)
       }
     })
     console.log(event.target.value)
