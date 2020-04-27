@@ -155,6 +155,7 @@ export default function Kysymys(props) {
   }
   return (
     <div>
+      TÄTÄ COMPOA EI PITÄISI NYT KÄYTTÄÄ MISSÄÄN , SOO SOO
       <RenderKysymys />
       {/* <SelectCorrectCompo  key="selectCompo"/> */}
       <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} />
