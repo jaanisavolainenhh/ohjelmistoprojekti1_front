@@ -12,24 +12,17 @@ import Checkbox from '@material-ui/core/Checkbox';
 export default function KysymysTextfield(props) {
 
 
-  const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-  const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
+  // const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
+  // const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
 
-  React.useEffect(() => {
-    //props.df(value);
-  }, [value])
 
-  React.useEffect(() => {
-    //setValue(props.dv);
-  }, [])
+  // const handleChange = (event) => {
+  //   console.log(event.target.value);
+  //   //setValue(event.target.value);
+  //   //props.df(event);
+  //   //setVastaus({ ...vastaus, vastaus: event.target.value });
 
-  const handleChange = (event) => {
-    console.log(event.target.value);
-    setValue(event.target.value);
-    //props.df(event);
-    //setVastaus({ ...vastaus, vastaus: event.target.value });
-
-  };
+  // };
 
   function RenderKysymys() {
     return (<div> {props.kysymys.kysymys} </div>)
