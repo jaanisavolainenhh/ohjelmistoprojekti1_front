@@ -13,13 +13,24 @@ export default function KysymysRadio(props) {
 
 
   const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-  const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
+  //const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
 
 
   const handleChange = (event) => {
-    console.log(event.target.value);
+    //console.log(event.target.value);
     setValue(event.target.value);
-    setVastaus({ ...vastaus, vastaus: event.target.value });
+    //haetaan tässä kohtaa vastaus 
+    props.kysymys.vaihtoehdot.map((i) =>{
+      if(i.vaihtoehto == event.target.value)
+      {
+        props.MuokkaaKyselynVastauksia(props.kysymys, i);
+
+        //console.log("Löydettiin oikea "+ event.target.value)
+      }
+    })
+    console.log(event.target.value)
+    //#TODO tässä kohtaa lähettää kyselyyn infon että tämä props.kysymys.kysymys_id ja vaihtoehto ID:n.
+    //setVastaus({ ...vastaus, vastaus: event.target.value });
   };
 
 
@@ -37,7 +48,8 @@ export default function KysymysRadio(props) {
     return (
       //vaihtoehdot.map((jotain, index) => {
       props.kysymys.vaihtoehdot.map((jotain, index) => {
-        return <FormControlLabel key={index} value={jotain.vaihtoehto} control={<Radio />} label={jotain.vaihtoehto} />
+        //console.log(jotain.vaihtoehto_id)
+        return <FormControlLabel key={jotain.vaihtoehto_id} id={jotain.vaihtoehto_id}  value={jotain.vaihtoehto} control={<Radio />} label={jotain.vaihtoehto} />
       })
 
     )
@@ -47,6 +59,9 @@ export default function KysymysRadio(props) {
   function RenderKysymys() {
     return (<div> {props.kysymys.kysymys} </div>)
   }
+
+
+  
   return (
     <div>
       <RenderKysymys />

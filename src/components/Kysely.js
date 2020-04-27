@@ -63,7 +63,14 @@ export default function Kysely(props) {
   }
 
   function JaaninUseEffecti() {
-    fetch(props.urlit + 'kyselyt')
+    console.log(props.urlit + 'kyselyt')
+    fetch(props.urlit + 'kyselyt', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      }
+    })
       .then(response => response.json())
       .then(res => {
         setKysely(res)
@@ -72,44 +79,35 @@ export default function Kysely(props) {
   }
 
   const TestiEventti = (event) => {
-   //console.log(event.target.value)
-//   SetDummystate(event.target.value)
-   SetDummystate(event.target.value)
+    //console.log(event.target.value)
+    //   SetDummystate(event.target.value)
+    SetDummystate(event.target.value)
 
   }
 
-  function MappaaKysymykset() { //miks helvetissä nää ei toimi ## EI TOIMI koska tää on Kysely componentin sisällä, ja kun se rerenderaantuu niin nää on uusia. Korjattu siirtämällä tää Kyselyn ulkopuolelle, tiedoston loppuun.
-    return (
-      <div key="MapatutKysymykset">
+
+
+  function MuokkaaKyselynVastauksia(kysymys, kysymyksenvastaus) //palautetaan kysymyksenvastauksessa suoraan olio.
+  {
+    console.log(kysymyksenvastaus)
+    let muokattavakysely = kysely;
+
+    muokattavakysely.map((tulos, index) => {
+      tulos.kysymykset.map((kysymysloop, index2) => {
+        console.log(kysymysloop)
+        //console.log(kysymys.)
+        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
-          kysely.map((tulos, index) => {
-            return (
-              tulos.kysymykset.map((kysymys, index2) => {
-                switch (kysymys.tyyppi) {
-
-                  case "Radio":
-                    return (<KysymysRadio key={index2} kysymys={kysymys} />)
-                  case "Teksti":
-                    return (<KysymysTextfield df={TestiEventti} dv={dummystate} key={index2} kysymys={kysymys} />)
-                  case "Skaala":
-                    return (<KysymysSkaala key={index2} kysymys={kysymys} />)
-                  case "Monivalinta":
-                    return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
-                  default:
-                    return (<div> Default </div>)
-                }
-                // <KysymysTextfield key={index2} kysymys={kysymys} />
-
-              })
-
-            )
-          })
+          let loopvastaukset = [kysymyksenvastaus];
+          kysymysloop.vastaus = loopvastaukset;
+          console.log("löytyi!")
         }
-      </div>
-    )
+      })
+    })
+
+    setKysely(muokattavakysely);
+
   }
-
-
 
   // Returns "question" as fetch result, radio with 2 options and button to post value of the answer
   //Mappaakysymykset2 pitää syöttää proppeina kaikki funkkarit joita tarvitaan lopullisen kyselyn täyttämiseen. 
@@ -117,7 +115,7 @@ export default function Kysely(props) {
   return (
     <div>
       <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely} dv={dummystate} changeevent={TestiEventti} />
+        <MappaaKysymykset2 kysely={kysely} dv={dummystate} changeevent={TestiEventti} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
 
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
@@ -138,7 +136,7 @@ function MappaaKysymykset2(props) { //miks helvetissä nää ei toimi
               switch (kysymys.tyyppi) {
 
                 case "Radio":
-                  return (<KysymysRadio kysymys={kysymys} />)
+                  return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
                 case "Teksti":
                   return (<KysymysTextfield df={props.changeevent} dv={props.dv} kysymys={kysymys} />)
                 case "Skaala":
