@@ -11,13 +11,11 @@ import KysymysMonivalinta from './KysymysMonivalinta'
 
 export default function Kysely(props) {
 
-  const [kysely, setKysely] = React.useState([{ kysymykset: [] }]);
-  //const [kysymys, setKysymys] = React.useState([]);    // Käytetään kysymyksen esittämiseen.
+  const [kysely, setKysely] = React.useState([]);
+
   //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
   //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-  const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
   const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
-  //Snackbariin statet
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState('')
   React.useEffect(() => {
@@ -27,18 +25,18 @@ export default function Kysely(props) {
 
   function postAnswer() { //Tätä pitää muokata että lähettää kysely olion eikä vastaus oliota
     try {
-      fetch(props.urlit + 'palautakysymys', {
+      fetch(props.urlit + 'kyselyt', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-type': 'application/json'
         },
-        body: JSON.stringify(vastaus)
+        body: JSON.stringify(kysely[0])
       })
         .catch(err => console.error(err));
       setmsg("Vastaus lähetetty!");
       setOpen(true);
-      //console.log(JSON.stringify(vastaus));
+      console.log(JSON.stringify(kysely[0]));
     } catch (e) {
       setOpen(true);
       setmsg("Lähettäminen epäonnistui!");
