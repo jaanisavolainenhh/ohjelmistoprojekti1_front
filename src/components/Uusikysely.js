@@ -176,29 +176,24 @@ export default function Uusikysely(props) {
             </div>)
     }
 
-    function poistaVaihtoehto(Vaihtoehto, Olio) {
-        //console.log(Olio + " " + Vaihtoehto)
+
+    function poistaKysymys(Olio ) {
         let temp = { kyselynKysymykset }.kyselynKysymykset;
-        console.log(temp);
-        console.log(temp[Olio])
-        console.log(temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)])
-        temp[parseInt(Olio)].vaihtoehdot.splice(Vaihtoehto, 1);
-        // delete    temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)];
-        console.log(temp[Olio])
+        temp.splice(Olio, 1);
         setKyselynKysymykset(temp);
-        //setTestaus({testaus}*-1);
         forceUpdate2()
-        //kyselynKysymykset[parseInt(olio)].kysmykset[parseInt(Vaihtoehto)]
     }
 
-    function lel(e, c) {
-        console.log(e + " " + c)
+
+    function poistaVaihtoehto(Vaihtoehto, Olio) {
+        let temp = { kyselynKysymykset }.kyselynKysymykset;
+        temp[parseInt(Olio)].vaihtoehdot.splice(Vaihtoehto, 1);
+        console.log(temp);
+        setKyselynKysymykset(temp);
+        forceUpdate2()
     }
 
-    function toinenTesti(props) {
-        setTestaus({ testaus } + 1)
-        console.log(props.paska)
-    }
+
     //<Button onClick={poistaVaihtoehto.bind(this,{index2}.index2).bind(this, {index}.index)} color="default" startIcon={<RemoveIcon />} ></Button>
 
     // onClick={() => PoistaVaihtoehto({index}.index, {index2}.index2)} 
@@ -211,7 +206,7 @@ export default function Uusikysely(props) {
                 return (
                     <div>
                         <div >
-                            <h1> <Button color="secondary" startIcon={<RemoveIcon />}></Button> {kysymys.kysymys} </h1>
+                            <h1> <Button onClick={poistaKysymys.bind(this, { index }.index)} color="secondary" startIcon={<RemoveIcon />}></Button> {kysymys.kysymys} </h1>
                         </div>
                         {
                             kysymys.vaihtoehdot.map((vaihtoehto, index2) => {
