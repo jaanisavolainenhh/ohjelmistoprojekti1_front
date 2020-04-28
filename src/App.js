@@ -7,6 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
           <Link to="/">Kysely</Link>{' '}
           <Link to="/vastaukset">Vastaukset</Link>{' '}
           <Link to="/uusikysely">Uusi kysely</Link>{' '}
+          <Link to="/tarkastelu">Tarkastelu</Link>{' '}
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
@@ -44,6 +46,8 @@ function App() {
               render={(props) => <Vastaus {...props} urlit={urlit}  />} />
               <Route exact path="/uusikysely"
               render={(props) => <Uusikysely {...props} urlit={urlit}  />} />
+                    <Route exact path="/tarkastelu"
+              render={(props) => <AdminTarkasteluSivu {...props} urlit={urlit}  />} />
           </Switch>
         </div>
       </Router>

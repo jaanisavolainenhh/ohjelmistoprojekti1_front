@@ -1,162 +1,114 @@
 
 import React from 'react';
-import FormControl from '@material-ui/core/FormControl';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import Kysymys from './Kysymys';
-import KysymysTextfield from './KysymysTextfield'
-import KysymysRadio from './KysymysRadio'
-import KysymysSkaala from './KysymysSkaala'
-import KysymysMonivalinta from './KysymysMonivalinta'
 
 export default function AdminTarkasteluSivu(props) {
 
-  const [kysely, setKysely] = React.useState([]);
+    const [kysely, setKysely] = React.useState();
 
-  //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
-  //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-  const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
-  const [open, setOpen] = React.useState(false);
-  const [msg, setmsg] = React.useState('')
-  React.useEffect(() => {
-    JaaninUseEffecti();
-  }, [])
+    //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
+    //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
 
+    const [open, setOpen] = React.useState(false);
+    const [msg, setmsg] = React.useState('')
+    React.useEffect(() => {
+        JaaninUseEffecti();
+    }, [])
 
-  function postAnswer() { //Tätä pitää muokata että lähettää kysely olion eikä vastaus oliota
-    try {
-      fetch(props.urlit + 'kyselyt', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify(kysely[0])
-      })
-        .catch(err => console.error(err));
-      setmsg("Vastaus lähetetty!");
-      setOpen(true);
-      console.log(JSON.stringify(kysely[0]));
-    } catch (e) {
-      setOpen(true);
-      setmsg("Lähettäminen epäonnistui!");
-      console.log(e)
-    }
-    //setValue();
-  }
-
-  const handleClose = () => {
-    setOpen(false);
-  }
-
-  function SnackBarCompo() {
-    return (
-      <Snackbar
-        open={open}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        message={msg}
-      />
-    )
-  }
-
-  function JaaninUseEffecti() {
-    console.log(props.urlit + 'kyselyt')
-    fetch(props.urlit + 'kyselyt', {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(res => {
-        setKysely(res)
-      })
-      .catch(err => console.log(err))
-  }
-
-
-  function MuokkaaKyselynVastauksia(kysymys, kysymyksenvastaus) //palautetaan kysymyksenvastauksessa suoraan olio.
-  {
-    console.log(kysymyksenvastaus)
-    let muokattavakysely = kysely;
-
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
-        console.log(kysymysloop)
-        //console.log(kysymys.)
-        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
-        {
-          let loopvastaukset = [{vastaus: kysymyksenvastaus.vaihtoehto}];
-          kysymysloop.vastaus = loopvastaukset;
-          console.log("löytyi!")
-        }
-      })
-    })
-    setKysely(muokattavakysely);
-  }
-
-  function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus)
-  {
-
-    console.log(kysymyksenvastaus)
-    let muokattavakysely = kysely;
-
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
-        console.log(kysymysloop)
-        //console.log(kysymys.)
-        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
-        {
-          let loopvastaukset = [{vastaus: kysymyksenvastaus}];
-          kysymysloop.vastaus = loopvastaukset;
-          console.log("löytyi!")
-        }
-      })
-    })
-    setKysely(muokattavakysely);
-
-  }
-
-  return (
-    <div>
-      <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely}  MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
-
-        <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
-        < SnackBarCompo />
-      </FormControl>
-    </div>
-  )
-}
-
-
-function MappaaKysymykset2(props) { 
-  return (
-    <div key="MapatutKysymykset">
-      {
-        props.kysely.map((tulos, index) => {
-          return (
-            tulos.kysymykset.map((kysymys, index2) => {
-              switch (kysymys.tyyppi) {
-
-                case "Radio":
-                  return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
-                case "Teksti":
-                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
-                case "Skaala":
-                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
-                case "Monivalinta":
-                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
-                default:
-                  return (<div> Default </div>)
-              }
-            })
-
-          )
+    function JaaninUseEffecti() {
+        console.log(props.urlit + 'kyselytadmin')
+        fetch(props.urlit + 'kyselytadmin', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            }
         })
-      }
-    </div>
-  )
+            .then(response => response.json())
+            .then(res => {
+                SorttaaData(res)
+            })
+            .catch(err => console.log(err))
+    }
+
+
+    function SorttaaData(data) { //tää näyttää nyt montako kappaletta on
+        console.log(data)
+        data.map((kysely, index) => {
+            let kyselyntulos = { kysely: "", tulokset: [] }
+            //let kyselyntulos = Array();
+            kysely.kysymykset.map((kysymys, index2) => {
+                console.log("###########")
+                let setti = new Set();
+                kysymys.vaihtoehdot.map((vaihtoehto) => {
+                    setti.add(vaihtoehto.vaihtoehto);
+                })
+                let tempcount = {};
+                let numbah = { vastaukset: [] };
+                if(kysymys.tyyppi == "Radio")
+                {
+                    setti.forEach((a) => {
+                        //numbah[a] = 0
+                        //numbah.vastaukset.push({[a]:0})
+                        //numbah.vastaukset[a] =0
+                        tempcount[a] = 0
+                    })
+                    numbah.kysymys = kysymys.kysymys;
+                    //console.log(kysymys.vastaus)
+                    kysymys.vastaus.map((kys, index3) => {
+                        tempcount[kys.vastaus] = tempcount[kys.vastaus] + 1
+                        // numbah[kys.vastaus] = numbah[kys.vastaus]+1;
+                        //numbah.vastaukset[kys.vastaus] = numbah.vastaukset[kys.vastaus]+1
+                    })
+                    console.log("Numbah: ")
+                    console.log(numbah)
+                    //console.log(numbah.vastaukset.length)
+                    console.log(Object.keys(tempcount))
+                    Object.keys(tempcount).forEach((looper) => {
+                        //numbah.vastaukset.push({ [looper]: tempcount[looper] })
+                        let uusstring = [looper]+": "+tempcount[looper]
+                        numbah.vastaukset.push(uusstring);
+
+                    }
+                    )
+                    console.log("Numbah: ")
+                    console.log(numbah)
+                    kyselyntulos.tulokset.push(numbah)
+                }
+
+                if(kysymys.tyyppi == "Teksti")
+                {
+                    setti.forEach((a) => {
+                        tempcount[a] = 0
+                    })
+                    numbah.kysymys = kysymys.kysymys;
+                    kysymys.vastaus.map((kys, index3) => {
+                          numbah.vastaukset.push(kys.vastaus)
+                    })
+                    kyselyntulos.tulokset.push(numbah)
+
+                }
+
+
+            })
+            console.log("@@@@@@@")
+            console.log(kyselyntulos)
+            setKysely(kyselyntulos)
+        }
+
+        )
+    }
+
+
+
+
+
+
+
+    return (
+        <div>
+
+        </div>
+    )
 }
+
+
