@@ -102,22 +102,34 @@ export default function AdminTarkasteluSivu(props) {
     function SorttaaDataSessioittain(data) { //tästä puuttuu vielä pairaus kysymykseen
         let kaikkiKyselyt = [];
         data.map((kysely, index) => {
-            let sessiot = Array();
+     
             kysely.sessioidt.map((sessio) => {
+                let kysymys_F = {vastaukset : []};
+                let sessiot = Array();
                 sessiot.push(sessio.id)
+                kysymys_F.sessio = sessio.id
                 console.log("####")
                 console.log("Sessio: "+sessio.id)
                 kysely.kysymykset.map((kysymys) => {
+                    let kysvas = kysymys.kysymys+" ";
                     kysymys.vastaus.map((vastaus) =>{
                         //console.log(vastaus)
                         if(sessio.id == vastaus.sessioid)
+                        {
+                            kysvas = kysvas+vastaus.vastaus
+                            //kysymys_F.vastaukset.push(kysvas) //tää jos halutaa yhessä tringissä kysymys ja vastaus
+                            kysymys_F.vastaukset.push({[kysymys.kysymys]: vastaus.vastaus}) //tää jos halutaan objetkissa, voidaan sitten key valuella extractaa
+
                             console.log(vastaus.vastaus)
+                        
+                        }
                     })
 
                 })
+                console.log(sessiot)
+                console.log(kysymys_F)
 
             })
-            console.log(sessiot)
         })
 
     }
