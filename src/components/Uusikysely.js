@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 export default function Uusikysely(props) {
     //kysely
     //const [valmisKysely, setValmiskysely] = React.useState({name: 'kyselyn nimi', kysymykset:[]});
-    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{kysymys: "uusiKysymys", vaihtoehdot: ["123","234","tosipitkäteksti"], tyyppi: "Radio"}]); // Tähän listana kaikki kyselyyn tulevat kysymykset
+    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
     const [kyselynNimi, setKyselynnimi] = React.useState('je ejee kysssäri');
 
     //lisättävän kysymyksen tietoa
@@ -35,6 +35,9 @@ export default function Uusikysely(props) {
     const [kysymyksenTyyppi, setKysymyksentyyppi] = React.useState("10"); //textfield, radio blabla, bindaa vetovalikkoon
     //uusi vaihtoehto kysymykseen
     const [uusiVaihtoehto, setUusivaihtoehto] = React.useState("");
+
+    const [testaus, setTestaus] = React.useState(0);
+    const [, forceUpdate2] = React.useReducer(x => x + 1, 0);  // Tämä triggeraa rerenderin Buttonin OnClickissä koska siinä on nyt custombindi
 
     const [open, setOpen] = React.useState(false);
     const [msg, setmsg] = React.useState('')
@@ -173,21 +176,32 @@ export default function Uusikysely(props) {
             </div>)
     }
 
-    const PoistaVaihtoehto = (Olio, Vaihtoehto) => {
-        console.log(Olio + " " + Vaihtoehto)
-        let temp = {kyselynKysymykset}.kyselynKysymykset;
+    function poistaVaihtoehto(Vaihtoehto, Olio) {
+        //console.log(Olio + " " + Vaihtoehto)
+        let temp = { kyselynKysymykset }.kyselynKysymykset;
         console.log(temp);
         console.log(temp[Olio])
-        console.log(       temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)])
-        temp[parseInt(Olio)].vaihtoehdot.splice(Vaihtoehto,1);
-               // delete    temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)];
+        console.log(temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)])
+        temp[parseInt(Olio)].vaihtoehdot.splice(Vaihtoehto, 1);
+        // delete    temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)];
         console.log(temp[Olio])
         setKyselynKysymykset(temp);
-
-        
+        //setTestaus({testaus}*-1);
+        forceUpdate2()
         //kyselynKysymykset[parseInt(olio)].kysmykset[parseInt(Vaihtoehto)]
     }
 
+    function lel(e, c) {
+        console.log(e + " " + c)
+    }
+
+    function toinenTesti(props) {
+        setTestaus({ testaus } + 1)
+        console.log(props.paska)
+    }
+    //<Button onClick={poistaVaihtoehto.bind(this,{index2}.index2).bind(this, {index}.index)} color="default" startIcon={<RemoveIcon />} ></Button>
+
+    // onClick={() => PoistaVaihtoehto({index}.index, {index2}.index2)} 
     function Kysymykset() {
         // En keksinyt vielä miten nämä olisi saanut järkevästi näkymään sivulla... ja jotenkin onnistuin saamaan ne renderöitymään vierekkäin (rivi: -kysymys -vaih -toe -hto)
         return (
@@ -202,7 +216,7 @@ export default function Uusikysely(props) {
                         {
                             kysymys.vaihtoehdot.map((vaihtoehto, index2) => {
                                 return (<div>
-                                    <Button onClick={() => PoistaVaihtoehto({index}.index, {index2}.index2)} color="default" olio="saatana" value="perkele"  startIcon={<RemoveIcon />} ></Button>
+                                    <Button onClick={poistaVaihtoehto.bind(this, { index2 }.index2).bind(this, { index }.index)} color="default" startIcon={<RemoveIcon />} ></Button>
                                     {vaihtoehto}
                                 </div>)
                             })
