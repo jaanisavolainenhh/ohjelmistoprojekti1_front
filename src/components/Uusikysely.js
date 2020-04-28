@@ -26,13 +26,13 @@ const useStyles = makeStyles(theme => ({
 export default function Uusikysely(props) {
     //kysely
     //const [valmisKysely, setValmiskysely] = React.useState({name: 'kyselyn nimi', kysymykset:[]});
-    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([]); // Tähän listana kaikki kyselyyn tulevat kysymykset
+    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{kysymys: "uusiKysymys", vaihtoehdot: ["123","234","tosipitkäteksti"], tyyppi: "Radio"}]); // Tähän listana kaikki kyselyyn tulevat kysymykset
     const [kyselynNimi, setKyselynnimi] = React.useState('je ejee kysssäri');
- 
+
     //lisättävän kysymyksen tietoa
     const [uusiKysymys, setUusikysymys] = React.useState(""); //tallennetaan nykyisen luotavan kysymyksen vaihtoehdot
     const [kysymyksenVaihtoehdot, setKysymyksenVaihtoehdot] = React.useState([]); //lisättävän kysymyksen vaihtoehdot
-    const [kysymyksenTyyppi, setKysymyksentyyppi] = React.useState(""); //textfield, radio blabla, bindaa vetovalikkoon
+    const [kysymyksenTyyppi, setKysymyksentyyppi] = React.useState("10"); //textfield, radio blabla, bindaa vetovalikkoon
     //uusi vaihtoehto kysymykseen
     const [uusiVaihtoehto, setUusivaihtoehto] = React.useState("");
 
@@ -41,30 +41,30 @@ export default function Uusikysely(props) {
     const classes = useStyles();
 
     function postUusikysely() { //Tätä pitää muokata että lähettää kysely olion eikä vastaus oliota
-        console.log({kyselynNimi}.kyselynNimi)
+        console.log({ kyselynNimi }.kyselynNimi)
         //let kysNimi = {kyselynNimi};
-        let postattavaKysely = {name: {kyselynNimi}.kyselynNimi, kysymykset: {kyselynKysymykset}.kyselynKysymykset}
+        let postattavaKysely = { name: { kyselynNimi }.kyselynNimi, kysymykset: { kyselynKysymykset }.kyselynKysymykset }
 
         try {
-          fetch(props.urlit + 'tallennauusikysely', {
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-type': 'application/json'
-            },
-            body: JSON.stringify(postattavaKysely)
-          })
-            .catch(err => console.error(err));
-          setmsg("Vastaus lähetetty!");
-          setOpen(true);
-          console.log(JSON.stringify(postattavaKysely));
+            fetch(props.urlit + 'tallennauusikysely', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(postattavaKysely)
+            })
+                .catch(err => console.error(err));
+            setmsg("Vastaus lähetetty!");
+            setOpen(true);
+            console.log(JSON.stringify(postattavaKysely));
         } catch (e) {
-          setOpen(true);
-          setmsg("Lähettäminen epäonnistui!");
-          console.log(e)
+            setOpen(true);
+            setmsg("Lähettäminen epäonnistui!");
+            console.log(e)
         }
         //setValue();
-      }
+    }
 
     const handleChangeKysymykysenTyyppi = (event) => {
         setKysymyksentyyppi(event.target.value);
@@ -162,35 +162,47 @@ export default function Uusikysely(props) {
                         value={kysymyksenTyyppi}
                         onChange={handleChangeKysymykysenTyyppi}>
 
-                        <MenuItem hidden selected value={0}>-</MenuItem>
-                        <MenuItem value={10}>Radio</MenuItem>
+                        {/* <MenuItem hidden selected value={0}>-</MenuItem> */}
+                        <MenuItem selected value={10}>Radio</MenuItem>
                         <MenuItem value={20}>Tekstikenttä</MenuItem>
                         <MenuItem value={30}>Skaala</MenuItem>
-                        <MenuItem value={40}>Monivalinta</MenuItem>
+                        <MenuItem selected value={40}>Monivalinta</MenuItem>
                     </Select>
                 </FormControl>
 
             </div>)
     }
 
+    const PoistaVaihtoehto = (Olio, Vaihtoehto) => {
+        console.log(Olio + " " + Vaihtoehto)
+        let temp = {kyselynKysymykset}.kyselynKysymykset;
+        console.log(temp);
+        console.log(temp[Olio])
+        console.log(       temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)])
+        temp[parseInt(Olio)].vaihtoehdot.splice(Vaihtoehto,1);
+               // delete    temp[parseInt(Olio)].vaihtoehdot[parseInt(Vaihtoehto)];
+        console.log(temp[Olio])
+        setKyselynKysymykset(temp);
+
+        
+        //kyselynKysymykset[parseInt(olio)].kysmykset[parseInt(Vaihtoehto)]
+    }
+
     function Kysymykset() {
         // En keksinyt vielä miten nämä olisi saanut järkevästi näkymään sivulla... ja jotenkin onnistuin saamaan ne renderöitymään vierekkäin (rivi: -kysymys -vaih -toe -hto)
         return (
-
+            //käytetään dellissä tablerowin indexiä jne
             kyselynKysymykset.map((kysymys, index) => {
 
                 return (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <table>
-                            <tr>
-                                <td><Button color="secondary" startIcon={<RemoveIcon />}></Button></td>
-                                <td>{kysymys.kysymys}</td>
-                            </tr>
-                        </table>
+                    <div>
+                        <div >
+                            <h1> <Button color="secondary" startIcon={<RemoveIcon />}></Button> {kysymys.kysymys} </h1>
+                        </div>
                         {
                             kysymys.vaihtoehdot.map((vaihtoehto, index2) => {
                                 return (<div>
-                                    <Button color="default" startIcon={<RemoveIcon />} ></Button>
+                                    <Button onClick={() => PoistaVaihtoehto({index}.index, {index2}.index2)} color="default" olio="saatana" value="perkele"  startIcon={<RemoveIcon />} ></Button>
                                     {vaihtoehto}
                                 </div>)
                             })

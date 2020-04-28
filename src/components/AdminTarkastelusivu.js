@@ -9,7 +9,7 @@ import KysymysRadio from './KysymysRadio'
 import KysymysSkaala from './KysymysSkaala'
 import KysymysMonivalinta from './KysymysMonivalinta'
 
-export default function Kysely(props) {
+export default function AdminTarkasteluSivu(props) {
 
   const [kysely, setKysely] = React.useState([]);
 
