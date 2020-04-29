@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
-
+import EditointiKompo from './components/EditointiKompo'
 function App() {
 
   //passataan tää propsinsa niin voidaan käyttää ilman 30 eri paikan muokkaamista. Ehkä joku global variable tms
@@ -36,6 +36,7 @@ function App() {
           <Link to="/vastaukset">Vastaukset</Link>{' '}
           <Link to="/uusikysely">Uusi kysely</Link>{' '}
           <Link to="/tarkastelu">Tarkastelu</Link>{' '}
+          <Link to="/kyselynmuokkaus">Tarkastelu</Link>{' '}
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
@@ -48,6 +49,8 @@ function App() {
               render={(props) => <Uusikysely {...props} urlit={urlit}  />} />
                     <Route exact path="/tarkastelu"
               render={(props) => <AdminTarkasteluSivu {...props} urlit={urlit}  />} />
+                        <Route exact path="/kyselynmuokkaus"
+              render={(props) => <EditointiKompo {...props} urlit={urlit}  />} />
           </Switch>
         </div>
       </Router>
