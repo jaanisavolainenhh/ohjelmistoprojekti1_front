@@ -20,8 +20,62 @@ export default function EditointiKompo() {
     const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }, { kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
     //const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
     const [kyselynNimi, setKyselynnimi] = React.useState('je ejee kysssäri');
-
+    const [kyselynID, setKyselynID] = React.useState("-1")
     const [, forceUpdate2] = React.useReducer(x => x + 1, 0);  // Tämä triggeraa rerenderin Buttonin OnClickissä koska siinä on nyt custombindi
+
+    React.useEffect(() => {
+        JaaninUseEffecti();
+    }, [])
+
+    function JaaninUseEffecti() {
+        fetch('https://salenpalikatback.herokuapp.com/kyselyt', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(res => {
+                console.log(res[0].kysymykset)
+                setKyselynID(res[0].kysely_id)
+                setKyselynKysymykset(res[0].kysymykset)
+            })
+            .catch(err => console.log(err))
+    }
+
+
+
+    function TallennaKysely() {
+
+        console.log({ kyselynNimi }.kyselynNimi)
+        //let kysNimi = {kyselynNimi}; 
+        let postattavaKysely = { kysely_id: { kyselynID }.kyselynID, name: { kyselynNimi }.kyselynNimi, kysymykset: { kyselynKysymykset }.kyselynKysymykset }
+        console.log(JSON.stringify(postattavaKysely))
+        //return;
+
+        try {
+            fetch('https://salenpalikatback.herokuapp.com/kysely/'+{kyselynID}.kyselynID, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(postattavaKysely)
+            })
+                .catch(err => console.error(err));
+            setmsg("Vastaus lähetetty!");
+            setOpen(true);
+            //console.log(JSON.stringify(postattavaKysely));
+        } catch (e) {
+            setOpen(true);
+            setmsg("Lähettäminen epäonnistui!");
+            console.log(e)
+        }
+        //setValue();
+
+    }
+
     const handleClose = () => {
         console.log("sulkeudu paska");
         setOpen(false);
@@ -29,7 +83,7 @@ export default function EditointiKompo() {
     //    <Button onClick={poistaVaihtoehto.bind(this, { index2 }.index2).bind(this, { index }.index)} color="default" startIcon={<RemoveIcon />} ></Button>
     function onChangeText(e, c) {
         let uusi = kyselynKysymykset;
-        uusi[c.row.original.olio].vaihtoehdot[c.row.index] = e.target.value;
+        uusi[c.row.original.olio].vaihtoehdot[c.row.index] = { vaihtoehto: e.target.value };
         setKyselynKysymykset(uusi);
         forceUpdate2();
     }
@@ -49,6 +103,14 @@ export default function EditointiKompo() {
 
     }
 
+    function VaihdaKysymyksenTyyppi(e,row)
+    {
+        let temp = { kyselynKysymykset }.kyselynKysymykset
+        temp[row].tyyppi = e.target.value;
+        forceUpdate2();
+
+    }
+
     function VaihdaKysymyksenNimi(e, row) {
         let temp = { kyselynKysymykset }.kyselynKysymykset
         temp[row].kysymys = e.target.value;
@@ -57,30 +119,25 @@ export default function EditointiKompo() {
 
     function LisaaVaihtoehto(row) {
         let temp = { kyselynKysymykset }.kyselynKysymykset;
-        temp[row].vaihtoehdot.push("")
+        temp[row].vaihtoehdot.push({ vaihtoehto: "" })
         setKyselynKysymykset(temp);
         console.log(temp[row].vaihtoehdot)
         forceUpdate2();
         console.log("hei")
     }
 
-    function LisaaKysymys()
-    {
-        setKyselynKysymykset([...kyselynKysymykset, { kysymys: "", vaihtoehdot: [], tyyppi: "Radio" }])
+    function LisaaKysymys() {
+        setKyselynKysymykset([...kyselynKysymykset, { kysymys: "", vaihtoehdot: [{ vaihtoehto: "" }], tyyppi: "Radio" }])
     }
 
 
     return (
         <div>
-            <br></br>
-            <br></br>
-            <br></br>
-            <RenderaaKysymys key="lol" onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} VaihdaKysymyksenNimi={VaihdaKysymyksenNimi} LisaaVaihtoehto={LisaaVaihtoehto} PoistaKysymys={PoistaKysymys} />
-            <br></br>
-            <br></br>
-            <br></br>
-            <Button variant="contained" onClick={LisaaKysymys}>Lisää kysymys</Button>
 
+            <br></br>
+            <Button variant="contained" onClick={TallennaKysely}>Tallenna Kysely</Button>
+            <RenderaaKysymys key="lol" onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} VaihdaKysymyksenNimi={VaihdaKysymyksenNimi} LisaaVaihtoehto={LisaaVaihtoehto} PoistaKysymys={PoistaKysymys} VaihdaKysymyksenTyyppi={VaihdaKysymyksenTyyppi} />
+            <Button variant="contained" onClick={LisaaKysymys}>Lisää kysymys</Button>
             <Snackbar
                 open={open}
                 autoHideDuration={3000}
@@ -125,7 +182,7 @@ function RenderaaKysymys(props) {
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                     // onChangeText={text => onChangeText(text)}
                     onChange={b => props.onChangeText(b, { row })} //tää lisää nyt  uuden parametrin, toinen ja ehkä fiksumpi tapa?
-                    value={row.original.vaihtoehto}
+                    value={row.original.vaihtoehto.vaihtoehto}
                     key={row.index}
                 />)
         },
@@ -137,11 +194,18 @@ function RenderaaKysymys(props) {
         }
     ]
 
+    function vetovaihto(e,i) {
+        console.log(e.target.value)
+        console.log(i)
+        props.VaihdaKysymyksenTyyppi(e,i)
+    }
+
+
 
     return (
         props.kyselynKysymykset.map((kys, index) => {
             let tempdata = Array();
-
+            console.log(kys.tyyppi)
             kys.vaihtoehdot.map((loope, index2) => {
                 tempdata.push({ olio: { index }.index, vaihtoehto: { loope }.loope })
             })
@@ -161,13 +225,13 @@ function RenderaaKysymys(props) {
                             <Select
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
-                            //value={kysymyksenTyyppi}
-                            //onChange={handleChangeKysymykysenTyyppi}
+                                value={kys.tyyppi}
+                                onChange={b => vetovaihto(b, {index}.index)}
                             >
-                                <MenuItem selected value={10}>Radio</MenuItem>
-                                <MenuItem value={20}>Tekstikenttä</MenuItem>
-                                <MenuItem value={30}>Skaala</MenuItem>
-                                <MenuItem selected value={40}>Monivalinta</MenuItem>
+                                <MenuItem selected value="Radio">Radio</MenuItem>
+                                <MenuItem value="Teksti">Tekstikenttä</MenuItem>
+                                <MenuItem value="Skaala">Skaala</MenuItem>
+                                <MenuItem selected value="Monivalinta">Monivalinta</MenuItem>
                             </Select>
                         </FormControl>
                     </div>

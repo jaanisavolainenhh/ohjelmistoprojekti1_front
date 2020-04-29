@@ -36,7 +36,7 @@ function App() {
           <Link to="/vastaukset">Vastaukset</Link>{' '}
           <Link to="/uusikysely">Uusi kysely</Link>{' '}
           <Link to="/tarkastelu">Tarkastelu</Link>{' '}
-          <Link to="/kyselynmuokkaus">Tarkastelu</Link>{' '}
+          <Link to="/kyselynmuokkaus">En  muokkaa</Link>{' '}
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
