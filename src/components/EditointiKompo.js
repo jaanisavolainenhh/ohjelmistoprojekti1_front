@@ -24,6 +24,8 @@ export default function EditointiKompo() {
     const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
     const [kyselynNimi, setKyselynnimi] = React.useState('je ejee kysssäri');
 
+    const [, forceUpdate2] = React.useReducer(x => x + 1, 0);  // Tämä triggeraa rerenderin Buttonin OnClickissä koska siinä on nyt custombindi
+
 
     const useStyles = makeStyles(theme => ({
         formControl: {
@@ -46,16 +48,23 @@ export default function EditointiKompo() {
         setOpen(false);
     }
 
+
+    function wtf(e)
+    {
+
+    }
+
     const columns = [
 
         {
-            // Header: 'Mikä on lempivärisi',
+             Header: "",
+            //getHeaderProps: () =>({}),
             Cell: row => (
                 <TextField
                     style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
                    // onChangeText={text => onChangeText(text)}
-                    onChange={b => onChangeText(b,{row},{columns})} //tää lisää nyt  uuden parametrin, toinen ja ehkä fiksumpi tapa?
-                    value={row.original}
+                    onChange={b => onChangeText(b,{row})} //tää lisää nyt  uuden parametrin, toinen ja ehkä fiksumpi tapa?
+                    value={row.original.vaihtoehto}
                 />)
                // console.log(row.original)
         },
@@ -70,20 +79,32 @@ export default function EditointiKompo() {
 //    <Button onClick={poistaVaihtoehto.bind(this, { index2 }.index2).bind(this, { index }.index)} color="default" startIcon={<RemoveIcon />} ></Button>
 
 
-    function onChangeText(e,c,t) {
-        console.log(e)
+    function onChangeText(e,c) {
+        //console.log(e)
         console.log(e.target.value)
-        console.log(c)
-        console.log(t)
+        console.log(c.row)
+        let uusi = kyselynKysymykset;
+        console.log(c.row.original.olio)
+        console.log(uusi[c.row.original.olio])
+        uusi[c.row.original.olio].vaihtoehdot[c.row.index] = e.target.value;
+        console.log(uusi)
+        setKyselynKysymykset(uusi);
+        forceUpdate2();
     }
 
     function MuokkaaKysymysta()
     {
 
     }
-    function RenderaaKysymys() {
+    function RenderaaKysymys(props) {
         return (
             kyselynKysymykset.map((kys, index) => {
+                let tempdata = Array();
+
+                kys.vaihtoehdot.map((loope,index2)=>{
+                    tempdata.push({olio: {index}.index, vaihtoehto: {loope}.loope})
+                })
+
                 return (
                     <div>
                         <div>
@@ -110,7 +131,7 @@ export default function EditointiKompo() {
                             </FormControl>
                         </div>
                         <div style={{ width: 400, display: "inline-block" }}>
-                            <ReactTable  key={index} data={kys.vaihtoehdot} columns={columns} defaultPageSize={kys.vaihtoehdot.length} filterable={false} showPageSizeOptions={false} showPagination={false} />
+                            <ReactTable key={index} data={tempdata} columns={columns} defaultPageSize={kys.vaihtoehdot.length} filterable={false} showPageSizeOptions={false} showPagination={false} />
                             <div>
                                 <Button color="primary" size="large" >Lisää vaihtoehto </Button>
                                 <Button color="secondary" size="small" >Poista kysymys </Button>
