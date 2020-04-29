@@ -14,6 +14,9 @@ export default function AdminTarkasteluSivu(props) {
     const [kysely, setKysely] = React.useState([]);
     const [naytaSessioittain, setNaytaSessioittain] = React.useState(false);
 
+    const [sessioittainData,SetSessioittainData] = React.useState([]);
+    const [kyselyittainData, SetKyselyittainData] = React.useState([]);
+
     const [origData, setOrigdata] = React.useState([]);
     //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
     //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
@@ -39,17 +42,17 @@ export default function AdminTarkasteluSivu(props) {
             .then(response => response.json())
             .then(res => {
                 setOrigdata(res)
+                Paata(res)
             })
             .catch(err => console.log(err))
     }
 
     function Paata(data) {
-        if (naytaSessioittain) {
+       
             SorttaaDataSessioittain(data)
-        } else {
             SorttaaData(data);
         }
-    }
+    
 
 
     function SorttaaData(data) { //tää näyttää nyt montako kappaletta on
@@ -86,7 +89,6 @@ export default function AdminTarkasteluSivu(props) {
                         let uusstring = [looper] + ": " + tempcount[looper]
                         numbah.vastaukset.push(uusstring);
                     })
-
                     kyselyntulos.tulokset.push(numbah)
                 }
 
@@ -104,11 +106,10 @@ export default function AdminTarkasteluSivu(props) {
 
             })
             kaikkiKyselyt.push(kyselyntulos)
-            console.log("@@@@@@@")
+            //console.log("@@@@@@@")
             //console.log(kyselyntulos)
-            //setKysely(kyselyntulos)
         })
-        setKysely(kaikkiKyselyt)
+        SetKyselyittainData(kaikkiKyselyt)
     }
 
 
@@ -119,10 +120,11 @@ export default function AdminTarkasteluSivu(props) {
             kysely.sessioidt.map((sessio) => {
                 let kysymys_F = { vastaukset: [] };
                 let sessiot = Array();
+                kysymys_F.kysely = kysely.name
                 sessiot.push(sessio.id)
                 kysymys_F.sessio = sessio.id
-                console.log("####")
-                console.log("Sessio: " + sessio.id)
+                // console.log("####")
+                // console.log("Sessio: " + sessio.id)
                 kysely.kysymykset.map((kysymys) => {
                     let kysvas = kysymys.kysymys + " ";
                     kysymys.vastaus.map((vastaus) => {
@@ -131,20 +133,18 @@ export default function AdminTarkasteluSivu(props) {
                             kysvas = kysvas + vastaus.vastaus
                             kysymys_F.vastaukset.push(kysvas) //tää jos halutaa yhessä tringissä kysymys ja vastaus
                             // kysymys_F.vastaukset.push({ [kysymys.kysymys]: vastaus.vastaus }) //tää jos halutaan objetkissa, voidaan sitten key valuella extractaa
-
                             console.log(vastaus.vastaus)
 
                         }
                     })
 
                 })
-                console.log(sessiot)
-                console.log(kysymys_F)
-
+                // console.log(sessiot)
+                // console.log(kysymys_F)
                 kaikkiSessioittain.push(kysymys_F)
             })
         })
-        setKysely(kaikkiSessioittain)
+        SetSessioittainData(kaikkiSessioittain)
         console.log("Sortted by sessions")
     }
 
@@ -196,7 +196,7 @@ export default function AdminTarkasteluSivu(props) {
                         >
 
                             {
-                                kysely.map((sess, index) => {
+                                sessioittainData.map((sess, index) => {
                                     return (<MenuItem value={sess.sessio}>{sess.sessio}</MenuItem>)
                                 })
                             }
@@ -243,10 +243,14 @@ export default function AdminTarkasteluSivu(props) {
         return (
             <div>
                 {
-                    kysely.map((kys) => {
+                    sessioittainData.map((kys) => {
                         if (kys.sessio == sessioToShow) {
                             console.log("Matching session")
+                            console.log(kys)
                             return (
+                                <div>
+                                <h1>{kys.kysely}</h1>
+                                {
                                 kys.vastaukset.map((vas) => {
                                     //
                                     return (
@@ -256,6 +260,8 @@ export default function AdminTarkasteluSivu(props) {
                                         </div>
                                     )
                                 })
+                            }
+                            </div>
                             )
                         }
                     })
@@ -265,11 +271,36 @@ export default function AdminTarkasteluSivu(props) {
     }
 
     function NaytaKysymyksittain() {
-        wtf();
         return (
             <div>
                 {
+                    kyselyittainData.map((kys3) => {
+                        return (
+                            <div>
+                                <h1>{kys3.kysely} </h1>
+                                {
+                                    
+                                    kys3.tulokset.map((tul) => {
+                                        return (
+                                            <div>
+                                            <h2>{tul.kysymys}</h2>
+                                            {
+                                                tul.vastaukset.map((vas) =>{
+                                                    return(
+                                                    <div> {vas} </div>
+                                                    )
+                                                })
+                                            }
 
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+
+
+                        )
+                    })
                 }
             </div>
         )
@@ -277,16 +308,7 @@ export default function AdminTarkasteluSivu(props) {
     }
 
     function wtf() {
-        kysely.map((kys3) => {
-            console.log(kys3)
-            console.log(kys3.kysely)
-            console.log(kys3.tulokset)
-            if (kys3.tulokset) { //jostain syystä tää tulokset voi olla hetken veks, ehkä useeffectin takia?
-                kys3.tulokset.forEach((a) => {
 
-                })
-            }
-        })
     }
 
     return (

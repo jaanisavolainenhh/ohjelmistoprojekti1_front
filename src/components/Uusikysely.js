@@ -32,7 +32,7 @@ export default function Uusikysely(props) {
     //lisättävän kysymyksen tietoa
     const [uusiKysymys, setUusikysymys] = React.useState(""); //tallennetaan nykyisen luotavan kysymyksen vaihtoehdot
     const [kysymyksenVaihtoehdot, setKysymyksenVaihtoehdot] = React.useState([]); //lisättävän kysymyksen vaihtoehdot
-    const [kysymyksenTyyppi, setKysymyksentyyppi] = React.useState("10"); //textfield, radio blabla, bindaa vetovalikkoon
+    const [kysymyksenTyyppi, setKysymyksentyyppi] = React.useState(10); //textfield, radio blabla, bindaa vetovalikkoon
     //uusi vaihtoehto kysymykseen
     const [uusiVaihtoehto, setUusivaihtoehto] = React.useState("");
 

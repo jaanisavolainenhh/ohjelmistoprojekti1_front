@@ -15,7 +15,7 @@ export default function Kysely(props) {
 
   //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
   //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-  const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
+  //const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState('')
   React.useEffect(() => {
@@ -23,7 +23,7 @@ export default function Kysely(props) {
   }, [])
 
 
-  function postAnswer() { //Tätä pitää muokata että lähettää kysely olion eikä vastaus oliota
+  function postAnswer() { 
     try {
       fetch(props.urlit + 'kyselyt', {
         method: 'POST',
@@ -31,7 +31,7 @@ export default function Kysely(props) {
           'Accept': 'application/json',
           'Content-type': 'application/json'
         },
-        body: JSON.stringify(kysely[0])
+        body: JSON.stringify(kysely[0]) //Tässä kovakoodattu että lähettää vain ekan kyselyn
       })
         .catch(err => console.error(err));
       setmsg("Vastaus lähetetty!");
@@ -88,7 +88,7 @@ export default function Kysely(props) {
         //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
-          let loopvastaukset = [{vastaus: kysymyksenvastaus.vaihtoehto}];
+          let loopvastaukset = [{ vastaus: kysymyksenvastaus.vaihtoehto }];
           kysymysloop.vastaus = loopvastaukset;
           console.log("löytyi!")
         }
@@ -97,8 +97,7 @@ export default function Kysely(props) {
     setKysely(muokattavakysely);
   }
 
-  function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus)
-  {
+  function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus) {
 
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
@@ -109,7 +108,7 @@ export default function Kysely(props) {
         //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
-          let loopvastaukset = [{vastaus: kysymyksenvastaus}];
+          let loopvastaukset = [{ vastaus: kysymyksenvastaus }];
           kysymysloop.vastaus = loopvastaukset;
           console.log("löytyi!")
         }
@@ -122,7 +121,7 @@ export default function Kysely(props) {
   return (
     <div>
       <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely}  MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
+        <MappaaKysymykset2 kysely={kysely} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
 
         <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
@@ -132,11 +131,14 @@ export default function Kysely(props) {
 }
 
 
-function MappaaKysymykset2(props) { 
+function MappaaKysymykset2(props) {
   return (
     <div key="MapatutKysymykset">
       {
-        props.kysely.map((tulos, index) => {
+        props.kysely.map((tulos, index) => { //kovakoodattu nyt näyttämään vain ekan kysymyksen
+           if (index != 0)
+             return (<div></div>)
+
           return (
             tulos.kysymykset.map((kysymys, index2) => {
               switch (kysymys.tyyppi) {
