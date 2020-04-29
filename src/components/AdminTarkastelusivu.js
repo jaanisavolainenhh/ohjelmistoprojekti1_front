@@ -1,17 +1,30 @@
 
 import React from 'react';
+import Button from '@material-ui/core/Button';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import InputBase from '@material-ui/core/InputBase';
 
 export default function AdminTarkasteluSivu(props) {
 
-    const [kysely, setKysely] = React.useState();
-    const [naytaSessioittain, setNaytaSessioittain] = React.useState(true);
+    const [kysely, setKysely] = React.useState([]);
+    const [naytaSessioittain, setNaytaSessioittain] = React.useState(false);
 
+    const [origData, setOrigdata] = React.useState([]);
     //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
     //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
     const [open, setOpen] = React.useState(false);
     const [msg, setmsg] = React.useState('')
     React.useEffect(() => {
         JaaninUseEffecti();
+    }, [])
+
+    React.useEffect(() => {
+        Paata(origData);
     }, [naytaSessioittain])
 
     function JaaninUseEffecti() {
@@ -25,7 +38,7 @@ export default function AdminTarkasteluSivu(props) {
         })
             .then(response => response.json())
             .then(res => {
-                Paata(res)
+                setOrigdata(res)
             })
             .catch(err => console.log(err))
     }
@@ -92,7 +105,7 @@ export default function AdminTarkasteluSivu(props) {
             })
             kaikkiKyselyt.push(kyselyntulos)
             console.log("@@@@@@@")
-            console.log(kyselyntulos)
+            //console.log(kyselyntulos)
             //setKysely(kyselyntulos)
         })
         setKysely(kaikkiKyselyt)
@@ -100,28 +113,27 @@ export default function AdminTarkasteluSivu(props) {
 
 
     function SorttaaDataSessioittain(data) { //tästä puuttuu vielä pairaus kysymykseen
-        let kaikkiKyselyt = [];
+        let kaikkiSessioittain = [];
         data.map((kysely, index) => {
-     
+
             kysely.sessioidt.map((sessio) => {
-                let kysymys_F = {vastaukset : []};
+                let kysymys_F = { vastaukset: [] };
                 let sessiot = Array();
                 sessiot.push(sessio.id)
                 kysymys_F.sessio = sessio.id
                 console.log("####")
-                console.log("Sessio: "+sessio.id)
+                console.log("Sessio: " + sessio.id)
                 kysely.kysymykset.map((kysymys) => {
-                    let kysvas = kysymys.kysymys+" ";
-                    kysymys.vastaus.map((vastaus) =>{
+                    let kysvas = kysymys.kysymys + " ";
+                    kysymys.vastaus.map((vastaus) => {
                         //console.log(vastaus)
-                        if(sessio.id == vastaus.sessioid)
-                        {
-                            kysvas = kysvas+vastaus.vastaus
-                            //kysymys_F.vastaukset.push(kysvas) //tää jos halutaa yhessä tringissä kysymys ja vastaus
-                            kysymys_F.vastaukset.push({[kysymys.kysymys]: vastaus.vastaus}) //tää jos halutaan objetkissa, voidaan sitten key valuella extractaa
+                        if (sessio.id == vastaus.sessioid) {
+                            kysvas = kysvas + vastaus.vastaus
+                            kysymys_F.vastaukset.push(kysvas) //tää jos halutaa yhessä tringissä kysymys ja vastaus
+                            // kysymys_F.vastaukset.push({ [kysymys.kysymys]: vastaus.vastaus }) //tää jos halutaan objetkissa, voidaan sitten key valuella extractaa
 
                             console.log(vastaus.vastaus)
-                        
+
                         }
                     })
 
@@ -129,19 +141,159 @@ export default function AdminTarkasteluSivu(props) {
                 console.log(sessiot)
                 console.log(kysymys_F)
 
+                kaikkiSessioittain.push(kysymys_F)
             })
         })
+        setKysely(kaikkiSessioittain)
+        console.log("Sortted by sessions")
+    }
+
+
+    const useStyles = makeStyles((theme) => ({
+        button: {
+            display: 'block',
+            marginTop: theme.spacing(2),
+        },
+        formControl: {
+            margin: theme.spacing(1),
+            minWidth: 120,
+        },
+    }));
+
+
+    const classes = useStyles();
+    const [sessioToShow, setAge] = React.useState('');
+
+    const handleChange = (event) => {
+        setAge(event.target.value);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+
+    function DropdownSessioittain() {
+        if (naytaSessioittain) {
+
+            return (
+
+                <div>
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-controlled-open-select-label">Sessio</InputLabel>
+                        <Select
+                            labelId="demo-controlled-open-select-label"
+                            id="demo-controlled-open-select"
+                            open={open}
+                            onClose={handleClose}
+                            onOpen={handleOpen}
+                            value={sessioToShow}
+                            onChange={handleChange}
+                        >
+
+                            {
+                                kysely.map((sess, index) => {
+                                    return (<MenuItem value={sess.sessio}>{sess.sessio}</MenuItem>)
+                                })
+                            }
+
+                        </Select>
+                    </FormControl>
+
+                </div>
+            )
+        }
+        else
+            return (
+                <div></div>
+            )
 
     }
 
 
 
+    function Nappulateksti() {
+        if (naytaSessioittain) {
+            return <div>Sessioittain</div>
+        } else {
+            return <div>Kysymyksittäin</div>
+        }
+
+    }
+
+    function ValitseEsitystapa() {
+        if (naytaSessioittain) {
+            return NaytaValittuSessio();
+        } else {
+            return NaytaKysymyksittain();
+        }
+    }
+
+    function VaihdaFilter() {
+        setNaytaSessioittain(!naytaSessioittain)
+    }
 
 
+
+    function NaytaValittuSessio() {
+        return (
+            <div>
+                {
+                    kysely.map((kys) => {
+                        if (kys.sessio == sessioToShow) {
+                            console.log("Matching session")
+                            return (
+                                kys.vastaukset.map((vas) => {
+                                    //
+                                    return (
+                                        <div>
+                                            <br></br>
+                                            {vas}
+                                        </div>
+                                    )
+                                })
+                            )
+                        }
+                    })
+                }
+            </div>
+        )
+    }
+
+    function NaytaKysymyksittain() {
+        wtf();
+        return (
+            <div>
+                {
+
+                }
+            </div>
+        )
+
+    }
+
+    function wtf() {
+        kysely.map((kys3) => {
+            console.log(kys3)
+            console.log(kys3.kysely)
+            console.log(kys3.tulokset)
+            if (kys3.tulokset) { //jostain syystä tää tulokset voi olla hetken veks, ehkä useeffectin takia?
+                kys3.tulokset.forEach((a) => {
+
+                })
+            }
+        })
+    }
 
     return (
         <div>
-
+            <Button onClick={VaihdaFilter} variant="contained"><Nappulateksti /> </Button>
+            <DropdownSessioittain />
+            <ValitseEsitystapa />
         </div>
     )
 }
