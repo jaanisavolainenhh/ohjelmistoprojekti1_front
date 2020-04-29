@@ -12,16 +12,13 @@ import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 
-// import Addcustomer from './Addcustomer';
-// import Editcustomer from './Editcustomer';
-
 export default function EditointiKompo() {
-    const [customers, setCustomers] = React.useState([]);
-    const [trainings, setTrainings] = React.useState([]);
+
     const [open, setOpen] = React.useState(false);
     const [msg, setmsg] = React.useState('')
 
-    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" },{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
+    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }, { kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
+    //const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
     const [kyselynNimi, setKyselynnimi] = React.useState('je ejee kysssäri');
 
     const [, forceUpdate2] = React.useReducer(x => x + 1, 0);  // Tämä triggeraa rerenderin Buttonin OnClickissä koska siinä on nyt custombindi
@@ -31,41 +28,59 @@ export default function EditointiKompo() {
     }
     //    <Button onClick={poistaVaihtoehto.bind(this, { index2 }.index2).bind(this, { index }.index)} color="default" startIcon={<RemoveIcon />} ></Button>
     function onChangeText(e, c) {
-        //console.log(e)
-        console.log(e.target.value)
-        console.log(c.row)
         let uusi = kyselynKysymykset;
-        console.log(c.row.original.olio)
-        console.log(uusi[c.row.original.olio])
         uusi[c.row.original.olio].vaihtoehdot[c.row.index] = e.target.value;
-        console.log(uusi)
         setKyselynKysymykset(uusi);
         forceUpdate2();
     }
 
-function PoistaVaihtoehto(row)
-{
-    console.log("moi");
+    function PoistaVaihtoehto(row) {
+        let temp = { kyselynKysymykset }.kyselynKysymykset;
+        temp[row.row.original.olio].vaihtoehdot.splice(row.row.index, 1);
+        setKyselynKysymykset(temp);
+        forceUpdate2();
+    }
 
-    //console.log(index)
-    //return;
-    let temp = {kyselynKysymykset}.kyselynKysymykset;
-    console.log(temp)
-    console.log(temp[row.row.original.olio])
-    console.log(temp[row.row.original.olio].vaihtoehdot)
-    temp[row.row.original.olio].vaihtoehdot.splice(row.row.index,1);
-    console.log(temp)
-    setKyselynKysymykset(temp);
-    forceUpdate2();
-}
+    function PoistaKysymys(e) {
+        let temp = { kyselynKysymykset }.kyselynKysymykset;
+        temp.splice(e, 1);
+        setKyselynKysymykset(temp);
+        forceUpdate2();
+
+    }
+
+    function VaihdaKysymyksenNimi(e, row) {
+        let temp = { kyselynKysymykset }.kyselynKysymykset
+        temp[row].kysymys = e.target.value;
+        forceUpdate2();
+    }
+
+    function LisaaVaihtoehto(row) {
+        let temp = { kyselynKysymykset }.kyselynKysymykset;
+        temp[row].vaihtoehdot.push("")
+        setKyselynKysymykset(temp);
+        console.log(temp[row].vaihtoehdot)
+        forceUpdate2();
+        console.log("hei")
+    }
+
+    function LisaaKysymys()
+    {
+        setKyselynKysymykset([...kyselynKysymykset, { kysymys: "", vaihtoehdot: [], tyyppi: "Radio" }])
+    }
+
 
     return (
         <div>
             <br></br>
             <br></br>
             <br></br>
-            <RenderaaKysymys onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} />
-            {/* <Addcustomer addCustomer={addCustomer} /> */}
+            <RenderaaKysymys key="lol" onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} VaihdaKysymyksenNimi={VaihdaKysymyksenNimi} LisaaVaihtoehto={LisaaVaihtoehto} PoistaKysymys={PoistaKysymys} />
+            <br></br>
+            <br></br>
+            <br></br>
+            <Button variant="contained" onClick={LisaaKysymys}>Lisää kysymys</Button>
+
             <Snackbar
                 open={open}
                 autoHideDuration={3000}
@@ -76,8 +91,20 @@ function PoistaVaihtoehto(row)
     )
 }
 
+// ########################
 
 function RenderaaKysymys(props) {
+
+    const [pyh, setPyh] = React.useState(0);
+    const [, forceUpdate2] = React.useReducer(x => x + 1, 0);  // Tämä triggeraa rerenderin Buttonin OnClickissä koska siinä on nyt custombindi
+
+    function Vammailua(e) {
+        console.log("asdasd")
+        console.log(e)
+        props.LisaaVaihtoehto(e)
+        forceUpdate2();
+    }
+
     const useStyles = makeStyles(theme => ({
         formControl: {
             margin: theme.spacing(1),
@@ -99,15 +126,18 @@ function RenderaaKysymys(props) {
                     // onChangeText={text => onChangeText(text)}
                     onChange={b => props.onChangeText(b, { row })} //tää lisää nyt  uuden parametrin, toinen ja ehkä fiksumpi tapa?
                     value={row.original.vaihtoehto}
+                    key={row.index}
                 />)
         },
 
         {
             width: 100,
             Cell: row => (
-                <Button onClick={() => props.PoistaVaihtoehto({ row })}color="secondary" size="small" >Poista</Button>)
+                <Button onClick={() => props.PoistaVaihtoehto({ row })} color="secondary" size="small" >Poista</Button>)
         }
     ]
+
+
     return (
         props.kyselynKysymykset.map((kys, index) => {
             let tempdata = Array();
@@ -117,11 +147,11 @@ function RenderaaKysymys(props) {
             })
 
             return (
-                <div>
+                <div style={{ margin: 100 }}>
                     <div>
                         <TextField
                             style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                            //onChangeText={text => onChangeText(text)}
+                            onChange={b => props.VaihdaKysymyksenNimi(b, { index }.index)}
                             label="Kysymys"
                             value={kys.kysymys}
                         />
@@ -142,10 +172,13 @@ function RenderaaKysymys(props) {
                         </FormControl>
                     </div>
                     <div style={{ width: 400, display: "inline-block" }}>
-                        <ReactTable key={index} data={tempdata} columns={columns} defaultPageSize={kys.vaihtoehdot.length} filterable={false} showPageSizeOptions={false} showPagination={false} />
+                        <ReactTable key={index} data={tempdata} columns={columns}
+                            //defaultPageSize={kys.vaihtoehdot.length} 
+                            defaultPageSize={5}
+                            filterable={false} showPageSizeOptions={false} showPagination={false} />
                         <div>
-                            <Button color="primary" size="large" >Lisää vaihtoehto </Button>
-                            <Button color="secondary" size="small" >Poista kysymys </Button>
+                            <Button variant="contained" color="primary" size="small" onClick={() => Vammailua({ index }.index)}  >Lisää vaihtoehto </Button>
+                            <Button variant="contained" color="secondary" size="small" onClick={() => props.PoistaKysymys({ index }.index)}>Poista kysymys </Button>
 
                         </div>
                     </div>
