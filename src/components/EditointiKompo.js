@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withTheme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 
 export default function EditointiKompo() {
@@ -134,10 +134,11 @@ export default function EditointiKompo() {
     return (
         <div>
 
-            <br></br>
-            <Button variant="contained" onClick={TallennaKysely}>Tallenna Kysely</Button>
+            <br></br><br></br>
+            <h1>Muokkaa kyselyä:</h1>
             <RenderaaKysymys key="lol" onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} VaihdaKysymyksenNimi={VaihdaKysymyksenNimi} LisaaVaihtoehto={LisaaVaihtoehto} PoistaKysymys={PoistaKysymys} VaihdaKysymyksenTyyppi={VaihdaKysymyksenTyyppi} />
-            <Button variant="contained" onClick={LisaaKysymys}>Lisää kysymys</Button>
+            <Button variant="contained" onClick={LisaaKysymys} style={{marginLeft: 30}}>Lisää kysymys</Button>
+            <Button variant="contained" onClick={TallennaKysely} style={{backgroundColor : 'green', color: 'white', marginLeft: 10}}>Tallenna Kysely</Button>
             <Snackbar
                 open={open}
                 autoHideDuration={3000}
@@ -214,7 +215,7 @@ function RenderaaKysymys(props) {
                 <div style={{ margin: 100 }}>
                     <div>
                         <TextField
-                            style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                            style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingRight: 30, width: 300, marginTop: 16 }}
                             onChange={b => props.VaihdaKysymyksenNimi(b, { index }.index)}
                             label="Kysymys"
                             value={kys.kysymys}
@@ -227,6 +228,7 @@ function RenderaaKysymys(props) {
                                 id="demo-simple-select-filled"
                                 value={kys.tyyppi}
                                 onChange={b => vetovaihto(b, {index}.index)}
+                                style={{ backgroundColor: 'white'}}
                             >
                                 <MenuItem selected value="Radio">Radio</MenuItem>
                                 <MenuItem value="Teksti">Tekstikenttä</MenuItem>
@@ -235,14 +237,16 @@ function RenderaaKysymys(props) {
                             </Select>
                         </FormControl>
                     </div>
-                    <div style={{ width: 400, display: "inline-block" }}>
+                    <div style={{ width: 400, display: "inline-block", paddingTop: 30,  }}>
                         <ReactTable key={index} data={tempdata} columns={columns}
                             //defaultPageSize={kys.vaihtoehdot.length} 
                             defaultPageSize={5}
-                            filterable={false} showPageSizeOptions={false} showPagination={false} />
+                            filterable={false} showPageSizeOptions={false} showPagination={false} className="-striped -highlight" style={{border: 'none'}}/>
                         <div>
-                            <Button variant="contained" color="primary" size="small" onClick={() => Vammailua({ index }.index)}  >Lisää vaihtoehto </Button>
-                            <Button variant="contained" color="secondary" size="small" onClick={() => props.PoistaKysymys({ index }.index)}>Poista kysymys </Button>
+                            <Button variant="contained" color="primary" size="small" style={{marginTop: 25, marginRight: 10}}
+                                onClick={() => Vammailua({ index }.index)}  >Lisää vaihtoehto </Button>
+                            <Button variant="contained" color="secondary" size="small" style={{marginTop: 25}}
+                                onClick={() => props.PoistaKysymys({ index }.index)}>Poista kysymys </Button>
 
                         </div>
                     </div>
