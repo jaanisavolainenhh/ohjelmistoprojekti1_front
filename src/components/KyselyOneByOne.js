@@ -14,33 +14,36 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      width: '100%',
-    },
-    backButton: {
-      marginRight: theme.spacing(1),
-    },
-    instructions: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-  }));
+  root: {
+    width: '100%',
+  },
+  backButton: {
+    marginRight: theme.spacing(1),
+  },
+  instructions: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+}));
 
 export default function KyselyOneByOne(props) {
 
   const [kysely, setKysely] = React.useState([]);
-
-  //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
-  //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-  //const [dummystate, SetDummystate] = React.useState("DUMMYSTATE");
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState('')
+  const [kyssäri, setKyssäri] = React.useState([]);
+  const [activeStep, setActiveStep] = React.useState(0);
+  //const [dis, setDis] = React.useState(['k1','y2','s3','y4','m4','y5','s6']);  //stepper test state
+  const classes = useStyles();
+
+
   React.useEffect(() => {
     JaaninUseEffecti();
+
   }, [])
 
 
-  function postAnswer() { 
+  function postAnswer() {
     try {
       fetch(props.urlit + 'kyselyt', {
         method: 'POST',
@@ -59,7 +62,7 @@ export default function KyselyOneByOne(props) {
       setmsg("Lähettäminen epäonnistui!");
       console.log(e)
     }
-    //setValue();
+
   }
 
   const handleClose = () => {
@@ -88,6 +91,7 @@ export default function KyselyOneByOne(props) {
     })
       .then(response => response.json())
       .then(res => {
+        jotai(res)
         setKysely(res)
       })
       .catch(err => console.log(err))
@@ -135,163 +139,96 @@ export default function KyselyOneByOne(props) {
 
   }
 
+  // tekee arrayn kyselyn kysymyksistä (sis. vain kysymykset)
+  function jotai(vastauslista) {
+    console.log(vastauslista)
+    let arra = new Array();
+    vastauslista.map(kaksi => {
 
-// -------------------------------STEPPER--------------------------------------------------
-
-const [kyssäri, setKyssäri] = React.useState([]);
-const [dis, setDis] = React.useState(['k1','y2','s3','y4','m4','y5','s6']);
-
-// function getSteps() { return dis }
-// function getSteps() { console.log(varis); return ddd}
-
- function getSteps() { return kysymystaulu }  
- // antaa yhden stepin ja "arvoksi" molemmat kyssärit -> haluttaisiin kysymystaulu[0], mutta = "Cannot read property 'map' of undefined"
-
-// miten tästä saisi returnilla vain yhden taulukon (jälkimmäinen), kun nyt tulee "taulu talun sisällä"
-const kysymystaulu = kysely.map((kysely) => {
-      return kysely.kysymykset.map(kysymys => {
-    return kysymys.kysymys
-    
-  })
-}) 
-
-/*const kystaulu = kysely.kysymykset.map((kysymys) =>{
-  return kysymys.kysymys
-}) */
-
-/*
-const kystaulu = kysely.map((kyskys) =>{
-  return kyskys.kysymykset.map((kkk) =>{
-    return kkk.kysymys
-    
-  })
-})
-
-// turhaa
-function kylla(){
-  kysely.map((ky, index) => {
-    let harakka = Array();
-    ky.kysmykset.map((yk) =>{
-      harakka.push(yk.kysymys)
-      console.log(harakka)
+      kaksi.kysymykset.map(kysymys => {
+        arra.push(kysymys.kysymys)
+      })
+      console.log(arra)
+      setKyssäri(arra);
     })
-  }) 
-} */
-  
+  }
 
+  // moves to the next "step"
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
 
+  // goes to previous "step"
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
 
-/* const renderData = kysely.kysymykset.map((kysymys) => {
-   return kysymys.kysymys
-}) //ei vittu toimi näin */
-  
- 
-    const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);
-    const steps = getSteps();
+  // resets stepper back to starting point
+  const handleReset = () => {
+    setActiveStep(0);
+  };
 
-    const handleNext = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-
-      // logittelua next buttonilla
-      console.log("--Kysymystaulu map tulostaa:")
-      console.log(kysymystaulu)
-      console.log(kysymystaulu[0])
-      console.log("--Kysely state:")
-      console.log(kysely)
-      console.log(kysely[0])
-      console.log("--Kysely[0]...")
-      console.log(kysely[0].kysymykset[0].kysymys)
-      console.log(kysely[0].kysymykset[1].kysymys)
-      console.log(kysely[0].kysymykset.length) 
-    };
-  
-    const handleBack = () => {
-      setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-  
-    const handleReset = () => {
-      setActiveStep(0);
-    };
- 
-
-    function getStepContent(stepIndex) {
-      switch (stepIndex) {
-        case 0:
-          return 'kysymys 1';
-        case 1:
-          return 'kysymys 2';
-        case 2:
-          return 'finale';
-        default:
-          return 'huohuoh';
-      }
+  // antaa viestin stepperin ja buttoneiden väliin väliin, --> riippuen monesko step on aktiivinen
+  function getStepContent(stepIndex) {
+    switch (stepIndex) {
+      case 0:
+        return 'kysymys 1';
+      case 1:
+        return 'kysymys 2';
+      default:
+        return 'vieläkö...';
     }
-//--------------------------------STEPPER END--------------------------------------------------
-
+  }
 
 
   return (
-      <div>
     <div>
-      <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
-
-        <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
-        < SnackBarCompo />
-      </FormControl>
-    </div>
-    <br></br>
-
-    <p>.-.-.-.-.-.-Stepper shits below-.-.-.-.-.-.-.</p>
-
-    <br></br>
-    <div className={classes.root}>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <div>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography className={classes.instructions}>All steps completed</Typography>
-            <Button onClick={handleReset}>Reset</Button>
-          </div>
-        ) : (
-          <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+      <div className={classes.root}>
+        <Stepper activeStep={activeStep} alternativeLabel>
+          {kyssäri.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        <div>
+          {activeStep === kyssäri.length ? (
             <div>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.backButton}
-              >
-                Back
-              </Button>
-              <Button variant="contained" color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
+              <Typography className={classes.instructions}>All steps completed</Typography>
+              <Button onClick={handleReset}>Reset</Button>
             </div>
-          </div>
-        )}
+          ) : (
+              <div>
+                <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                <div>
+                  <Button
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    className={classes.backButton}
+                  >
+                    Back
+              </Button>
+                  <Button variant="contained" color="primary" onClick={handleNext}>
+                    {activeStep === kyssäri.length - 1 ? 'Finish' : 'Next'}
+                  </Button>
+                </div>
+              </div>
+            )}
+        </div>
       </div>
-    </div>
     </div>
   )
 }
 
-//----------------------------------------------------------------------------
+
 function MappaaKysymykset2(props) {
   return (
-      
+
     <div key="MapatutKysymykset">
       {
         props.kysely.map((tulos, index) => { //kovakoodattu nyt näyttämään vain ekan kysymyksen
-           if (index != 0)
-             return (<div></div>)
+          if (index != 0)
+            return (<div></div>)
 
           return (
             tulos.kysymykset.map((kysymys, index2) => {
