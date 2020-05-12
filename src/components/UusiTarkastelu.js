@@ -97,7 +97,7 @@ return (
             <YAxis dataKey="name" type="category" />
             <Tooltip />
             <Bar dataKey="uv" fill="#ff7300" maxBarSize={20} label radius={[10, 10, 10, 10]} />
-            <Bar dataKey="pv" fill="#387908" />
+           
         </BarChart>
     </div>
 )
