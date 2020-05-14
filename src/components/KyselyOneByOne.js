@@ -32,6 +32,7 @@ export default function KyselyOneByOne(props) {
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState('')
   const [kyssäri, setKyssäri] = React.useState([]);
+  const [kyssy, setKyssy] = React.useState([]);
   const [activeStep, setActiveStep] = React.useState(0);
   //const [dis, setDis] = React.useState(['k1','y2','s3','y4','m4','y5','s6']);  //stepper test state
   const classes = useStyles();
@@ -92,6 +93,7 @@ export default function KyselyOneByOne(props) {
       .then(response => response.json())
       .then(res => {
         jotai(res)
+        asiaa(res)
         setKysely(res)
       })
       .catch(err => console.log(err))
@@ -140,17 +142,33 @@ export default function KyselyOneByOne(props) {
   }
 
   // tekee arrayn kyselyn kysymyksistä (sis. vain kysymykset)
+  
   function jotai(vastauslista) {
-    console.log(vastauslista)
+    //console.log(vastauslista)
     let arra = new Array();
     vastauslista.map(kaksi => {
 
       kaksi.kysymykset.map(kysymys => {
         arra.push(kysymys.kysymys)
       })
-      console.log(arra)
+      //console.log(arra)
       setKyssäri(arra);
     })
+  }
+
+  function asiaa(kysOliot) {
+    let kot = new Array();
+    kysOliot.map(olio =>{
+
+      olio.kysymykset.map(kysymys =>{
+        kot.push(kysymys)
+      })
+      // console.log(kot)
+      // console.log(kot[0])
+      // console.log(kot[1])
+      setKyssy(kot)
+    })
+    
   }
 
   // moves to the next "step"
@@ -172,17 +190,60 @@ export default function KyselyOneByOne(props) {
   function getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
-        return 'kysymys 1';
+        return 'fuck';
       case 1:
-        return 'kysymys 2';
+        return 'no';
       default:
         return 'vieläkö...';
     }
   }
 
+  const [itku, setItku] = React.useState(0);
+  const current = kyssäri[itku];
+  const curry = kyssy
+  .map(kyssy => (
+    <div key={kyssy.kysymys_id}>
+      <div>{kyssy.kysymys}</div>
+      <div>{ (() => {
+            switch (kyssy.tyyppi){
 
+              // case "Radio":
+              //     return (<KysymysRadio kysymys={kyssy.kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
+              // case "Teksti":
+              //     return (<KysymysTextfield vastaus={kyssy.vaihtoehdot[0]} kysymys={kyssy.kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
+              // case "Skaala":
+              //      return (<KysymysSkaala key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
+              // case "Monivalinta":
+              //      return (<KysymysMonivalinta key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
+              default:
+                   return (<div> Default </div>)  
+            }
+          })()}</div>
+      <div>{
+            kyssy.vaihtoehdot.map(vaahto => {
+              return(
+              <div>{vaahto.vaihtoehto}</div>
+              )
+            })
+          }</div>
+    </div>
+  ))
+
+  // <div>{current}</div>
+  // <div>{curry[itku]}</div>
+  // <button onClick={() => {setItku(itku + 1);}}>next</button>
+ 
   return (
     <div>
+      
+      <div>{curry[itku]}</div>
+      <button onClick={() => {setItku(itku + 1);}}>next</button>
+
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+
       <div className={classes.root}>
         <Stepper activeStep={activeStep} alternativeLabel>
           {kyssäri.map((label) => (
@@ -220,6 +281,39 @@ export default function KyselyOneByOne(props) {
   )
 }
 
+
+function Mappaa(props) {
+  return (
+
+    <div key="MapatutKysymykset">
+      {
+        props.kysely.map((tulos, index) => { //kovakoodattu nyt näyttämään vain ekan kysymyksen
+          if (index != 0)
+            return (<div></div>)
+
+          return (
+            tulos.kysymykset.map((kysymys, index2) => {
+              switch (kysymys.tyyppi) {
+
+                case "Radio":
+                  return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
+                case "Teksti":
+                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
+                case "Skaala":
+                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+                case "Monivalinta":
+                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+                default:
+                  return (<div> Default </div>)
+              }
+            })
+
+          )
+        })
+      }
+    </div>
+  )
+}
 
 function MappaaKysymykset2(props) {
   return (
