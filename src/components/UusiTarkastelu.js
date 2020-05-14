@@ -7,20 +7,13 @@ import {
 
 export default function UusiTarkastelu(props) {
 
-    const [vastaukset, setVastaukset] = React.useState([]);
-
-    const [data, setData] = React.useState([
-        { name: "gym", uv: 150 },
-        { name: "jogging", uv: 120 },
-        { name: "blabla", uv: 50 },
-
-    ]);
-
+    const [data, setData] = React.useState([]);
 
     React.useEffect(() => {
         getVastaukset();
 
     }, [])
+
 
     const getVastaukset = () => {
         fetch(props.urlit + 'kyselytadmin')
@@ -28,15 +21,15 @@ export default function UusiTarkastelu(props) {
             .then(
                 data => {
 
-                    let vastaukset = new Array();
-                    let setti = new Set();
-                    let tempcount = {};
+                    let chartindatat = new Array();
 
-
-                    
                     data.map((kysely, index) => {
-                        let kyselyntulos = { kysely: kysely.name, tulokset: [] }
+
                         kysely.kysymykset.map((kysymys, index2) => {
+                            let setti = new Set();
+                            let tempcount = {};
+                            let tarkein = { kysymys: "", lista: [] }
+                            tarkein.kysymys = kysymys.kysymys;
                             console.log("###########")
 
 
@@ -44,62 +37,71 @@ export default function UusiTarkastelu(props) {
                                 setti.add(vaihtoehto.vaihtoehto);
                             })
 
-                            let numbah = { vastaukset: [] };
-                            setti.forEach((a) => {
 
-                                tempcount[a] = 0
-                            })
-                            numbah.kysymys = kysymys.kysymys;
+                            if (kysymys.tyyppi == "Radio") {
+                                setti.forEach((a) => {
 
-                            kysymys.vastaus.map((kys, index3) => {
-                                tempcount[kys.vastaus] = tempcount[kys.vastaus] + 1
-                                // numbah[kys.vastaus] = numbah[kys.vastaus]+1;
-                                //numbah.vastaukset[kys.vastaus] = numbah.vastaukset[kys.vastaus]+1
-                            })
+                                    tempcount[a] = 0
+                                })
+
+                                kysymys.vastaus.map((kys, index3) => {
+                                    tempcount[kys.vastaus] = tempcount[kys.vastaus] + 1
+                                    console.log(kys.vastaus)
+
+                                })
+                                let blaablaa = new Array;
+
+                                Object.keys(tempcount).forEach((looper) => {
 
 
+                                    blaablaa.push({
+                                        name: [looper], uv: tempcount[looper]
+                                    })
 
-                            Object.keys(tempcount).forEach((looper) => {
-                               
-                                let uusstring = [looper] + ": " + tempcount[looper]
-                                numbah.vastaukset.push(uusstring);
-                                
-                            kyselyntulos.tulokset.push(numbah)
-                            vastaukset.push({ name: looper, uv: tempcount[looper] })
+                                    tarkein.lista.push({
+                                        name: [looper], uv: tempcount[looper]
+                                    })
+                                })
+                                chartindatat.push(tarkein)
+                            }
                         })
-
-                        setData(vastaukset)
-
-
-
-                    }
-                    )
-                }
-            )
+                    })
+                    setData(chartindatat)
+                    console.log(data)
+                })
     }
-                    
-            
-            )
-}
-
-return (
 
 
-    <div className="area-chart-wrapper">
-        <BarChart
-            width={700}
-            height={400}
-            data={data}
-            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-            layout="vertical"
-        >
-            <XAxis type="number" />
-            <YAxis dataKey="name" type="category" />
-            <Tooltip />
-            <Bar dataKey="uv" fill="#ff7300" maxBarSize={20} label radius={[10, 10, 10, 10]} />
-            <Bar dataKey="pv" fill="#387908" />
-        </BarChart>
-    </div>
-)
 
-                } 
+
+    return (
+        <div>
+            {
+                data.map((blaablaa) => {
+
+                    return (
+                        <div className="area-chart-wrapper" >
+                            <h1> {blaablaa.kysymys} </h1>
+                            <BarChart
+                                width={700}
+                                height={400}
+                                data={blaablaa.lista}
+                                margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                                layout="vertical"
+                            >
+                                <XAxis type="number" />
+                                <YAxis dataKey="name" type="category" />
+                                <Tooltip />
+                                <Bar dataKey="uv" fill="#ff7300" maxBarSize={20} label radius={[10, 10, 10, 10]} />
+
+                            </BarChart>
+
+                        </div>
+                    )
+                })
+            }
+
+        </div>
+    )
+
+} 
