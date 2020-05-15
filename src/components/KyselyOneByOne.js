@@ -62,8 +62,8 @@ export default function KyselyOneByOne(props) {
       setOpen(true);
       setmsg("Lähettäminen epäonnistui!");
       console.log(e)
+      
     }
-
   }
 
   const handleClose = () => {
@@ -164,8 +164,6 @@ export default function KyselyOneByOne(props) {
         kot.push(kysymys)
       })
       // console.log(kot)
-      // console.log(kot[0])
-      // console.log(kot[1])
       setKyssy(kot)
     })
     
@@ -191,20 +189,18 @@ export default function KyselyOneByOne(props) {
   function getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
-        return 'fuck';
+        return 'much wow';
       case 1:
-        return 'no';
+        return 'pls stop';
       default:
         return 'vieläkö...';
     }
   }
 
-  const [itku, setItku] = React.useState(0); // ei käytössä enää --- activeStep määrää indeksin
-  // const current = kyssäri[itku];  // ei käytössä enää
   const curry = kyssy // päivittää vaikkei ehkä pitäisi? lol
   .map(kyssy => (
-    <div key={kyssy.kysymys_id}>
-      <div style={{display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}>{ (() => {
+    <div key={kyssy.kysymys_id}  style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}>
+      <div>{ (() => {
             switch (kyssy.tyyppi){
 
               case "Radio":

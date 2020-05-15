@@ -11,6 +11,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles, withTheme } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function EditointiKompo() {
 
@@ -132,13 +134,13 @@ export default function EditointiKompo() {
 
 
     return (
-        <div>
+        <div style={{backgroundColor: 'white', marginRight: 'auto', marginLeft: 'auto'}}>
 
             <br></br><br></br>
             <h1>Muokkaa kyselyä:</h1>
             <RenderaaKysymys key="lol" onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} VaihdaKysymyksenNimi={VaihdaKysymyksenNimi} LisaaVaihtoehto={LisaaVaihtoehto} PoistaKysymys={PoistaKysymys} VaihdaKysymyksenTyyppi={VaihdaKysymyksenTyyppi} />
-            <Button variant="contained" onClick={LisaaKysymys} style={{marginLeft: 30}}>Lisää kysymys</Button>
-            <Button variant="contained" onClick={TallennaKysely} style={{backgroundColor : 'green', color: 'white', marginLeft: 10}}>Tallenna Kysely</Button>
+            <Button variant="contained" onClick={LisaaKysymys} style={{marginLeft: 30, marginBottom: 60}}>Lisää kysymys</Button>
+            <Button variant="contained" onClick={TallennaKysely} style={{backgroundColor : 'navy', color: 'white', marginLeft: 10, marginBottom: 60}}>Tallenna Kysely</Button>
             <Snackbar
                 open={open}
                 autoHideDuration={3000}
@@ -191,7 +193,7 @@ function RenderaaKysymys(props) {
         {
             width: 100,
             Cell: row => (
-                <Button onClick={() => props.PoistaVaihtoehto({ row })} color="secondary" size="small" >Poista</Button>)
+                <IconButton onClick={() => props.PoistaVaihtoehto({ row })} color="default" size="small" ><DeleteIcon fontSize="small" /></IconButton>)
         }
     ]
 
@@ -212,7 +214,7 @@ function RenderaaKysymys(props) {
             })
 
             return (
-                <div style={{ margin: 100 }}>
+                <div style={{ margin: 100, backgroundColor: 'white' }}>
                     <div>
                         <TextField
                             style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingRight: 30, width: 300, marginTop: 16 }}
@@ -244,8 +246,8 @@ function RenderaaKysymys(props) {
                             filterable={false} showPageSizeOptions={false} showPagination={false} className="-striped -highlight" style={{border: 'none'}}/>
                         <div>
                             <Button variant="contained" color="primary" size="small" style={{marginTop: 25, marginRight: 10}}
-                                onClick={() => Vammailua({ index }.index)}  >Lisää vaihtoehto </Button>
-                            <Button variant="contained" color="secondary" size="small" style={{marginTop: 25}}
+                                onClick={() => Vammailua({ index }.index)}  >+ vaihtoehto </Button>
+                            <Button variant="contained" color="default" size="small" style={{marginTop: 25}}
                                 onClick={() => props.PoistaKysymys({ index }.index)}>Poista kysymys </Button>
 
                         </div>
