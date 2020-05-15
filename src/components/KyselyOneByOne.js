@@ -171,12 +171,12 @@ export default function KyselyOneByOne(props) {
     
   }
 
-  // moves to the next "step"
+  // moves to the next question
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  // goes to previous "step"
+  // goes to previous question
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -187,6 +187,7 @@ export default function KyselyOneByOne(props) {
   };
 
   // antaa viestin stepperin ja buttoneiden väliin väliin, --> riippuen monesko step on aktiivinen
+  // entiedä onko käyttöä meille...
   function getStepContent(stepIndex) {
     switch (stepIndex) {
       case 0:
@@ -198,34 +199,31 @@ export default function KyselyOneByOne(props) {
     }
   }
 
-  const [itku, setItku] = React.useState(0);
-  const current = kyssäri[itku];
-  const curry = kyssy
+  const [itku, setItku] = React.useState(0); // ei käytössä enää --- activeStep määrää indeksin
+  // const current = kyssäri[itku];  // ei käytössä enää
+  const curry = kyssy // päivittää vaikkei ehkä pitäisi? lol
   .map(kyssy => (
     <div key={kyssy.kysymys_id}>
-      <div>{kyssy.kysymys}</div>
-      <div>{ (() => {
+      <div style={{display: 'flex', justifyContent: 'center'}}>{ (() => {
             switch (kyssy.tyyppi){
 
-              // case "Radio":
-              //     return (<KysymysRadio kysymys={kyssy.kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
-              // case "Teksti":
-              //     return (<KysymysTextfield vastaus={kyssy.vaihtoehdot[0]} kysymys={kyssy.kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
-              // case "Skaala":
-              //      return (<KysymysSkaala key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
-              // case "Monivalinta":
-              //      return (<KysymysMonivalinta key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
+              case "Radio":
+                  return (<KysymysRadio kysymys={kyssy} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />)
+              case "Teksti":
+                  return (<KysymysTextfield vastaus={kyssy.vaihtoehdot[0]} kysymys={kyssy} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} />)
+              case "Skaala":
+                   return (<KysymysSkaala key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
+              case "Monivalinta":
+                   return (<KysymysMonivalinta key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
               default:
                    return (<div> Default </div>)  
             }
           })()}</div>
-      <div>{
+      {/* <div>{
             kyssy.vaihtoehdot.map(vaahto => {
-              return(
-              <div>{vaahto.vaihtoehto}</div>
-              )
+             
             })
-          }</div>
+          }</div> */}
     </div>
   ))
 
@@ -233,14 +231,14 @@ export default function KyselyOneByOne(props) {
   // <div>{curry[itku]}</div>
   // <button onClick={() => {setItku(itku + 1);}}>next</button>
  
+  // <div>{curry[itku]}</div>
+  // <button onClick={() => {setItku(itku + 1);}}>next</button>
+
   return (
     <div>
-      
-      <div>{curry[itku]}</div>
-      <button onClick={() => {setItku(itku + 1);}}>next</button>
 
-      <br></br>
-      <br></br>
+   
+      <div>{curry[activeStep]}</div>
       <br></br>
       <br></br>
 
@@ -248,7 +246,7 @@ export default function KyselyOneByOne(props) {
         <Stepper activeStep={activeStep} alternativeLabel>
           {kyssäri.map((label) => (
             <Step key={label}>
-              <StepLabel>{label}</StepLabel>
+              <StepLabel></StepLabel>
             </Step>
           ))}
         </Stepper>
@@ -277,73 +275,6 @@ export default function KyselyOneByOne(props) {
             )}
         </div>
       </div>
-    </div>
-  )
-}
-
-
-function Mappaa(props) {
-  return (
-
-    <div key="MapatutKysymykset">
-      {
-        props.kysely.map((tulos, index) => { //kovakoodattu nyt näyttämään vain ekan kysymyksen
-          if (index != 0)
-            return (<div></div>)
-
-          return (
-            tulos.kysymykset.map((kysymys, index2) => {
-              switch (kysymys.tyyppi) {
-
-                case "Radio":
-                  return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
-                case "Teksti":
-                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
-                case "Skaala":
-                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
-                case "Monivalinta":
-                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
-                default:
-                  return (<div> Default </div>)
-              }
-            })
-
-          )
-        })
-      }
-    </div>
-  )
-}
-
-function MappaaKysymykset2(props) {
-  return (
-
-    <div key="MapatutKysymykset">
-      {
-        props.kysely.map((tulos, index) => { //kovakoodattu nyt näyttämään vain ekan kysymyksen
-          if (index != 0)
-            return (<div></div>)
-
-          return (
-            tulos.kysymykset.map((kysymys, index2) => {
-              switch (kysymys.tyyppi) {
-
-                case "Radio":
-                  return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
-                case "Teksti":
-                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
-                case "Skaala":
-                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
-                case "Monivalinta":
-                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
-                default:
-                  return (<div> Default </div>)
-              }
-            })
-
-          )
-        })
-      }
     </div>
   )
 }
