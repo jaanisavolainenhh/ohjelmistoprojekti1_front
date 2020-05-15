@@ -204,7 +204,7 @@ export default function KyselyOneByOne(props) {
   const curry = kyssy // päivittää vaikkei ehkä pitäisi? lol
   .map(kyssy => (
     <div key={kyssy.kysymys_id}>
-      <div style={{display: 'flex', justifyContent: 'center'}}>{ (() => {
+      <div style={{display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}>{ (() => {
             switch (kyssy.tyyppi){
 
               case "Radio":
@@ -237,10 +237,7 @@ export default function KyselyOneByOne(props) {
   return (
     <div>
 
-   
       <div>{curry[activeStep]}</div>
-      <br></br>
-      <br></br>
 
       <div className={classes.root}>
         <Stepper activeStep={activeStep} alternativeLabel>
@@ -254,6 +251,7 @@ export default function KyselyOneByOne(props) {
           {activeStep === kyssäri.length ? (
             <div>
               <Typography className={classes.instructions}>All steps completed</Typography>
+              <Button variant="contained" color="primary" onClick={() => postAnswer()}>Submit</Button>
               <Button onClick={handleReset}>Reset</Button>
             </div>
           ) : (
