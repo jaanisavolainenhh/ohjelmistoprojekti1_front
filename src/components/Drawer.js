@@ -81,6 +81,9 @@ class Layout extends Component {
           <MenuItem component={Link} to="/kyselyOneByOne" selected={'/kyselyOneByOne' === pathname}>
             KyselyOneByOne
           </MenuItem>
+          <MenuItem component={Link} to="/uusitarkastelu" selected={'/uusitarkastelu' === pathname}>
+           Chartit
+          </MenuItem>
         </MenuList>
       </div>
     )

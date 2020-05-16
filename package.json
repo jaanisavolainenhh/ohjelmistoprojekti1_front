@@ -20,7 +20,9 @@
     "react-scripts": "3.4.1",
     "react-table-6": "^6.11.0",
     "react-table-v6": "^6.8.6",
-    "recompose": "^0.30.0"
+    "recharts": "^1.8.5",
+    "recompose": "^0.30.0",
+    "save": "^2.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
