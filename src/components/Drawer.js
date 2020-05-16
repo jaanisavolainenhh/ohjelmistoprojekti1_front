@@ -88,6 +88,9 @@ class Layout extends Component {
           <MenuItem component={Link} to="/kyselyOneByOne" selected={'/kyselyOneByOne' === pathname}>
             KyselyOneByOne
           </MenuItem>
+          <MenuItem component={Link} to="/uusitarkastelu" selected={'/uusitarkastelu' === pathname}>
+           Chartit
+          </MenuItem>
         </MenuList>
       </div>
     )
@@ -102,7 +105,7 @@ class Layout extends Component {
               color="inherit"
               aria-label="open drawer"
               onClick={this.handleDrawerToggle}
-              className={classes.navIconHide}>
+            >           
               <Menu />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
@@ -110,7 +113,7 @@ class Layout extends Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Hidden mdUp>
+        
           <Drawer
             variant="temporary"
             open={mobileOpen}
@@ -124,18 +127,7 @@ class Layout extends Component {
           >
             {drawer}
           </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <Drawer
-            variant="permanent"
-            open
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
+    
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {children}
