@@ -98,7 +98,7 @@ class Layout extends Component {
               color="inherit"
               aria-label="open drawer"
               onClick={this.handleDrawerToggle}
-              className={classes.navIconHide}
+
             >
               <Menu />
             </IconButton>
@@ -107,7 +107,7 @@ class Layout extends Component {
             </Typography>
           </Toolbar>
         </AppBar>
-        <Hidden mdUp>
+        
           <Drawer
             variant="temporary"
             open={mobileOpen}
@@ -121,18 +121,7 @@ class Layout extends Component {
           >
             {drawer}
           </Drawer>
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <Drawer
-            variant="permanent"
-            open
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
+    
         <main className={classes.content}>
           <div className={classes.toolbar} />
           {children}
