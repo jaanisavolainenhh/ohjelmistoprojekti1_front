@@ -8,7 +8,6 @@ import KysymysTextfield from './KysymysTextfield'
 import KysymysRadio from './KysymysRadio'
 import KysymysSkaala from './KysymysSkaala'
 import KysymysMonivalinta from './KysymysMonivalinta'
-import { Link, Redirect } from "react-router-dom";
 
 export default function Kysely(props) {
 
@@ -49,7 +48,6 @@ export default function Kysely(props) {
   const handleClose = () => {
     setOpen(false);
   }
- 
 
   function SnackBarCompo() {
     return (
@@ -61,7 +59,6 @@ export default function Kysely(props) {
       />
     )
   }
-
 
   function JaaninUseEffecti() {
     console.log(props.urlit + 'kyselyt')
@@ -126,10 +123,8 @@ export default function Kysely(props) {
       <FormControl component="fieldset">
         <MappaaKysymykset2 kysely={kysely} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
 
-        <br /><br /> <Button variant="contained" color="primary" onClick={() => postAnswer()} >Vastaa</Button>
-       
+        <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
-       
       </FormControl>
     </div>
   )

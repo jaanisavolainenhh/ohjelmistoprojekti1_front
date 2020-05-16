@@ -8,8 +8,7 @@ import Drawer from './components/Drawer';
 import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
-import EditointiKompo from './components/EditointiKompo';
-import UusiTarkastelu from './components/UusiTarkastelu';
+import EditointiKompo from './components/EditointiKompo'
 function App() {
 
   //passataan tää propsinsa niin voidaan käyttää ilman 30 eri paikan muokkaamista. Ehkä joku global variable tms
@@ -23,6 +22,7 @@ function App() {
     {/* <Kysely urlit={urlit} /> */}
 
       <Router>
+        <Drawer>
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
@@ -38,8 +38,6 @@ function App() {
               render={(props) => <AdminTarkasteluSivu {...props} urlit={urlit}  />} />
                         <Route exact path="/kyselynmuokkaus"
               render={(props) => <EditointiKompo {...props} urlit={urlit}  />} />
-               <Route exact path="/uusijuttu"
-              render={(props) => <UusiTarkastelu {...props} urlit={urlit}  />} />
           </Switch>
         </Drawer>
       </Router>
