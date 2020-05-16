@@ -28,12 +28,12 @@ export default function KysymysTextfield(props) {
    };
 
   function RenderKysymys() {
-    return (<div> {props.kysymys.kysymys} </div>)
+    return (<div> <h3 style={{marginTop: 40, marginBottom: 40}}>{props.kysymys.kysymys}</h3></div>)
   }
   return (
     <div>
-      <RenderKysymys />
-      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} />
+      <div><RenderKysymys /></div>
+      <div><TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} /></div>
     </div>
   )
 }

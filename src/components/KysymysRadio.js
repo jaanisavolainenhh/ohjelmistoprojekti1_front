@@ -55,15 +55,14 @@ export default function KysymysRadio(props) {
 
 
   function RenderKysymys() {
-    return (<div> {props.kysymys.kysymys} </div>)
+     return (<div> <h3 style={{marginTop: 40}}>{props.kysymys.kysymys} </h3></div>)
   }
 
 
-  
   return (
     <div>
-      <RenderKysymys />
-      <RadioGroupVastaus />
+     <div><RenderKysymys /></div>
+     <div style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white', marginTop: 30}}><RadioGroupVastaus /></div>
     </div>
   )
 }
