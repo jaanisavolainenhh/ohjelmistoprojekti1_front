@@ -9,6 +9,8 @@ import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
 import EditointiKompo from './components/EditointiKompo'
+import Container from '@material-ui/core/Container';
+
 function App() {
 
   //passataan tää propsinsa niin voidaan käyttää ilman 30 eri paikan muokkaamista. Ehkä joku global variable tms
@@ -17,9 +19,10 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="container">
 
     {/* <Kysely urlit={urlit} /> */}
+    <Container maxWidth="md">
 
       <Router>
         <Drawer>
@@ -41,6 +44,7 @@ function App() {
           </Switch>
         </Drawer>
       </Router>
+      </Container>
     </div>
   );
 }

@@ -134,7 +134,7 @@ export default function EditointiKompo() {
 
 
     return (
-        <div style={{backgroundColor: 'white', marginRight: 'auto', marginLeft: 'auto'}}>
+        <div /*style={{backgroundColor: 'white', marginRight: 'auto', marginLeft: 'auto'}}*/>
 
             <br></br><br></br>
             <h1>Muokkaa kyselyä:</h1>
@@ -214,7 +214,7 @@ function RenderaaKysymys(props) {
             })
 
             return (
-                <div style={{ margin: 100, backgroundColor: 'white' }}>
+                <div /*style={{ margin: 100, backgroundColor: 'white' }}*/>
                     <div>
                         <TextField
                             style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingRight: 30, width: 300, marginTop: 16 }}
@@ -230,7 +230,7 @@ function RenderaaKysymys(props) {
                                 id="demo-simple-select-filled"
                                 value={kys.tyyppi}
                                 onChange={b => vetovaihto(b, {index}.index)}
-                                style={{ backgroundColor: 'white'}}
+                                /*style={{ backgroundColor: 'white'}}*/
                             >
                                 <MenuItem selected value="Radio">Radio</MenuItem>
                                 <MenuItem value="Teksti">Tekstikenttä</MenuItem>

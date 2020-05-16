@@ -199,7 +199,7 @@ export default function KyselyOneByOne(props) {
 
   const curry = kyssy // päivittää vaikkei ehkä pitäisi? lol
   .map(kyssy => (
-    <div key={kyssy.kysymys_id}  style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}>
+    <div key={kyssy.kysymys_id} /* style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}*/>
       <div>{ (() => {
             switch (kyssy.tyyppi){
 

@@ -5,6 +5,9 @@ import { AppBar, Toolbar, IconButton, Typography, Hidden,
 import { withStyles } from '@material-ui/core/styles'
 import { Menu } from '@material-ui/icons'
 import { compose } from 'recompose'
+import red from '@material-ui/core/colors/red';
+
+const primary = red[500]; // #F44336
 
 const drawerWidth = 225
 
@@ -13,12 +16,15 @@ const styles = theme => ({
     flexGrow: 1,
     zIndex: 1,
     overflow: 'hidden',
-    position: 'relative',
+    position: 'static',
     display: 'flex',
     width: '100%',
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
+    /*width: '65%',
+    display: 'flex',
+    justifyContent: 'center',*/
   },
   navIconHide: {
     [theme.breakpoints.up('md')]: {
@@ -29,18 +35,19 @@ const styles = theme => ({
   drawerPaper: {
     width: drawerWidth,
     [theme.breakpoints.up('md')]: {
-      position: 'relative',
+    position: 'relative', // Siirtää drawerin linkit vasempaan reunaan kun tää on kommentoituna
     },
   },
   content: {
+    width: '100%',
     flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3),
+    //backgroundColor: theme.palette.background.default, // Tämä vaikuttaa koko sivun taustaväriin
+    //padding: theme.spacing(3),
   },
-  // nested incase we want nest smth (probably not)
-  nested: {
-    paddingLeft: theme.spacing(4),
-  },
+  //nested incase we want nest smth (probably not)
+  //nested: {
+    //paddingLeft: theme.spacing(4),
+  //},
 })
 
 class Layout extends Component {
@@ -89,14 +96,13 @@ class Layout extends Component {
       <CssBaseline/>
 
       <div className={classes.root}>
-        <AppBar position="absolute" className={classes.appBar}>
+        <AppBar /*position="absolute"*/ color="default" className={classes.appBar}>
           <Toolbar>
             <IconButton
               color="inherit"
               aria-label="open drawer"
               onClick={this.handleDrawerToggle}
-              className={classes.navIconHide}
-            >
+              className={classes.navIconHide}>
               <Menu />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
