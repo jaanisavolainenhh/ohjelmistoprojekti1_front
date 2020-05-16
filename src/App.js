@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
 import EditointiKompo from './components/EditointiKompo';
 import UusiTarkastelu from './components/UusiTarkastelu';
+import Palaute from './components/Palaute';
+
 function App() {
 
   //passataan tää propsinsa niin voidaan käyttää ilman 30 eri paikan muokkaamista. Ehkä joku global variable tms
@@ -39,6 +41,7 @@ function App() {
           <Link to="/tarkastelu">Tarkastelu</Link>{' '}
           <Link to="/kyselynmuokkaus">En  muokkaa</Link>{' '}
           <Link to="/uusijuttu">Uusi tarkastelu</Link>{' '}
+          <Link to="/palaute">Palaute</Link>{' '}
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
@@ -55,6 +58,8 @@ function App() {
               render={(props) => <EditointiKompo {...props} urlit={urlit}  />} />
                <Route exact path="/uusijuttu"
               render={(props) => <UusiTarkastelu {...props} urlit={urlit}  />} />
+              <Route exact path="/palaute"
+              render={(props) => <Palaute {...props} urlit={urlit}  />} />
           </Switch>
         </div>
       </Router>
