@@ -268,7 +268,7 @@ export default function KyselyOneByOne(props) {
             <div>
               <Typography className={classes.instructions}>All steps completed</Typography>
               <Button onClick={handleReset}>Reset</Button>
-              <Button variant="contained" onClick={() => postAnswer()} style={{backgroundColor:'#045A89', color: 'white'}}>Submit</Button>
+              <Button variant="contained" onClick={() => postAnswer()} style={{backgroundColor:'#045A89', color: 'white', outline: 'none'}}>Submit</Button>
             </div>
           ) : (
               <div>

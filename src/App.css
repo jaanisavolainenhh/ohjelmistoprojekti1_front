@@ -10,6 +10,9 @@
   font-size: 20px !important;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
+*:focus {
+  outline: none !important;
+}
 
 .fontit{
   font-size: 30px;

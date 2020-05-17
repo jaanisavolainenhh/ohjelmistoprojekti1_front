@@ -9,6 +9,18 @@ import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
+import { withStyles } from "@material-ui/core/styles";
+import { green } from "@material-ui/core/colors";
+
+const GreenRadio = withStyles({
+  root: {
+    color: '#73A7B8',
+    "&$checked": {
+      color: '#3A799B'
+    }
+  },
+  checked: {}
+})(props => <Radio color="default" {...props} />);
 
 export default function KysymysRadio(props) {
 
@@ -48,7 +60,7 @@ export default function KysymysRadio(props) {
       //vaihtoehdot.map((jotain, index) => {
       props.kysymys.vaihtoehdot.map((jotain, index) => {
         //console.log(jotain.vaihtoehto_id)
-        return <FormControlLabel key={jotain.vaihtoehto_id} id={jotain.vaihtoehto_id}  value={jotain.vaihtoehto} control={<Radio />} label={jotain.vaihtoehto} />
+        return <FormControlLabel key={jotain.vaihtoehto_id} id={jotain.vaihtoehto_id}  value={jotain.vaihtoehto} control={<GreenRadio />} label={jotain.vaihtoehto} />
       })
 
     )
@@ -58,6 +70,7 @@ export default function KysymysRadio(props) {
   function RenderKysymys() {
      return (<div style={{marginTop: 40}}>{props.kysymys.kysymys} </div>)
   }
+
 
 
   return (
