@@ -3,9 +3,14 @@
 }
 .container{
   width: 900px !important;
+  padding-bottom: 20px;
   text-align: center;
   background-color: white;
-  color: green;
-  font-size: medium;
+  color: black;
+  font-size: 20px !important;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.fontit{
+  font-size: 30px;
 }

@@ -75,13 +75,13 @@ export default function UusiTarkastelu(props) {
 
 
     return (
-        <div>
+        <div className="container">
             {
                 data.map((blaablaa) => {
 
                     return (
                         <div className="area-chart-wrapper" >
-                            <h1> {blaablaa.kysymys} </h1>
+                            <h3> {blaablaa.kysymys} </h3>
                             <BarChart
                                 width={700}
                                 height={400}
@@ -92,7 +92,7 @@ export default function UusiTarkastelu(props) {
                                 <XAxis type="number" />
                                 <YAxis dataKey="name" type="category" />
                                 <Tooltip />
-                                <Bar dataKey="uv" fill="#ff7300" maxBarSize={20} label radius={[10, 10, 10, 10]} />
+                                <Bar dataKey="uv" fill="#3A799B" textColor="white" maxBarSize={20} label radius={[10, 10, 10, 10]} />
 
                             </BarChart>
 

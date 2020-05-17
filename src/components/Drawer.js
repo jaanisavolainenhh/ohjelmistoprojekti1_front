@@ -5,9 +5,7 @@ import { AppBar, Toolbar, IconButton, Typography, Hidden,
 import { withStyles } from '@material-ui/core/styles'
 import { Menu } from '@material-ui/icons'
 import { compose } from 'recompose'
-import red from '@material-ui/core/colors/red';
 
-const primary = red[500]; // #F44336
 
 const drawerWidth = 225
 
@@ -109,7 +107,7 @@ class Layout extends Component {
               <Menu />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Kysely äppi
+              Kysely
             </Typography>
           </Toolbar>
         </AppBar>

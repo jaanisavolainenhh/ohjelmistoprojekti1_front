@@ -1,4 +1,5 @@
 import React from 'react';
+import '../App.css';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -55,14 +56,15 @@ export default function KysymysRadio(props) {
 
 
   function RenderKysymys() {
-     return (<div> <h3 style={{marginTop: 40}}>{props.kysymys.kysymys} </h3></div>)
+     return (<div style={{marginTop: 40}}>{props.kysymys.kysymys} </div>)
   }
 
 
   return (
     <div>
      <div><RenderKysymys /></div>
-     <div style={{ display: 'flex', justifyContent: 'center', /*backgroundColor: 'white',*/ marginTop: 30}}><RadioGroupVastaus /></div>
+     <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30}}>
+       <RadioGroupVastaus /></div>
     </div>
   )
 }
