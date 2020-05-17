@@ -7,11 +7,12 @@ import KysymysTextfield from './KysymysTextfield'
 import KysymysRadio from './KysymysRadio'
 import KysymysSkaala from './KysymysSkaala'
 import KysymysMonivalinta from './KysymysMonivalinta'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +26,23 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
   },
 }));
+
+const muiTheme = createMuiTheme({
+  overrides: {
+      MuiStepIcon: {
+          root: {
+              color: '#73A7B8', // or 'rgba(0, 0, 0, 1)'
+              '&$active': {
+                  color: '#3A799B',
+              },
+              '&$completed': {
+                  color: '#045A89',
+              },
+          },
+      },
+  }
+});
+
 
 export default function KyselyOneByOne(props) {
 
@@ -199,7 +217,7 @@ export default function KyselyOneByOne(props) {
 
   const curry = kyssy // päivittää vaikkei ehkä pitäisi? lol
   .map(kyssy => (
-    <div key={kyssy.kysymys_id}  style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}>
+    <div key={kyssy.kysymys_id} /* style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}*/>
       <div>{ (() => {
             switch (kyssy.tyyppi){
 
@@ -236,19 +254,21 @@ export default function KyselyOneByOne(props) {
       <div>{curry[activeStep]}</div>
 
       <div className={classes.root}>
+        <MuiThemeProvider theme={muiTheme}>
         <Stepper activeStep={activeStep} alternativeLabel>
           {kyssäri.map((label) => (
             <Step key={label}>
-              <StepLabel></StepLabel>
+              <StepLabel ></StepLabel>
             </Step>
           ))}
         </Stepper>
+        </MuiThemeProvider>
         <div>
           {activeStep === kyssäri.length ? (
             <div>
               <Typography className={classes.instructions}>All steps completed</Typography>
-              <Button variant="contained" color="primary" onClick={() => postAnswer()}>Submit</Button>
               <Button onClick={handleReset}>Reset</Button>
+              <Button variant="contained" onClick={() => postAnswer()} style={{backgroundColor:'#045A89', color: 'white', outline: 'none'}}>Submit</Button>
             </div>
           ) : (
               <div>
@@ -261,7 +281,7 @@ export default function KyselyOneByOne(props) {
                   >
                     Back
               </Button>
-                  <Button variant="contained" color="primary" onClick={handleNext}>
+                  <Button variant="contained" style={{backgroundColor: '#04688A', color:'white'}} onClick={handleNext}>
                     {activeStep === kyssäri.length - 1 ? 'Finish' : 'Next'}
                   </Button>
                 </div>

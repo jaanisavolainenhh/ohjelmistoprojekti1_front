@@ -9,6 +9,8 @@ import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
 import EditointiKompo from './components/EditointiKompo'
+import Container from '@material-ui/core/Container';
+
 import UusiTarkastelu from './components/UusiTarkastelu'
 function App() {
 
@@ -18,9 +20,10 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="container">
 
     {/* <Kysely urlit={urlit} /> */}
+    <Container maxWidth="md">
 
       <Router>
         <Drawer>
@@ -44,6 +47,7 @@ function App() {
           </Switch>
         </Drawer>
       </Router>
+      </Container>
     </div>
   );
 }
