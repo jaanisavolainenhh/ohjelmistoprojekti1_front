@@ -52,6 +52,8 @@ export default function Palaute(props) {
                                 kysymys.vastaus.map((kys, index3) => {
                                     tempcount[kys.vastaus] = tempcount[kys.vastaus] + 1
                                     console.log(kys.vastaus)
+                                    tarkein.textfieldi = kys.vastaus;
+
                                 })
                                 Object.keys(tempcount).forEach((looper) => {
                                     tarkein.lista.push({
@@ -82,11 +84,11 @@ export default function Palaute(props) {
 
         
         return kayttajanVastaus.map((kysely, index) => {
-            kysely.kysymykset.map((kysymys) => {
-                if (kysymys.kysymys_id == vastausData.kysymys_id) {
-                    return kysymys.vastaus[0].vastaus;
+            //kysely.kysymykset.map((kysymys) => {
+                if (kysely.kysymys_id == vastausData.kysymys_id) {
+                    return kysely.vastaus[0].vastaus;
                 }
-            })
+           // })
                 
          
         })
@@ -119,7 +121,14 @@ export default function Palaute(props) {
                                     <Bar dataKey="uv" fill={"#17a3c2"} maxBarSize={20} label radius={[10, 10, 10, 10]} />
 
                                 </BarChart>
-                                <h3>Vastasit: {annettuVastaus} </h3>
+                                 {/* {
+                                     kysymys.vastaus.map((i) => {
+                                         return(
+                                            <h3>Vastasit: {i} </h3>
+                                         )
+                                     })
+                                 } */}
+                                <h3>Vastasit: {kysymys.textfieldi} </h3>
                                 <br></br>
                                 <br></br>
 

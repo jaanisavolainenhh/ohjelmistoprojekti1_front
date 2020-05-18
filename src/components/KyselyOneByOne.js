@@ -66,7 +66,6 @@ export default function KyselyOneByOne(props) {
 
     return (
       <div>
-        saatana
         {
           palautteenData.map((palaute, index) => {
             return(
@@ -121,7 +120,7 @@ export default function KyselyOneByOne(props) {
 
   function JaaninUseEffecti() {
     //console.log(props.urlit + 'kysely/1')
-    fetch(props.urlit + 'kysely/1', {
+    fetch(props.urlit + 'kysely/' + props.match.params.id, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
