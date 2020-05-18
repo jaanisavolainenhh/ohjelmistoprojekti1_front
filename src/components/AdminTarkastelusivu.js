@@ -8,27 +8,27 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import InputBase from '@material-ui/core/InputBase';
-
+import UusiTarkastelu from './UusiTarkastelu'
 export default function AdminTarkasteluSivu(props) {
 
+    const [origData, setOrigdata] = React.useState([]); //sisältää kaikki kyselyt
     const [kysely, setKysely] = React.useState([]);
-    const [naytaSessioittain, setNaytaSessioittain] = React.useState(false);
-
-    const [sessioittainData,SetSessioittainData] = React.useState([]);
+    const [kyselynSessioIDt, setKyselynSessioIDt] = React.useState(["5", "2"])
+    const [valittuKyselyID, setValittuKyselyID] = React.useState("");
+    const [valittuSessioID, setValittuSessioID] = React.useState(-1);
+    const [sessioittainData, SetSessioittainData] = React.useState([]);
     const [kyselyittainData, SetKyselyittainData] = React.useState([]);
 
-    const [origData, setOrigdata] = React.useState([]);
     //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
     //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
-    const [open, setOpen] = React.useState(false);
+    const [openKysely, setOpenKysely] = React.useState(false);
+    const [openSessio, setOpenSessio] = React.useState(false);
     const [msg, setmsg] = React.useState('')
     React.useEffect(() => {
         JaaninUseEffecti();
     }, [])
 
-    React.useEffect(() => {
-        Paata(origData);
-    }, [naytaSessioittain])
+
 
     function JaaninUseEffecti() {
         console.log(props.urlit + 'kyselytadmin')
@@ -48,11 +48,11 @@ export default function AdminTarkasteluSivu(props) {
     }
 
     function Paata(data) {
-       
-            SorttaaDataSessioittain(data)
-            SorttaaData(data);
-        }
-    
+
+        SorttaaDataSessioittain(data)
+        SorttaaData(data);
+    }
+
 
 
     function SorttaaData(data) { //tää näyttää nyt montako kappaletta on
@@ -162,160 +162,127 @@ export default function AdminTarkasteluSivu(props) {
 
 
     const classes = useStyles();
-    const [sessioToShow, setAge] = React.useState('');
+    const [sessioToShow, setSessionToShow] = React.useState('');
 
     const handleChange = (event) => {
-        setAge(event.target.value);
+        setSessionToShow(event.target.value);
     };
+
+    const kyselynValinta = (event) => {
+        //    setSessionToShow("");
+        setValittuKyselyID(event.target.value);
+
+        setKyselynSessioIDt(origData[event.target.value].sessioidt);
+        setValittuSessioID(-1);
+        setKysely([origData[event.target.value]])
+    };
+
+    const sessionValinta = (event) => {
+
+        setValittuSessioID(event.target.value);
+        //setKysely([]);
+    }
+
+
 
     const handleClose = () => {
-        setOpen(false);
+        setOpenSessio(false)
+        setOpenKysely(false);
+
     };
 
-    const handleOpen = () => {
-        setOpen(true);
+    const handleOpenKysely = () => {
+        setOpenKysely(true);
+    };
+
+    const handleOpenSessio = () => {
+        setOpenSessio(true);
     };
 
 
-    function DropdownSessioittain() {
-        if (naytaSessioittain) {
 
-            return (
-
-                <div>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="demo-controlled-open-select-label">Sessio</InputLabel>
-                        <Select
-                            labelId="demo-controlled-open-select-label"
-                            id="demo-controlled-open-select"
-                            open={open}
-                            onClose={handleClose}
-                            onOpen={handleOpen}
-                            value={sessioToShow}
-                            onChange={handleChange}
-                        >
-
-                            {
-                                sessioittainData.map((sess, index) => {
-                                    return (<MenuItem value={sess.sessio}>{sess.sessio}</MenuItem>)
-                                })
-                            }
-
-                        </Select>
-                    </FormControl>
-
-                </div>
-            )
-        }
-        else
-            return (
-                <div></div>
-            )
-
-    }
-
-
-
-    function Nappulateksti() {
-        if (naytaSessioittain) {
-            return <div>Sessioittain</div>
-        } else {
-            return <div>Kysymyksittäin</div>
-        }
-
-    }
-
-    function ValitseEsitystapa() {
-        if (naytaSessioittain) {
-            return NaytaValittuSessio();
-        } else {
-            return NaytaKysymyksittain();
-        }
-    }
-
-    function VaihdaFilter() {
-        setNaytaSessioittain(!naytaSessioittain)
-    }
-
-
-
-    function NaytaValittuSessio() {
+    function KaikkiKyselytDropdown() {
         return (
-            <div className="container">
-                {
-                    sessioittainData.map((kys) => {
-                        if (kys.sessio == sessioToShow) {
-                            console.log("Matching session")
-                            console.log(kys)
-                            return (
-                                <div>
-                                <h3>{kys.kysely}</h3>
-                                {
-                                kys.vastaukset.map((vas) => {
-                                    //
-                                    return (
-                                        <div>
-                                            <br></br>
-                                            {vas}
-                                        </div>
-                                    )
-                                })
-                            }
-                            </div>
-                            )
-                        }
-                    })
-                }
-            </div>
+            <div></div>
         )
     }
 
-    function NaytaKysymyksittain() {
-        return (
-            <div>
-                {
-                    kyselyittainData.map((kys3) => {
-                        return (
-                            <div>
-                                <h3>{kys3.kysely} </h3>
-                                {
-                                    
-                                    kys3.tulokset.map((tul) => {
-                                        return (
-                                            <div>
-                                            <h3>{tul.kysymys}</h3>
-                                            {
-                                                tul.vastaukset.map((vas) =>{
-                                                    return(
-                                                    <div> {vas} </div>
-                                                    )
-                                                })
-                                            }
-
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div>
 
 
+
+
+
+
+    function RenderValittuKysely() {
+        if(valittuSessioID == -1)
+        {
+            return (
+                kysely.map((kys3, index) => {
+                    return (
+                        <UusiTarkastelu kysely={kysely} />
                         )
                     })
-                }
-            </div>
-        )
-
-    }
-
-    function wtf() {
+                    )
+        }
+        else {
+            return (<div></div>)
+        }
+                    
 
     }
 
     return (
         <div>
-            <Button onClick={VaihdaFilter} variant="contained" style={{marginTop: 20, marginBottom:20, backgroundColor: '#3A799B', color: 'white'}}><Nappulateksti /> </Button>
-            <DropdownSessioittain />
-            <ValitseEsitystapa />
+            <KaikkiKyselytDropdown />
+
+            <div>
+                <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-controlled-open-select-label">Kysely</InputLabel>
+                    <Select
+                        labelId="demo-controlled-open-select-label"
+                        id="demo-controlled-open-select"
+                        open={openKysely}
+                        onClose={handleClose}
+                        onOpen={handleOpenKysely}
+                        value={valittuKyselyID}
+                        onChange={kyselynValinta}
+                    >
+
+                        {
+                            kyselyittainData.map((sess, index) => {
+                                return (<MenuItem value={index}>{sess.kysely}</MenuItem>)
+                            })
+                        }
+
+                    </Select>
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-controlled-open-select-label2">Sessio</InputLabel>
+                    <Select
+                        labelId="demo-controlled-open-select-label2"
+                        id="demo-controlled-open-select2"
+                        open={openSessio}
+                        onClose={handleClose}
+                        onOpen={handleOpenSessio}
+                        value={valittuSessioID}
+                        onChange={sessionValinta}
+                    >
+                                                <MenuItem value={-1}> - </MenuItem>
+
+                        {
+                            kyselynSessioIDt.map((sess, index) => {
+                                return (<MenuItem value={sess.id}> {sess.id} </MenuItem>)
+                            })
+                        }
+
+                    </Select>
+                </FormControl>
+
+            </div>
+            {/* <Button onClick={VaihdaFilter} variant="contained" style={{ marginTop: 20, marginBottom: 20, backgroundColor: '#3A799B', color: 'white' }}><Nappulateksti /> </Button> */}
+            {/* <DropdownSessioittain /> */}
+            {/* <ValitseEsitystapa /> */}
+            <RenderValittuKysely />
         </div>
     )
 }
