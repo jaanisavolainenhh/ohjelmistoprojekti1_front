@@ -14,9 +14,19 @@ export default function KysymysTextfield(props) {
 
    const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   // const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
+  React.useEffect(() => {
+ 
+    if (props.lukittu) {
+      props.kysymys.vastaus.map((i) => {
+        //setValue(props.kysymys.vastaus[0].vastaus)
+        setValue(i.vastaus)
 
+      })
+    }
+}, [])
 
    const handleChange = (event) => {
+     
       setValue(event.target.value)
       props.MuokkaaKyselynVastauksiaTextfield(props.kysymys, event.target.value)
       //props.df(event);
@@ -28,12 +38,12 @@ export default function KysymysTextfield(props) {
    };
 
   function RenderKysymys() {
-    return (<div> {props.kysymys.kysymys} </div>)
+    return (<div style={{marginTop: 40, marginBottom: 40}}>{props.kysymys.kysymys}</div>)
   }
   return (
     <div>
-      <RenderKysymys />
-      <TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} />
+      <div><RenderKysymys /></div>
+      <div><TextField disabled={props.lukittu} key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} style={{width: 400}} /></div>
     </div>
   )
 }

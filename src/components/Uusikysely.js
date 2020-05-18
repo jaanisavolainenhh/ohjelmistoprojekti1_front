@@ -47,9 +47,9 @@ export default function Uusikysely(props) {
         console.log({ kyselynNimi }.kyselynNimi)
         //let kysNimi = {kyselynNimi};
         let postattavaKysely = { name: { kyselynNimi }.kyselynNimi, kysymykset: { kyselynKysymykset }.kyselynKysymykset }
-
+        console.log(props.urlit)
         try {
-            fetch(props.urlit + 'tallennauusikysely', {
+            fetch(props.urlit + 'kysely', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -163,7 +163,8 @@ export default function Uusikysely(props) {
                         labelId="demo-simple-select-filled-label"
                         id="demo-simple-select-filled"
                         value={kysymyksenTyyppi}
-                        onChange={handleChangeKysymykysenTyyppi}>
+                        onChange={handleChangeKysymykysenTyyppi}
+                        style={{width:400}}>
 
                         {/* <MenuItem hidden selected value={0}>-</MenuItem> */}
                         <MenuItem selected value={10}>Radio</MenuItem>
@@ -206,7 +207,7 @@ export default function Uusikysely(props) {
                 return (
                     <div>
                         <div >
-                            <h1> <Button onClick={poistaKysymys.bind(this, { index }.index)} color="secondary" startIcon={<RemoveIcon />}></Button> {kysymys.kysymys} </h1>
+                            <h3> <Button onClick={poistaKysymys.bind(this, { index }.index)} color="secondary" startIcon={<RemoveIcon />}></Button> {kysymys.kysymys} </h3>
                         </div>
                         {
                             kysymys.vaihtoehdot.map((vaihtoehto, index2) => {
@@ -228,24 +229,24 @@ export default function Uusikysely(props) {
 
         <div>
             <br></br><br></br>
-            <TextField label="Kysymys" value={uusiKysymys} onChange={handgleChangeKysymysChanged} />
+            <TextField label="Kysymys" value={uusiKysymys} onChange={handgleChangeKysymysChanged} style={{width: 400}}/>
             <br></br><br></br>
             <Vetovalikko />
             <br></br>
             <div>
-                <TextField label="Uusi vaihtoehto" value={uusiVaihtoehto} onChange={handleChangeVaihtoehtoChanged} />
-                <Button variant="contained" color="primary" startIcon={<AddIcon />}
-                    style={{ marginTop: '10px', marginLeft: '30px', paddingLeft: '10px', paddingRight: '0px' }} onClick={lisaaVaihtoehto}></Button>
+                <TextField label="Uusi vaihtoehto" value={uusiVaihtoehto} onChange={handleChangeVaihtoehtoChanged} style={{width: 300}}/>
+                <Button variant="contained" startIcon={<AddIcon style={{color:'white'}}/>}
+                    style={{ marginTop: '10px', marginLeft: '30px', paddingLeft: '10px', paddingRight: '0px', backgroundColor: '#04688A', color:'white'}} onClick={lisaaVaihtoehto}></Button>
             </div>
             <br></br><br></br>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><NykyinenKysymys /></div>
             <br></br><br></br>
-            <Button variant="contained" color="primary" onClick={tallennaKysymys} style={{ marginRight: '20px' }}>Tallenna kysymys</Button>
-            <Button variant="contained" color="primary" onClick={tallennaKysely}>Tallenna kysely</Button>
+            <Button variant="contained" onClick={tallennaKysymys} style={{ marginRight: '20px', backgroundColor: '#3A799B', color:'white'}}>Tallenna kysymys</Button>
+            <Button variant="contained" onClick={tallennaKysely} style={{backgroundColor: '#045A89', color:'white'}}>Tallenna kysely</Button>
             <br></br>
             <br></br>
             {/* <Testi1 viesti="viestiteksti" /> */}
-            <h1>Kyselyn kysymykset:</h1>
+            <h3>Kyselyn kysymykset:</h3>
             <Kysymykset />
 
         </div>

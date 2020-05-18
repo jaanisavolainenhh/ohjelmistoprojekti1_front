@@ -11,7 +11,7 @@ import KysymysMonivalinta from './KysymysMonivalinta'
 
 export default function Kysely(props) {
 
-  const [kysely, setKysely] = React.useState([]);
+  const [kysely, setKysely] = React.useState({ kysymykset: [] });
 
   //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
   //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
@@ -19,11 +19,14 @@ export default function Kysely(props) {
   const [open, setOpen] = React.useState(false);
   const [msg, setmsg] = React.useState('')
   React.useEffect(() => {
-    JaaninUseEffecti();
+    if (!props.lukittu)
+      JaaninUseEffecti();
+    else
+      setKysely(props.esitysdata)
   }, [])
 
 
-  function postAnswer() { 
+  function postAnswer() {
     try {
       fetch(props.urlit + 'kyselyt', {
         method: 'POST',
@@ -31,12 +34,12 @@ export default function Kysely(props) {
           'Accept': 'application/json',
           'Content-type': 'application/json'
         },
-        body: JSON.stringify(kysely[0]) //Tässä kovakoodattu että lähettää vain ekan kyselyn
+        body: JSON.stringify(kysely) //Tässä kovakoodattu että lähettää vain ekan kyselyn
       })
         .catch(err => console.error(err));
       setmsg("Vastaus lähetetty!");
       setOpen(true);
-      console.log(JSON.stringify(kysely[0]));
+      console.log(JSON.stringify(kysely));
     } catch (e) {
       setOpen(true);
       setmsg("Lähettäminen epäonnistui!");
@@ -61,8 +64,8 @@ export default function Kysely(props) {
   }
 
   function JaaninUseEffecti() {
-    console.log(props.urlit + 'kyselyt')
-    fetch(props.urlit + 'kyselyt', {
+    console.log(props.urlit + 'kysely' + props.match.params.id)
+    fetch(props.urlit + 'kysely/' + props.match.params.id, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -72,6 +75,7 @@ export default function Kysely(props) {
       .then(response => response.json())
       .then(res => {
         setKysely(res)
+        console.log(props.match.params.id)
       })
       .catch(err => console.log(err))
   }
@@ -79,41 +83,44 @@ export default function Kysely(props) {
 
   function MuokkaaKyselynVastauksia(kysymys, kysymyksenvastaus) //palautetaan kysymyksenvastauksessa suoraan olio.
   {
+    if(props.lukittu)
+     return;
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
-        console.log(kysymysloop)
-        //console.log(kysymys.)
-        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
-        {
-          let loopvastaukset = [{ vastaus: kysymyksenvastaus.vaihtoehto }];
-          kysymysloop.vastaus = loopvastaukset;
-          console.log("löytyi!")
-        }
-      })
+    // muokattavakysely.map((tulos, index) => {
+    muokattavakysely.kysymykset.map((kysymysloop, index2) => {
+      console.log(kysymysloop)
+      //console.log(kysymys.)
+      if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
+      {
+        let loopvastaukset = [{ vastaus: kysymyksenvastaus.vaihtoehto }];
+        kysymysloop.vastaus = loopvastaukset;
+        console.log("löytyi!")
+      }
     })
+    // })
     setKysely(muokattavakysely);
   }
 
   function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus) {
-
+    if (props.lukittu)
+      return;
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
-        console.log(kysymysloop)
-        //console.log(kysymys.)
-        if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
-        {
-          let loopvastaukset = [{ vastaus: kysymyksenvastaus }];
-          kysymysloop.vastaus = loopvastaukset;
-          console.log("löytyi!")
-        }
-      })
+    // muokattavakysely.map((tulos, index) => {
+    muokattavakysely.kysymykset.map((kysymysloop, index2) => {
+      console.log(kysymysloop)
+      //console.log(kysymys.)
+      if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
+      {
+        let loopvastaukset = [{ vastaus: kysymyksenvastaus }];
+        kysymysloop.vastaus = loopvastaukset;
+        console.log("löytyi!")
+      }
     })
+    // })
     setKysely(muokattavakysely);
 
   }
@@ -121,9 +128,8 @@ export default function Kysely(props) {
   return (
     <div>
       <FormControl component="fieldset">
-        <MappaaKysymykset2 kysely={kysely} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
-
-        <br /><br /><Button variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
+        <MappaaKysymykset2 lukittu={props.lukittu} kysely={kysely} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
+        <br /><br /><Button disabled={props.lukittu} variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
       </FormControl>
     </div>
@@ -132,33 +138,29 @@ export default function Kysely(props) {
 
 
 function MappaaKysymykset2(props) {
+
   return (
     <div key="MapatutKysymykset">
       {
-        props.kysely.map((tulos, index) => { //kovakoodattu nyt näyttämään vain ekan kysymyksen
-           if (index != 0)
-             return (<div></div>)
+        props.kysely.kysymykset.map((kysymys, index2) => {
+          switch (kysymys.tyyppi) {
 
-          return (
-            tulos.kysymykset.map((kysymys, index2) => {
-              switch (kysymys.tyyppi) {
-
-                case "Radio":
-                  return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} />)
-                case "Teksti":
-                  return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} />)
-                case "Skaala":
-                  return (<KysymysSkaala key={index2} kysymys={kysymys} />)
-                case "Monivalinta":
-                  return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
-                default:
-                  return (<div> Default </div>)
-              }
-            })
-
-          )
+            case "Radio":
+              return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} lukittu={props.lukittu} />)
+            case "Teksti":
+              return (<KysymysTextfield vastaus={kysymys.vaihtoehdot} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} lukittu={props.lukittu} />)
+            case "Skaala":
+              return (<KysymysSkaala key={index2} kysymys={kysymys} />)
+            case "Monivalinta":
+              return (<KysymysMonivalinta key={index2} kysymys={kysymys} />)
+            default:
+              return (<div> Default </div>)
+          }
         })
+
+
       }
+
     </div>
   )
 }
