@@ -12,7 +12,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Typography from '@material-ui/core/Typography';
-
+import Palaute from './Palaute'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,17 +29,17 @@ const useStyles = makeStyles((theme) => ({
 
 const muiTheme = createMuiTheme({
   overrides: {
-      MuiStepIcon: {
-          root: {
-              color: '#73A7B8', // or 'rgba(0, 0, 0, 1)'
-              '&$active': {
-                  color: '#3A799B',
-              },
-              '&$completed': {
-                  color: '#045A89',
-              },
-          },
+    MuiStepIcon: {
+      root: {
+        color: '#73A7B8', // or 'rgba(0, 0, 0, 1)'
+        '&$active': {
+          color: '#3A799B',
+        },
+        '&$completed': {
+          color: '#045A89',
+        },
       },
+    },
   }
 });
 
@@ -53,6 +53,7 @@ export default function KyselyOneByOne(props) {
   const [kyssy, setKyssy] = React.useState([]);
   const [activeStep, setActiveStep] = React.useState(0);
   //const [dis, setDis] = React.useState(['k1','y2','s3','y4','m4','y5','s6']);  //stepper test state
+  const [palautteenData, setPalautteenData] = React.useState([]);
   const classes = useStyles();
 
 
@@ -61,6 +62,24 @@ export default function KyselyOneByOne(props) {
 
   }, [])
 
+  function RenderPalaute() {
+
+    return (
+      <div>
+        saatana
+        {
+          palautteenData.map((palaute, index) => {
+            return(
+              // <div></div>
+              <Palaute key={index} kysely={palaute} kyselyid={palaute.kysely_id} />
+
+            )
+   
+          })
+        }
+      </div>
+    )
+  }
 
   function postAnswer() {
     try {
@@ -70,17 +89,18 @@ export default function KyselyOneByOne(props) {
           'Accept': 'application/json',
           'Content-type': 'application/json'
         },
-        body: JSON.stringify(kysely[0]) //Tässä kovakoodattu että lähettää vain ekan kyselyn
+        body: JSON.stringify(kysely) //Tässä kovakoodattu että lähettää vain ekan kyselyn
       })
         .catch(err => console.error(err));
       setmsg("Vastaus lähetetty!");
       setOpen(true);
-      console.log(JSON.stringify(kysely[0]));
+      setPalautteenData([kysely]);
+      //console.log(JSON.stringify(kysely));
     } catch (e) {
       setOpen(true);
       setmsg("Lähettäminen epäonnistui!");
       console.log(e)
-      
+
     }
   }
 
@@ -100,8 +120,8 @@ export default function KyselyOneByOne(props) {
   }
 
   function JaaninUseEffecti() {
-    console.log(props.urlit + 'kyselyt')
-    fetch(props.urlit + 'kyselyt', {
+    //console.log(props.urlit + 'kysely/1')
+    fetch(props.urlit + 'kysely/1', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -113,6 +133,7 @@ export default function KyselyOneByOne(props) {
         jotai(res)
         asiaa(res)
         setKysely(res)
+        //console.log(res)
       })
       .catch(err => console.log(err))
   }
@@ -123,68 +144,68 @@ export default function KyselyOneByOne(props) {
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
-        console.log(kysymysloop)
+    //muokattavakysely.map((tulos, index) => {
+      muokattavakysely.kysymykset.map((kysymysloop, index2) => {
+        //console.log(kysymysloop)
         //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
           let loopvastaukset = [{ vastaus: kysymyksenvastaus.vaihtoehto }];
           kysymysloop.vastaus = loopvastaukset;
-          console.log("löytyi!")
+          //console.log("löytyi!")
         }
       })
-    })
+    //})
     setKysely(muokattavakysely);
   }
 
   function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus) {
 
-    console.log(kysymyksenvastaus)
+    //onsole.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
-        console.log(kysymysloop)
+    //muokattavakysely.map((tulos, index) => {
+      muokattavakysely.kysymykset.map((kysymysloop, index2) => {
+       // console.log(kysymysloop)
         //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
           let loopvastaukset = [{ vastaus: kysymyksenvastaus }];
           kysymysloop.vastaus = loopvastaukset;
-          console.log("löytyi!")
+          //console.log("löytyi!")
         }
       })
-    })
+    //})
     setKysely(muokattavakysely);
 
   }
 
   // tekee arrayn kyselyn kysymyksistä (sis. vain kysymykset)
-  
+
   function jotai(vastauslista) {
     //console.log(vastauslista)
     let arra = new Array();
-    vastauslista.map(kaksi => {
+    //vastauslista.map(kaksi => {
 
-      kaksi.kysymykset.map(kysymys => {
+      vastauslista.kysymykset.map(kysymys => {
         arra.push(kysymys.kysymys)
       })
       //console.log(arra)
       setKyssäri(arra);
-    })
+    //})
   }
 
   function asiaa(kysOliot) {
     let kot = new Array();
-    kysOliot.map(olio =>{
+    //kysOliot.map(olio => {
 
-      olio.kysymykset.map(kysymys =>{
+      kysOliot.kysymykset.map(kysymys => {
         kot.push(kysymys)
       })
       // console.log(kot)
       setKyssy(kot)
-    })
-    
+    //})
+
   }
 
   // moves to the next question
@@ -216,35 +237,35 @@ export default function KyselyOneByOne(props) {
   }
 
   const curry = kyssy // päivittää vaikkei ehkä pitäisi? lol
-  .map(kyssy => (
-    <div key={kyssy.kysymys_id} /* style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}*/>
-      <div>{ (() => {
-            switch (kyssy.tyyppi){
+    .map(kyssy => (
+      <div key={kyssy.kysymys_id} /* style={{ display: 'flex', justifyContent: 'center', backgroundColor: 'white'}}*/>
+        <div>{(() => {
+          switch (kyssy.tyyppi) {
 
-              case "Radio":
-                  return (<KysymysRadio kysymys={kyssy} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />)
-              case "Teksti":
-                  return (<KysymysTextfield vastaus={kyssy.vaihtoehdot[0]} kysymys={kyssy} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} />)
-              case "Skaala":
-                   return (<KysymysSkaala key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
-              case "Monivalinta":
-                   return (<KysymysMonivalinta key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
-              default:
-                   return (<div> Default </div>)  
-            }
-          })()}</div>
-      {/* <div>{
+            case "Radio":
+              return (<KysymysRadio kysymys={kyssy} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />)
+            case "Teksti":
+              return (<KysymysTextfield vastaus={kyssy.vaihtoehdot[0]} kysymys={kyssy} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} />)
+            case "Skaala":
+              return (<KysymysSkaala key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
+            case "Monivalinta":
+              return (<KysymysMonivalinta key={kyssy.kysymys_id} kysymys={kyssy.kysymys} />)
+            default:
+              return (<div> Default </div>)
+          }
+        })()}</div>
+        {/* <div>{
             kyssy.vaihtoehdot.map(vaahto => {
              
             })
           }</div> */}
-    </div>
-  ))
+      </div>
+    ))
 
   // <div>{current}</div>
   // <div>{curry[itku]}</div>
   // <button onClick={() => {setItku(itku + 1);}}>next</button>
- 
+
   // <div>{curry[itku]}</div>
   // <button onClick={() => {setItku(itku + 1);}}>next</button>
 
@@ -255,20 +276,20 @@ export default function KyselyOneByOne(props) {
 
       <div className={classes.root}>
         <MuiThemeProvider theme={muiTheme}>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {kyssäri.map((label) => (
-            <Step key={label}>
-              <StepLabel ></StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {kyssäri.map((label) => (
+              <Step key={label}>
+                <StepLabel ></StepLabel>
+              </Step>
+            ))}
+          </Stepper>
         </MuiThemeProvider>
         <div>
           {activeStep === kyssäri.length ? (
             <div>
               <Typography className={classes.instructions}>All steps completed</Typography>
               <Button onClick={handleReset}>Reset</Button>
-              <Button variant="contained" onClick={() => postAnswer()} style={{backgroundColor:'#045A89', color: 'white', outline: 'none'}}>Submit</Button>
+              <Button variant="contained" onClick={() => postAnswer()} style={{ backgroundColor: '#045A89', color: 'white', outline: 'none' }}>Submit</Button>
             </div>
           ) : (
               <div>
@@ -281,7 +302,7 @@ export default function KyselyOneByOne(props) {
                   >
                     Back
               </Button>
-                  <Button variant="contained" style={{backgroundColor: '#04688A', color:'white'}} onClick={handleNext}>
+                  <Button variant="contained" style={{ backgroundColor: '#04688A', color: 'white' }} onClick={handleNext}>
                     {activeStep === kyssäri.length - 1 ? 'Finish' : 'Next'}
                   </Button>
                 </div>
@@ -289,6 +310,7 @@ export default function KyselyOneByOne(props) {
             )}
         </div>
       </div>
+      <RenderPalaute />
     </div>
   )
 }

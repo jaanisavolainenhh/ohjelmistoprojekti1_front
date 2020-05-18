@@ -58,7 +58,7 @@ class Layout extends Component {
     const drawer = (
       <div className={classes.toolbar}>
         <MenuList>
-        <MenuItem component={Link} to="/" selected={'/' === pathname} onClick={this.handleDrawerToggle}>
+        <MenuItem component={Link} to="/kysely" selected={'/kysely' === pathname} onClick={this.handleDrawerToggle}>
             Kysely
           </MenuItem>
           <MenuItem component={Link} to="/vastaukset" selected={'/vastaukset' === pathname} onClick={this.handleDrawerToggle}>

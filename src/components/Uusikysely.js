@@ -47,9 +47,9 @@ export default function Uusikysely(props) {
         console.log({ kyselynNimi }.kyselynNimi)
         //let kysNimi = {kyselynNimi};
         let postattavaKysely = { name: { kyselynNimi }.kyselynNimi, kysymykset: { kyselynKysymykset }.kyselynKysymykset }
-
+        console.log(props.urlit)
         try {
-            fetch(props.urlit + 'tallennauusikysely', {
+            fetch(props.urlit + 'kysely', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
