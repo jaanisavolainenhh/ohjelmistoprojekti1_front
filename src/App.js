@@ -10,7 +10,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
 import EditointiKompo from './components/EditointiKompo'
 import Adminlogin from './components/Adminlogin'
-
+import Palaute from './components/Palaute'
 import Container from '@material-ui/core/Container';
 
 import UusiTarkastelu from './components/UusiTarkastelu'
@@ -51,6 +51,8 @@ export default function App() {
                   render={(props) => <EditointiKompo {...props} urlit={urlit} />} />
                 <Route exact path="/uusitarkastelu"
                   render={(props) => <UusiTarkastelu {...props} urlit={urlit} />} />
+                  <Route exact path="/palaute"
+                  render={(props) => <Palaute {...props} urlit={urlit} />} />
               </Switch>
             </Drawer>
           </Router>
