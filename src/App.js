@@ -52,7 +52,7 @@ export default function App() {
                 <Route exact path="/uusitarkastelu"
                   render={(props) => <UusiTarkastelu {...props} urlit={urlit} />} />
                   <Route exact path="/palaute"
-                  render={(props) => <Palaute {...props} urlit={urlit} />} />
+                  render={(props) => <Palaute {...props} urlit={urlit} kyselyid={1} />} />
               </Switch>
             </Drawer>
           </Router>

@@ -7,7 +7,7 @@ import {
 
 export default function Palaute(props) {
 
-    const [data, setData] = React.useState([]);
+    const [vastaukset, setVastaukset] = React.useState([]);
 
     React.useEffect(() => {
         getVastaukset();
@@ -15,15 +15,24 @@ export default function Palaute(props) {
     }, [])
 
 
-    const getVastaukset = () => {
-        fetch(props.urlit + 'kyselytadmin')
+    function getVastaukset() {
+        console.log("HALOO")
+        fetch("https://salenpalikatback.herokuapp.com/kyselyadmin/"+ props.kyselyid,{
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            }
+
+        })
             .then(response => response.json())
             .then(
                 data => {
+                    console.log(data)
                     let chartindatat = new Array();
-                    data.map((kysely, index) => {
+                    //data.map((kysely, index) => {
 
-                        kysely.kysymykset.map((kysymys, index2) => {
+                        data.kysymykset.map((kysymys, index2) => {
                             let setti = new Set();
                             let tempcount = {};
                             let tarkein = { kysymys: "", lista: [] }
@@ -59,46 +68,27 @@ export default function Palaute(props) {
                                 chartindatat.push(tarkein)
                             }
                         })
-                    })
-                    setData(chartindatat)
+                    //})
+                    setVastaukset(chartindatat)
+                    setKayttajanVastaus([props.kysely])
+                    console.log(data)
                 })
     }
 
-    const [kayttajanVastaus, setKayttajanVastaus] = React.useState({
-        kysely_id: 1,
-        name: "Kysely1",
-        kysymykset: [
-            {
-                kysymys_id: 14,
-                tyyppi: "Radio",
-                kysymys: "Tämä on kysymys 1, mistä väristä pidät?",
-                pakollinen: false,
+    const [kayttajanVastaus, setKayttajanVastaus] = React.useState([]);
 
-                vastaus: [
-                    {
-                        vastaus_id: 9,
-                        vastaus: "Pinkki3",
-                        sessioid: 8
-                    }
-                ]
-            }
-        ],
-        sessioidt: [
-            {
-                id: 8
-            },
-            {
-                id: 10
-            }
-        ]
-    });
 
     function etsiVastaus(vastausData) {
 
-        return kayttajanVastaus.kysymykset.map((kysymys, index) => {
-            if (kysymys.kysymys_id == vastausData.kysymys_id) {
-                return kysymys.vastaus[0].vastaus;
-            }
+        
+        return kayttajanVastaus.map((kysely, index) => {
+            kysely.kysymykset.map((kysymys) => {
+                if (kysymys.kysymys_id == vastausData.kysymys_id) {
+                    return kysymys.vastaus[0].vastaus;
+                }
+            })
+                
+         
         })
         console.log("mitään ei löytynyt")
         return "";
@@ -108,7 +98,7 @@ export default function Palaute(props) {
     return (
         <div>
             {
-                data.map((kysymys) => {
+                vastaukset.map((kysymys) => {
                     let annettuVastaus = etsiVastaus(kysymys);
                     if (kysymys.lista.length > 0) {
 

@@ -39,7 +39,7 @@ export default function KysymysRadio(props) {
         props.MuokkaaKyselynVastauksia(props.kysymys, i);
       }
     })
-    console.log(event.target.value)
+   // console.log(event.target.value)
     //#TODO tässä kohtaa lähettää kyselyyn infon että tämä props.kysymys.kysymys_id ja vaihtoehto ID:n.
     //setVastaus({ ...vastaus, vastaus: event.target.value });
   };
