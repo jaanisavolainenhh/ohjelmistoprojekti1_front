@@ -14,7 +14,10 @@ export default function KysymysTextfield(props) {
 
    const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   // const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
-
+  React.useEffect(() => {
+    if(props.lukittu)
+     setValue(props.kysymys.vastaus[0].vastaus)
+}, [])
 
    const handleChange = (event) => {
       setValue(event.target.value)

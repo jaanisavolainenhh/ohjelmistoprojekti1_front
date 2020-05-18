@@ -21,7 +21,8 @@ export default function Kysely(props) {
   React.useEffect(() => {
     if (!props.lukittu)
       JaaninUseEffecti();
-    else setKysely(props.esitysdata)
+    else
+      setKysely(props.esitysdata)
   }, [])
 
 
@@ -75,7 +76,6 @@ export default function Kysely(props) {
       .then(res => {
         setKysely(res)
         console.log(props.match.params.id)
-
       })
       .catch(err => console.log(err))
   }

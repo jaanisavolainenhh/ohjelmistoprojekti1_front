@@ -358,7 +358,9 @@ function RenderaaKysymys(props) {
                     <div style={{ width: 400, display: "inline-block", paddingTop: 30, }}>
                         <ReactTable key={index} data={tempdata} columns={columns}
                             //defaultPageSize={kys.vaihtoehdot.length} 
-                            defaultPageSize={5}
+                            //defaultPageSize={5}
+                            pageSize={kys.vaihtoehdot.length}
+                            //showPagination={false}
                             filterable={false} showPageSizeOptions={false} showPagination={false} className="-striped -highlight" style={{ border: 'none' }} />
                         <div>
                             <Button

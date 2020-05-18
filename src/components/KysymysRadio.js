@@ -27,7 +27,10 @@ export default function KysymysRadio(props) {
 
   const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   //const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
-
+  React.useEffect(() => {
+    if(props.lukittu)
+     setValue(props.kysymys.vastaus[0].vastaus)
+}, [])
 
   const handleChange = (event) => {
     //console.log(event.target.value);
@@ -60,7 +63,7 @@ export default function KysymysRadio(props) {
       //vaihtoehdot.map((jotain, index) => {
       props.kysymys.vaihtoehdot.map((jotain, index) => {
         //console.log(jotain.vaihtoehto_id)
-        return <FormControlLabel key={jotain.vaihtoehto_id} id={jotain.vaihtoehto_id}  value={jotain.vaihtoehto} control={<GreenRadio />} label={jotain.vaihtoehto} />
+        return <FormControlLabel disabled={props.lukittu} key={jotain.vaihtoehto_id} id={jotain.vaihtoehto_id}  value={jotain.vaihtoehto} control={<GreenRadio />} label={jotain.vaihtoehto} />
       })
 
     )
