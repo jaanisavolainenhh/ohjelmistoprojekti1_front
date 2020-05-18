@@ -193,10 +193,13 @@ export default function EditointiKompo() {
         if (event.target.value == -1) {
             setKyselynID(-1)
             setKyselynKysymykset([])
+            setKyselynnimi("");
         }
         else {
             setKyselynID(kaikkiKysymykset[event.target.value].kysely_id)
             setKyselynKysymykset(kaikkiKysymykset[event.target.value].kysymykset)
+            setKyselynnimi(kaikkiKysymykset[event.target.value].name);
+
         }
     };
 
