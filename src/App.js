@@ -1,15 +1,19 @@
 import React from 'react';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Kysely from './components/Kysely';
+import KyselyOneByOne from './components/KyselyOneByOne';
 import Vastaus from './components/Vastaus';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import Drawer from './components/Drawer';
 import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
 import EditointiKompo from './components/EditointiKompo'
 import Adminlogin from './components/Adminlogin'
+
+import Container from '@material-ui/core/Container';
+
+import UusiTarkastelu from './components/UusiTarkastelu'
 function App() {
 
   //passataan tää propsinsa niin voidaan käyttää ilman 30 eri paikan muokkaamista. Ehkä joku global variable tms
@@ -20,30 +24,20 @@ function App() {
   return (
     <div className="App">
       <Adminlogin/>
-    {/* <Kysely urlit={urlit} /> */}
+    <div className="container">
 
-    
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6">
-            Kysely kysely kysely!
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    {/* <Kysely urlit={urlit} /> */}
+    <Container maxWidth="md">
 
       <Router>
-        <div>
-          <Link to="/">Kysely</Link>{' '}
-          <Link to="/vastaukset">Vastaukset</Link>{' '}
-          <Link to="/uusikysely">Uusi kysely</Link>{' '}
-          <Link to="/tarkastelu">Tarkastelu</Link>{' '}
-          <Link to="/kyselynmuokkaus">En  muokkaa</Link>{' '}
+        <Drawer>
           <Switch>
             {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
             <Route exact path="/"
               render={(props) => <Kysely {...props} urlit={urlit} />} />
-
+              <Route exact path="/KyselyOneByOne"
+              render={(props) => <KyselyOneByOne {...props} urlit={urlit} />} />
             <Route exact path="/vastaukset"
               render={(props) => <Vastaus {...props} urlit={urlit}  />} />
               <Route exact path="/uusikysely"
@@ -52,11 +46,12 @@ function App() {
               render={(props) => <AdminTarkasteluSivu {...props} urlit={urlit}  />} />
                         <Route exact path="/kyselynmuokkaus"
               render={(props) => <EditointiKompo {...props} urlit={urlit}  />} />
+               <Route exact path="/uusitarkastelu"
+              render={(props) => <UusiTarkastelu {...props} urlit={urlit}  />} />
           </Switch>
-        </div>
+        </Drawer>
       </Router>
-      <br />
-      <br />
+      </Container>
     </div>
   );
 }

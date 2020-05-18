@@ -241,7 +241,7 @@ export default function AdminTarkasteluSivu(props) {
 
     function NaytaValittuSessio() {
         return (
-            <div>
+            <div className="container">
                 {
                     sessioittainData.map((kys) => {
                         if (kys.sessio == sessioToShow) {
@@ -249,7 +249,7 @@ export default function AdminTarkasteluSivu(props) {
                             console.log(kys)
                             return (
                                 <div>
-                                <h1>{kys.kysely}</h1>
+                                <h3>{kys.kysely}</h3>
                                 {
                                 kys.vastaukset.map((vas) => {
                                     //
@@ -277,13 +277,13 @@ export default function AdminTarkasteluSivu(props) {
                     kyselyittainData.map((kys3) => {
                         return (
                             <div>
-                                <h1>{kys3.kysely} </h1>
+                                <h3>{kys3.kysely} </h3>
                                 {
                                     
                                     kys3.tulokset.map((tul) => {
                                         return (
                                             <div>
-                                            <h2>{tul.kysymys}</h2>
+                                            <h3>{tul.kysymys}</h3>
                                             {
                                                 tul.vastaukset.map((vas) =>{
                                                     return(
@@ -313,7 +313,7 @@ export default function AdminTarkasteluSivu(props) {
 
     return (
         <div>
-            <Button onClick={VaihdaFilter} variant="contained"><Nappulateksti /> </Button>
+            <Button onClick={VaihdaFilter} variant="contained" style={{marginTop: 20, marginBottom:20, backgroundColor: '#3A799B', color: 'white'}}><Nappulateksti /> </Button>
             <DropdownSessioittain />
             <ValitseEsitystapa />
         </div>
