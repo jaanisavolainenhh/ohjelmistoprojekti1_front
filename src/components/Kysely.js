@@ -11,7 +11,7 @@ import KysymysMonivalinta from './KysymysMonivalinta'
 
 export default function Kysely(props) {
 
-  const [kysely, setKysely] = React.useState([]);
+  const [kysely, setKysely] = React.useState({kysymykset:[]});
 
   //const [vaihtoehdot, setVaihtoehdot] = React.useState([]); //tää lähtee pois ja menee jokaiseen childi compoon omanaan
   //const [value, setValue] = React.useState([]); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
@@ -31,12 +31,12 @@ export default function Kysely(props) {
           'Accept': 'application/json',
           'Content-type': 'application/json'
         },
-        body: JSON.stringify(kysely[0]) //Tässä kovakoodattu että lähettää vain ekan kyselyn
+        body: JSON.stringify(kysely) //Tässä kovakoodattu että lähettää vain ekan kyselyn
       })
         .catch(err => console.error(err));
       setmsg("Vastaus lähetetty!");
       setOpen(true);
-      console.log(JSON.stringify(kysely[0]));
+      console.log(JSON.stringify(kysely));
     } catch (e) {
       setOpen(true);
       setmsg("Lähettäminen epäonnistui!");
@@ -61,8 +61,8 @@ export default function Kysely(props) {
   }
 
   function JaaninUseEffecti() {
-    console.log(props.urlit + 'kyselyt')
-    fetch(props.urlit + 'kyselyt', {
+    console.log(props.urlit + 'kysely'+ props.match.params.id)
+    fetch(props.urlit + 'kysely/' + props.match.params.id, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -72,6 +72,8 @@ export default function Kysely(props) {
       .then(response => response.json())
       .then(res => {
         setKysely(res)
+      console.log(props.match.params.id)
+
       })
       .catch(err => console.log(err))
   }
@@ -82,8 +84,8 @@ export default function Kysely(props) {
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
+    // muokattavakysely.map((tulos, index) => {
+      muokattavakysely.kysymykset.map((kysymysloop, index2) => {
         console.log(kysymysloop)
         //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
@@ -93,7 +95,7 @@ export default function Kysely(props) {
           console.log("löytyi!")
         }
       })
-    })
+    // })
     setKysely(muokattavakysely);
   }
 
@@ -102,8 +104,8 @@ export default function Kysely(props) {
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
-    muokattavakysely.map((tulos, index) => {
-      tulos.kysymykset.map((kysymysloop, index2) => {
+    // muokattavakysely.map((tulos, index) => {
+      muokattavakysely.kysymykset.map((kysymysloop, index2) => {
         console.log(kysymysloop)
         //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
@@ -113,7 +115,7 @@ export default function Kysely(props) {
           console.log("löytyi!")
         }
       })
-    })
+    // })
     setKysely(muokattavakysely);
 
   }
@@ -132,15 +134,11 @@ export default function Kysely(props) {
 
 
 function MappaaKysymykset2(props) {
+
   return (
     <div key="MapatutKysymykset">
-      {
-        props.kysely.map((tulos, index) => { //kovakoodattu nyt näyttämään vain ekan kysymyksen
-           if (index != 0)
-             return (<div></div>)
-
-          return (
-            tulos.kysymykset.map((kysymys, index2) => {
+      { 
+            props.kysely.kysymykset.map((kysymys, index2) => {
               switch (kysymys.tyyppi) {
 
                 case "Radio":
@@ -156,9 +154,9 @@ function MappaaKysymykset2(props) {
               }
             })
 
-          )
-        })
-      }
+          
+        }
+      
     </div>
   )
 }

@@ -24,6 +24,7 @@ export default function App() {
   return (
     <div className="App">
       <Adminlogin />
+      
       <div className="container">
 
         {/* <Kysely urlit={urlit} /> */}
@@ -34,7 +35,9 @@ export default function App() {
               <Switch>
                 {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
-                <Route exact path="/"
+                {/* <Route exact path="/"
+                  render={(props) => <Kysely {...props} urlit={urlit} />} /> */}
+                <Route exact path="/kysely/:id"
                   render={(props) => <Kysely {...props} urlit={urlit} />} />
                 <Route exact path="/KyselyOneByOne"
                   render={(props) => <KyselyOneByOne {...props} urlit={urlit} />} />
