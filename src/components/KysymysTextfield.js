@@ -33,7 +33,7 @@ export default function KysymysTextfield(props) {
   return (
     <div>
       <div><RenderKysymys /></div>
-      <div><TextField key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} style={{width: 400}} /></div>
+      <div><TextField disabled={props.lukittu} key="Textfieleedijee" label="Vastauksesi" variant="outlined" value={value} onChange={handleChange} style={{width: 400}} /></div>
     </div>
   )
 }

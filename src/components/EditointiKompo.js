@@ -4,9 +4,9 @@ import 'react-table-v6/react-table.css'
 import ReactTable from 'react-table-v6';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-import { TextField } from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles, withTheme } from '@material-ui/core/styles';
@@ -16,12 +16,14 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function EditointiKompo() {
 
+    const [valittuKyselyID, setValittuKyselyID] = React.useState("");
+
     const [open, setOpen] = React.useState(false);
     const [msg, setmsg] = React.useState('')
-
-    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }, { kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
+    const [kaikkiKysymykset, setKaikkiKysymykset] = React.useState([]);
+    const [kyselynKysymykset, setKyselynKysymykset] = React.useState([]); // Tähän listana kaikki kyselyyn tulevat kysymykset
     //const [kyselynKysymykset, setKyselynKysymykset] = React.useState([{ kysymys: "uusiKysymys", vaihtoehdot: ["123", "234", "tosipitkäteksti"], tyyppi: "Radio" }]); // Tähän listana kaikki kyselyyn tulevat kysymykset
-    const [kyselynNimi, setKyselynnimi] = React.useState('je ejee kysssäri');
+    const [kyselynNimi, setKyselynnimi] = React.useState('');
     const [kyselynID, setKyselynID] = React.useState("-1")
     const [, forceUpdate2] = React.useReducer(x => x + 1, 0);  // Tämä triggeraa rerenderin Buttonin OnClickissä koska siinä on nyt custombindi
 
@@ -39,14 +41,44 @@ export default function EditointiKompo() {
         })
             .then(response => response.json())
             .then(res => {
+                setKaikkiKysymykset(res)
                 console.log(res[0].kysymykset)
-                setKyselynID(res[0].kysely_id)
-                setKyselynKysymykset(res[0].kysymykset)
+                // setKyselynID(res[0].kysely_id)
+                // setKyselynKysymykset(res[0].kysymykset)
             })
             .catch(err => console.log(err))
     }
 
 
+
+    function TallennaUusiKysely() {
+
+        //console.log({ kyselynNimi }.kyselynNimi)
+        //let kysNimi = {kyselynNimi}; 
+        let postattavaKysely = { kysely_id: { kyselynID }.kyselynID, name: { kyselynNimi }.kyselynNimi, kysymykset: { kyselynKysymykset }.kyselynKysymykset }
+        console.log(JSON.stringify(postattavaKysely))
+        //return;
+
+        try {
+            fetch('https://salenpalikatback.herokuapp.com/kysely/', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(postattavaKysely)
+            })
+                .catch(err => console.error(err));
+            setmsg("Vastaus lähetetty!");
+            setOpen(true);
+            //console.log(JSON.stringify(postattavaKysely));
+        } catch (e) {
+            setOpen(true);
+            setmsg("Lähettäminen epäonnistui!");
+            console.log(e)
+        }
+
+    }
 
     function TallennaKysely() {
 
@@ -57,7 +89,7 @@ export default function EditointiKompo() {
         //return;
 
         try {
-            fetch('https://salenpalikatback.herokuapp.com/kysely/'+{kyselynID}.kyselynID, {
+            fetch('https://salenpalikatback.herokuapp.com/kysely/' + { kyselynID }.kyselynID, {
                 method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
@@ -74,7 +106,6 @@ export default function EditointiKompo() {
             setmsg("Lähettäminen epäonnistui!");
             console.log(e)
         }
-        //setValue();
 
     }
 
@@ -105,8 +136,7 @@ export default function EditointiKompo() {
 
     }
 
-    function VaihdaKysymyksenTyyppi(e,row)
-    {
+    function VaihdaKysymyksenTyyppi(e, row) {
         let temp = { kyselynKysymykset }.kyselynKysymykset
         temp[row].tyyppi = e.target.value;
         forceUpdate2();
@@ -132,16 +162,98 @@ export default function EditointiKompo() {
         setKyselynKysymykset([...kyselynKysymykset, { kysymys: "", vaihtoehdot: [{ vaihtoehto: "" }], tyyppi: "Radio" }])
     }
 
+    function handleChange(e) {
+        setKyselynnimi(e.target.value)
+    }
+    const useStyles = makeStyles((theme) => ({
+        button: {
+            display: 'block',
+            marginTop: theme.spacing(2),
+        },
+        formControl: {
+            margin: theme.spacing(1),
+            minWidth: 120,
+        },
+    }));
+
+    const classes = useStyles();
+    const [openKysely, setOpenKysely] = React.useState(false);
+
+    const handleCloseKyselyvalikko = () => {
+        setOpenKysely(false);
+
+    };
+
+    const handleOpenKysely = () => {
+        setOpenKysely(true);
+    };
+
+    const kyselynValinta = (event) => {
+        //    setSessionToShow("");
+        if (event.target.value == -1) {
+            setKyselynID(-1)
+            setKyselynKysymykset([])
+        }
+        else {
+            setKyselynID(kaikkiKysymykset[event.target.value].kysely_id)
+            setKyselynKysymykset(kaikkiKysymykset[event.target.value].kysymykset)
+        }
+    };
+
+
+    function Vetovalikko() {
+        return (
+            <div>
+                <FormControl className={classes.formControl}>
+                    <InputLabel id="demo-controlled-open-select-label">Kysely</InputLabel>
+                    <Select
+                        labelId="demo-controlled-open-select-label"
+                        id="demo-controlled-open-select"
+                        open={openKysely}
+                        onClose={handleCloseKyselyvalikko}
+                        onOpen={handleOpenKysely}
+                        value={valittuKyselyID}
+                        onChange={kyselynValinta}
+                    >
+                        <MenuItem value={-1}> -  </MenuItem>
+
+                        {
+                            kaikkiKysymykset.map((sess, index) => {
+                                return (<MenuItem value={index}>{sess.kysely_id} {sess.name} </MenuItem>)
+                            })
+                        }
+
+                    </Select>
+                </FormControl>
+
+            </div>
+        )
+    }
+
+
+    function ValitseTallennus()
+    {
+        if(kyselynID == -1)
+            TallennaUusiKysely();
+        else 
+            TallennaKysely();
+
+    }
 
     return (
         <div className="container" /*style={{backgroundColor: 'white', marginRight: 'auto', marginLeft: 'auto'}}*/>
 
             <br></br><br></br>
+            <Vetovalikko />
+
             <h3>Muokkaa kyselyä</h3>
+            <TextField key="Textfieleedijee" label="Kyselyn nimi" variant="outlined" value={kyselynNimi} onChange={handleChange} style={{ width: 400 }} />
+
             <RenderaaKysymys key="lol" onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} VaihdaKysymyksenNimi={VaihdaKysymyksenNimi} LisaaVaihtoehto={LisaaVaihtoehto} PoistaKysymys={PoistaKysymys} VaihdaKysymyksenTyyppi={VaihdaKysymyksenTyyppi} />
-            <Button variant="contained" onClick={LisaaKysymys} style={{marginBottom: 30, marginTop:30, backgroundColor: '#3A799B', color: 'white'}}>Lisää kysymys</Button>
+            <br></br>
+            <Button variant="contained" onClick={LisaaKysymys} style={{ marginBottom: 30, marginTop: 30, backgroundColor: '#3A799B', color: 'white' }}>Lisää kysymys</Button>
             <br />
-            <Button variant="contained" onClick={TallennaKysely} style={{backgroundColor : '#045A89', color: 'white', marginBottom: 60}}>Tallenna Kysely</Button>
+            <Button variant="contained" onClick={ValitseTallennus} style={{ backgroundColor: '#045A89', color: 'white', marginBottom: 60 }}>Tallenna Kysely</Button>
             <Snackbar
                 open={open}
                 autoHideDuration={3000}
@@ -198,10 +310,10 @@ function RenderaaKysymys(props) {
         }
     ]
 
-    function vetovaihto(e,i) {
+    function vetovaihto(e, i) {
         console.log(e.target.value)
         console.log(i)
-        props.VaihdaKysymyksenTyyppi(e,i)
+        props.VaihdaKysymyksenTyyppi(e, i)
     }
 
 
@@ -209,7 +321,7 @@ function RenderaaKysymys(props) {
     return (
         props.kyselynKysymykset.map((kys, index) => {
             let tempdata = Array();
-            console.log(kys.tyyppi)
+            //console.log(kys.tyyppi)
             kys.vaihtoehdot.map((loope, index2) => {
                 tempdata.push({ olio: { index }.index, vaihtoehto: { loope }.loope })
             })
@@ -217,15 +329,15 @@ function RenderaaKysymys(props) {
             return (
                 <div /*style={{ margin: 100, backgroundColor: 'white' }}*/>
                     <div>
-                         <FormControl variant="filled" className={classes.formControl}>
+                        <FormControl variant="filled" className={classes.formControl}>
                             <InputLabel id="demo-simple-select-filled-label">Kysymystyyppi</InputLabel>
                             <Select
-                                style={{width: 400}}
+                                style={{ width: 400 }}
                                 labelId="demo-simple-select-filled-label"
                                 id="demo-simple-select-filled"
                                 value={kys.tyyppi}
-                                onChange={b => vetovaihto(b, {index}.index)}
-                                /*style={{ backgroundColor: 'white'}}*/
+                                onChange={b => vetovaihto(b, { index }.index)}
+                            /*style={{ backgroundColor: 'white'}}*/
                             >
                                 <MenuItem selected value="Radio">Radio</MenuItem>
                                 <MenuItem value="Teksti">Tekstikenttä</MenuItem>
@@ -241,25 +353,25 @@ function RenderaaKysymys(props) {
                             value={kys.kysymys}
                         />
 
-                       
+
                     </div>
-                    <div style={{ width: 400, display: "inline-block", paddingTop: 30,  }}>
+                    <div style={{ width: 400, display: "inline-block", paddingTop: 30, }}>
                         <ReactTable key={index} data={tempdata} columns={columns}
                             //defaultPageSize={kys.vaihtoehdot.length} 
                             defaultPageSize={5}
-                            filterable={false} showPageSizeOptions={false} showPagination={false} className="-striped -highlight" style={{border: 'none'}}/>
+                            filterable={false} showPageSizeOptions={false} showPagination={false} className="-striped -highlight" style={{ border: 'none' }} />
                         <div>
-                            <Button 
-                            variant="contained" 
-                            size="small" 
-                            style={{marginTop: 25, marginBottom: 25, marginRight: 10, backgroundColor: '#3A799B', color:'white'}}
-                            onClick={() => Vammailua({ index }.index)}  >+ vaihtoehto 
+                            <Button
+                                variant="contained"
+                                size="small"
+                                style={{ marginTop: 25, marginBottom: 25, marginRight: 10, backgroundColor: '#3A799B', color: 'white' }}
+                                onClick={() => Vammailua({ index }.index)}  >+ vaihtoehto
                             </Button>
-                            <Button 
-                            variant="contained" 
-                            size="small" 
-                            style={{marginTop: 25, marginBottom: 25, backgroundColor: '#045A89', color:'white'}}
-                            onClick={() => props.PoistaKysymys({ index }.index)}>Poista kysymys 
+                            <Button
+                                variant="contained"
+                                size="small"
+                                style={{ marginTop: 25, marginBottom: 25, backgroundColor: '#045A89', color: 'white' }}
+                                onClick={() => props.PoistaKysymys({ index }.index)}>Poista kysymys
                             </Button>
 
                         </div>

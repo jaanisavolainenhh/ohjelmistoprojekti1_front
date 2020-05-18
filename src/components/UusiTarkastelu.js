@@ -27,16 +27,12 @@ export default function UusiTarkastelu(props) {
                 let tarkein = { kysymys: "", lista: [] }
                 tarkein.kysymys = kysymys.kysymys;
                 console.log("###########")
-
-
                 kysymys.vaihtoehdot.map((vaihtoehto) => {
                     setti.add(vaihtoehto.vaihtoehto);
                 })
 
-
                 if (kysymys.tyyppi == "Radio") {
                     setti.forEach((a) => {
-
                         tempcount[a] = 0
                     })
 
@@ -48,8 +44,6 @@ export default function UusiTarkastelu(props) {
                     let blaablaa = new Array;
 
                     Object.keys(tempcount).forEach((looper) => {
-
-
                         blaablaa.push({
                             name: [looper], uv: tempcount[looper]
                         })
@@ -63,50 +57,36 @@ export default function UusiTarkastelu(props) {
             })
         })
         setData(chartindatat)
-        console.log(data)
-
     }
 
 
     function ChartitaData(data) {
 
         let chartindatat = new Array();
-
         data.map((kysely, index) => {
-
             kysely.kysymykset.map((kysymys, index2) => {
                 let setti = new Set();
                 let tempcount = {};
                 let tarkein = { kysymys: "", lista: [] }
                 tarkein.kysymys = kysymys.kysymys;
                 console.log("###########")
-
-
                 kysymys.vaihtoehdot.map((vaihtoehto) => {
                     setti.add(vaihtoehto.vaihtoehto);
                 })
-
-
                 if (kysymys.tyyppi == "Radio") {
                     setti.forEach((a) => {
-
                         tempcount[a] = 0
                     })
-
                     kysymys.vastaus.map((kys, index3) => {
                         tempcount[kys.vastaus] = tempcount[kys.vastaus] + 1
                         console.log(kys.vastaus)
 
                     })
                     let blaablaa = new Array;
-
                     Object.keys(tempcount).forEach((looper) => {
-
-
                         blaablaa.push({
                             name: [looper], uv: tempcount[looper]
                         })
-
                         tarkein.lista.push({
                             name: [looper], uv: tempcount[looper]
                         })

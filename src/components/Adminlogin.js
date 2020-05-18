@@ -20,10 +20,10 @@ export default function Adminlogin(props) {
 
     function Testikutsu() {
         const formData = new FormData();
-        formData.append('username', 'admi2n');
-        formData.append('password', 'turvallinensalasana')
+        formData.append('username', 'admin');
+        formData.append('password', 'password')
         try {
-            fetch('http://localhost:8080/login', {
+            fetch('https://salenpalikatback.herokuapp.com/login', {
                 //credentials: 'same-origin',
                 credentials: 'include',
                 method: 'POST',

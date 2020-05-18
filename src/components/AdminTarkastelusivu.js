@@ -8,7 +8,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import InputBase from '@material-ui/core/InputBase';
-import UusiTarkastelu from './UusiTarkastelu'
+import UusiTarkastelu from './UusiTarkastelu';
+import Kysely from './Kysely';
 export default function AdminTarkasteluSivu(props) {
 
     const [origData, setOrigdata] = React.useState([]); //sisältää kaikki kyselyt
@@ -225,7 +226,9 @@ export default function AdminTarkasteluSivu(props) {
                     )
         }
         else {
-            return (<div></div>)
+            return (
+                <Kysely  lukittu={true} esitysdata={{}}/>
+            )
         }
                     
 
