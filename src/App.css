@@ -8,10 +8,15 @@
   background-color: white;
   color: black;
   font-size: 20px !important;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 *:focus {
   outline: none !important;
+}
+
+.recharts-cartesian-axis-tick {    
+  font-size: 17px;
+  font-family: Roboto, sans-serif;
 }
 
 .fontit{

@@ -217,6 +217,7 @@ export default function EditointiKompo() {
                         onOpen={handleOpenKysely}
                         value={valittuKyselyID}
                         onChange={kyselynValinta}
+                        style={{width: 400}}
                     >
                         <MenuItem value={-1}> -  </MenuItem>
 
@@ -246,10 +247,13 @@ export default function EditointiKompo() {
     return (
         <div className="container" /*style={{backgroundColor: 'white', marginRight: 'auto', marginLeft: 'auto'}}*/>
 
-            <br></br><br></br>
+            <br></br>
+            <h3>Luo uusi kysely tai muokkaa kyselyä</h3>
+            <br></br>
             <Vetovalikko />
+            <br></br>
 
-            <h3>Muokkaa kyselyä</h3>
+            
             <TextField key="Textfieleedijee" label="Kyselyn nimi" variant="outlined" value={kyselynNimi} onChange={handleChange} style={{ width: 400 }} />
 
             <RenderaaKysymys key="lol" onChangeText={onChangeText} kyselynKysymykset={kyselynKysymykset} PoistaVaihtoehto={PoistaVaihtoehto} VaihdaKysymyksenNimi={VaihdaKysymyksenNimi} LisaaVaihtoehto={LisaaVaihtoehto} PoistaKysymys={PoistaKysymys} VaihdaKysymyksenTyyppi={VaihdaKysymyksenTyyppi} />

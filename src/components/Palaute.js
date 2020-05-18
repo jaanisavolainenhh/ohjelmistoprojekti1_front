@@ -103,9 +103,13 @@ export default function Palaute(props) {
                     if (kysymys.lista.length > 0) {
 
                         return (
-                            <div className="area-chart-wrapper" >
-                                <h1> {kysymys.kysymys} </h1>
+                            <div className="area-chart-wrapper">
+                                {kysymys.kysymys}
                                 <br></br>
+                                Vastasit: {annettuVastaus} 
+                                <br></br>
+                                <br></br>
+                                Muut ovat vastanneet kysymykseen seuraavasti:
                                 <BarChart
                                     width={700}
                                     height={200}
@@ -116,21 +120,20 @@ export default function Palaute(props) {
                                     <XAxis type="number" />
                                     <YAxis dataKey="name" type="category" />
                                     <Tooltip />
-                                    <Bar dataKey="uv" fill={"#17a3c2"} maxBarSize={20} label radius={[10, 10, 10, 10]} />
+                                    <Bar dataKey="uv" fill={"#17a3c2"} maxBarSize={20} label radius={[10, 10, 10, 10]} label={{ fill: '#ffffff'}} />
+
 
                                 </BarChart>
-                                <h3>Vastasit: {annettuVastaus} </h3>
                                 <br></br>
-                                <br></br>
-
                             </div>
                         )
                     }
                     else {
                         return (
                             <div className="area-chart-wrapper" >
-                                <h1> {kysymys.kysymys} </h1>
-                                <h3>Vastasit: {kysymys.textfieldi} </h3>
+                                {kysymys.kysymys}
+                               <br></br>
+                                Vastasit: {kysymys.textfieldi}
                                 <br></br>
                                 <br></br>
 

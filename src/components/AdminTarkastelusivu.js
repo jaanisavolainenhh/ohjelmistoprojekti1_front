@@ -155,12 +155,15 @@ export default function AdminTarkasteluSivu(props) {
     }
 
     return (
-        <div>
+        <div style={{marginTop:30}}>
+           <h3>Vastausten tarkastelu</h3>
             <KaikkiKyselytDropdown />
 
-            <div>
+            <div style={{marginTop: 20}}>
+                Valitse tarkasteltava kysely
+                <br></br>
                 <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-controlled-open-select-label">Kysely</InputLabel>
+                    <InputLabel id="demo-controlled-open-select-label">Kyselyn nimi</InputLabel>
                     <Select
                         labelId="demo-controlled-open-select-label"
                         id="demo-controlled-open-select"
@@ -169,6 +172,7 @@ export default function AdminTarkasteluSivu(props) {
                         onOpen={handleOpenKysely}
                         value={valittuKyselyID}
                         onChange={kyselynValinta}
+                        style={{width: 400}}
                     >
 
                         {
@@ -179,8 +183,12 @@ export default function AdminTarkasteluSivu(props) {
 
                     </Select>
                 </FormControl>
+                <br></br>
+                <br></br>
+                Valitse tarkasteltava sessio
+                <br></br>
                 <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-controlled-open-select-label2">Sessio</InputLabel>
+                    <InputLabel id="demo-controlled-open-select-label2">Sessio numero</InputLabel>
                     <Select
                         labelId="demo-controlled-open-select-label2"
                         id="demo-controlled-open-select2"
@@ -189,6 +197,8 @@ export default function AdminTarkasteluSivu(props) {
                         onOpen={handleOpenSessio}
                         value={valittuSessioID}
                         onChange={sessionValinta}
+                        style={{width:400}}
+
                     >
                         <MenuItem value={-1}> - </MenuItem>
 
