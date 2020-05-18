@@ -66,13 +66,11 @@ export default function KyselyOneByOne(props) {
 
     return (
       <div>
-        saatana
         {
           palautteenData.map((palaute, index) => {
             return(
               // <div></div>
               <Palaute key={index} kysely={palaute} kyselyid={palaute.kysely_id} />
-
             )
    
           })
@@ -91,10 +89,12 @@ export default function KyselyOneByOne(props) {
         },
         body: JSON.stringify(kysely) //Tässä kovakoodattu että lähettää vain ekan kyselyn
       })
+      .then(
+        setPalautteenData([kysely])
+      )
         .catch(err => console.error(err));
       setmsg("Vastaus lähetetty!");
       setOpen(true);
-      setPalautteenData([kysely]);
       //console.log(JSON.stringify(kysely));
     } catch (e) {
       setOpen(true);
@@ -121,7 +121,7 @@ export default function KyselyOneByOne(props) {
 
   function JaaninUseEffecti() {
     //console.log(props.urlit + 'kysely/1')
-    fetch(props.urlit + 'kysely/1', {
+    fetch(props.urlit + 'kysely/' + props.match.params.id, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -160,24 +160,15 @@ export default function KyselyOneByOne(props) {
   }
 
   function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus) {
-
-    //onsole.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
-
-    //muokattavakysely.map((tulos, index) => {
       muokattavakysely.kysymykset.map((kysymysloop, index2) => {
-       // console.log(kysymysloop)
-        //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
           let loopvastaukset = [{ vastaus: kysymyksenvastaus }];
           kysymysloop.vastaus = loopvastaukset;
-          //console.log("löytyi!")
         }
       })
-    //})
     setKysely(muokattavakysely);
-
   }
 
   // tekee arrayn kyselyn kysymyksistä (sis. vain kysymykset)

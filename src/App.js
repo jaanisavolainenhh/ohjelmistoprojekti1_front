@@ -39,7 +39,7 @@ export default function App() {
                   render={(props) => <Kysely {...props} urlit={urlit} />} /> */}
                 <Route exact path="/kysely/:id"
                   render={(props) => <Kysely {...props} urlit={urlit} lukittu={false} />} />
-                <Route exact path="/KyselyOneByOne"
+                <Route exact path="/KyselyOneByOne/:id"
                   render={(props) => <KyselyOneByOne {...props} urlit={urlit} />} />
                 <Route exact path="/vastaukset"
                   render={(props) => <Vastaus {...props} urlit={urlit} />} />

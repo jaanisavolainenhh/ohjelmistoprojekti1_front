@@ -28,21 +28,27 @@ export default function KysymysRadio(props) {
   const [value, setValue] = React.useState(""); //radiobuttoni säätelee tämän arvoa ja lukee tästä valinnan.
   //const [vastaus, setVastaus] = React.useState({ vastaus: '', kysymys: { id: -1 } }); //Raakile versio vastaus oliosta, olennainen löytyy.
   React.useEffect(() => {
-    if(props.lukittu)
-     setValue(props.kysymys.vastaus[0].vastaus)
-}, [])
+    if (props.lukittu) {
+      props.kysymys.vastaus.map((i) => {
+        //setValue(props.kysymys.vastaus[0].vastaus)
+        setValue(i.vastaus)
+
+      })
+    }
+  }, [])
 
   const handleChange = (event) => {
     //console.log(event.target.value);
     setValue(event.target.value);
     //haetaan tässä kohtaa vastaus 
-    props.kysymys.vaihtoehdot.map((i) =>{
-      if(i.vaihtoehto == event.target.value)
-      {
+    if(props.lukittu)
+     return;
+    props.kysymys.vaihtoehdot.map((i) => {
+      if (i.vaihtoehto == event.target.value) {
         props.MuokkaaKyselynVastauksia(props.kysymys, i);
       }
     })
-   // console.log(event.target.value)
+    // console.log(event.target.value)
     //#TODO tässä kohtaa lähettää kyselyyn infon että tämä props.kysymys.kysymys_id ja vaihtoehto ID:n.
     //setVastaus({ ...vastaus, vastaus: event.target.value });
   };
@@ -63,7 +69,7 @@ export default function KysymysRadio(props) {
       //vaihtoehdot.map((jotain, index) => {
       props.kysymys.vaihtoehdot.map((jotain, index) => {
         //console.log(jotain.vaihtoehto_id)
-        return <FormControlLabel disabled={props.lukittu} key={jotain.vaihtoehto_id} id={jotain.vaihtoehto_id}  value={jotain.vaihtoehto} control={<GreenRadio />} label={jotain.vaihtoehto} />
+        return <FormControlLabel disabled={props.lukittu} key={jotain.vaihtoehto_id} id={jotain.vaihtoehto_id} value={jotain.vaihtoehto} control={<GreenRadio />} label={jotain.vaihtoehto} />
       })
 
     )
@@ -71,16 +77,16 @@ export default function KysymysRadio(props) {
 
 
   function RenderKysymys() {
-     return (<div style={{marginTop: 40}}>{props.kysymys.kysymys} </div>)
+    return (<div style={{ marginTop: 40 }}>{props.kysymys.kysymys} </div>)
   }
 
 
 
   return (
     <div>
-     <div><RenderKysymys /></div>
-     <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30}}>
-       <RadioGroupVastaus /></div>
+      <div><RenderKysymys /></div>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+        <RadioGroupVastaus /></div>
     </div>
   )
 }

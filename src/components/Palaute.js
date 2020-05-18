@@ -17,11 +17,11 @@ export default function Palaute(props) {
 
     function getVastaukset() {
         console.log("HALOO")
-        fetch("https://salenpalikatback.herokuapp.com/kyselyadmin/"+ props.kyselyid,{
+        fetch("https://salenpalikatback.herokuapp.com/kyselyadmin/" + props.kyselyid, {
             method: 'GET',
             headers: {
-              'Accept': 'application/json',
-              'Content-type': 'application/json'
+                'Accept': 'application/json',
+                'Content-type': 'application/json'
             }
 
         })
@@ -32,45 +32,47 @@ export default function Palaute(props) {
                     let chartindatat = new Array();
                     //data.map((kysely, index) => {
 
-                        data.kysymykset.map((kysymys, index2) => {
-                            let setti = new Set();
-                            let tempcount = {};
-                            let tarkein = { kysymys: "", lista: [] }
-                            tarkein.kysymys = kysymys.kysymys;
-                            tarkein.kysymys_id = kysymys.kysymys_id;
-                            tarkein.tyyppi = kysymys.tyyppi;
-                            tarkein.textfieldi = "";
-                            kysymys.vaihtoehdot.map((vaihtoehto) => {
-                                setti.add(vaihtoehto.vaihtoehto);
-                            })
-                            if (kysymys.tyyppi == "Radio") {
-                                setti.forEach((a) => {
-
-                                    tempcount[a] = 0
-                                })
-
-                                kysymys.vastaus.map((kys, index3) => {
-                                    tempcount[kys.vastaus] = tempcount[kys.vastaus] + 1
-                                    console.log(kys.vastaus)
-                                })
-                                Object.keys(tempcount).forEach((looper) => {
-                                    tarkein.lista.push({
-                                        name: [looper], uv: tempcount[looper]
-                                    })
-                                })
-                                chartindatat.push(tarkein)
-                            }
-                            else {
-                                kysymys.vastaus.map((kys, index3) => {
-
-                                    tarkein.textfieldi = kys.vastaus;
-                                })
-                                chartindatat.push(tarkein)
-                            }
+                    data.kysymykset.map((kysymys, index2) => {
+                        let setti = new Set();
+                        let tempcount = {};
+                        let tarkein = { kysymys: "", lista: [] }
+                        tarkein.kysymys = kysymys.kysymys;
+                        tarkein.kysymys_id = kysymys.kysymys_id;
+                        tarkein.tyyppi = kysymys.tyyppi;
+                        tarkein.textfieldi = "";
+                        kysymys.vaihtoehdot.map((vaihtoehto) => {
+                            setti.add(vaihtoehto.vaihtoehto);
                         })
+                        if (kysymys.tyyppi == "Radio") {
+                            setti.forEach((a) => {
+
+                                tempcount[a] = 0
+                            })
+
+                            kysymys.vastaus.map((kys, index3) => {
+                                tempcount[kys.vastaus] = tempcount[kys.vastaus] + 1
+                                console.log(kys.vastaus)
+                                tarkein.textfieldi = kys.vastaus;
+
+                            })
+                            Object.keys(tempcount).forEach((looper) => {
+                                tarkein.lista.push({
+                                    name: [looper], uv: tempcount[looper]
+                                })
+                            })
+                            chartindatat.push(tarkein)
+                        }
+                        else {
+                            kysymys.vastaus.map((kys, index3) => {
+
+                                tarkein.textfieldi = kys.vastaus;
+                            })
+                            chartindatat.push(tarkein)
+                        }
+                    })
                     //})
                     setVastaukset(chartindatat)
-                    setKayttajanVastaus([props.kysely])
+                    //setKayttajanVastaus([props.kysely])
                     console.log(data)
                 })
     }
@@ -79,16 +81,12 @@ export default function Palaute(props) {
 
 
     function etsiVastaus(vastausData) {
-
-        
         return kayttajanVastaus.map((kysely, index) => {
-            kysely.kysymykset.map((kysymys) => {
-                if (kysymys.kysymys_id == vastausData.kysymys_id) {
-                    return kysymys.vastaus[0].vastaus;
-                }
-            })
-                
-         
+            //kysely.kysymykset.map((kysymys) => {
+            if (kysely.kysymys_id == vastausData.kysymys_id) {
+                return kysely.vastaus[0].vastaus;
+            }
+            // })
         })
         console.log("mitään ei löytynyt")
         return "";
@@ -119,7 +117,14 @@ export default function Palaute(props) {
                                     <Bar dataKey="uv" fill={"#17a3c2"} maxBarSize={20} label radius={[10, 10, 10, 10]} />
 
                                 </BarChart>
-                                <h3>Vastasit: {annettuVastaus} </h3>
+                                {/* {
+                                     kysymys.vastaus.map((i) => {
+                                         return(
+                                            <h3>Vastasit: {i} </h3>
+                                         )
+                                     })
+                                 } */}
+                                <h3>Vastasit: {kysymys.textfieldi} </h3>
                                 <br></br>
                                 <br></br>
 

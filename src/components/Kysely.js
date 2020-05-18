@@ -83,6 +83,8 @@ export default function Kysely(props) {
 
   function MuokkaaKyselynVastauksia(kysymys, kysymyksenvastaus) //palautetaan kysymyksenvastauksessa suoraan olio.
   {
+    if(props.lukittu)
+     return;
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
@@ -102,7 +104,8 @@ export default function Kysely(props) {
   }
 
   function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus) {
-
+    if (props.lukittu)
+      return;
     console.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
 
@@ -145,7 +148,7 @@ function MappaaKysymykset2(props) {
             case "Radio":
               return (<KysymysRadio kysymys={kysymys} MuokkaaKyselynVastauksia={props.MuokkaaKyselynVastauksia} lukittu={props.lukittu} />)
             case "Teksti":
-              return (<KysymysTextfield vastaus={kysymys.vaihtoehdot[0]} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} lukittu={props.lukittu} />)
+              return (<KysymysTextfield vastaus={kysymys.vaihtoehdot} kysymys={kysymys} MuokkaaKyselynVastauksiaTextfield={props.MuokkaaKyselynVastauksiaTextfield} lukittu={props.lukittu} />)
             case "Skaala":
               return (<KysymysSkaala key={index2} kysymys={kysymys} />)
             case "Monivalinta":
