@@ -344,8 +344,8 @@ function RenderaaKysymys(props) {
                             >
                                 <MenuItem selected value="Radio">Radio</MenuItem>
                                 <MenuItem value="Teksti">Tekstikenttä</MenuItem>
-                                <MenuItem value="Skaala">Skaala</MenuItem>
-                                <MenuItem selected value="Monivalinta">Monivalinta</MenuItem>
+                                {/* <MenuItem value="Skaala">Skaala</MenuItem>
+                                <MenuItem selected value="Monivalinta">Monivalinta</MenuItem> */}
                             </Select>
                         </FormControl>
                         <br />

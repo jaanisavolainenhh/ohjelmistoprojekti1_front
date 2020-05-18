@@ -89,10 +89,12 @@ export default function KyselyOneByOne(props) {
         },
         body: JSON.stringify(kysely) //Tässä kovakoodattu että lähettää vain ekan kyselyn
       })
+      .then(
+        setPalautteenData([kysely])
+      )
         .catch(err => console.error(err));
       setmsg("Vastaus lähetetty!");
       setOpen(true);
-      setPalautteenData([kysely]);
       //console.log(JSON.stringify(kysely));
     } catch (e) {
       setOpen(true);
