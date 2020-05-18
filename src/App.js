@@ -9,6 +9,8 @@ import Uusikysely from './components/Uusikysely';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import AdminTarkasteluSivu from './components/AdminTarkastelusivu';
 import EditointiKompo from './components/EditointiKompo'
+import Adminlogin from './components/Adminlogin'
+
 import Container from '@material-ui/core/Container';
 
 import UusiTarkastelu from './components/UusiTarkastelu'
@@ -20,6 +22,8 @@ function App() {
 
 
   return (
+    <div className="App">
+      <Adminlogin/>
     <div className="container">
 
     {/* <Kysely urlit={urlit} /> */}
