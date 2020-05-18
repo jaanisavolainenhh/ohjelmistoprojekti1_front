@@ -71,7 +71,6 @@ export default function KyselyOneByOne(props) {
             return(
               // <div></div>
               <Palaute key={index} kysely={palaute} kyselyid={palaute.kysely_id} />
-
             )
    
           })
@@ -159,24 +158,15 @@ export default function KyselyOneByOne(props) {
   }
 
   function MuokkaaKyselynVastauksiaTextfield(kysymys, kysymyksenvastaus) {
-
-    //onsole.log(kysymyksenvastaus)
     let muokattavakysely = kysely;
-
-    //muokattavakysely.map((tulos, index) => {
       muokattavakysely.kysymykset.map((kysymysloop, index2) => {
-       // console.log(kysymysloop)
-        //console.log(kysymys.)
         if (kysymysloop.kysymys_id == kysymys.kysymys_id) //verrataan että IDt on sama, sitten palautetaan
         {
           let loopvastaukset = [{ vastaus: kysymyksenvastaus }];
           kysymysloop.vastaus = loopvastaukset;
-          //console.log("löytyi!")
         }
       })
-    //})
     setKysely(muokattavakysely);
-
   }
 
   // tekee arrayn kyselyn kysymyksistä (sis. vain kysymykset)
