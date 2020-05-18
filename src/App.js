@@ -14,53 +14,54 @@ import Adminlogin from './components/Adminlogin'
 import Container from '@material-ui/core/Container';
 
 import UusiTarkastelu from './components/UusiTarkastelu'
-function App() {
+export default function App() {
 
   //passataan tää propsinsa niin voidaan käyttää ilman 30 eri paikan muokkaamista. Ehkä joku global variable tms
- const [urlit, setUrlit] = React.useState('https://salenpalikatback.herokuapp.com/'); //http://localhost:8080/
- // const [urlit, setUrlit] = React.useState('http://localhost:8080/'); //http://localhost:8080/
+  const [urlit, setUrlit] = React.useState('https://salenpalikatback.herokuapp.com/'); //http://localhost:8080/
+  // const [urlit, setUrlit] = React.useState('http://localhost:8080/'); //http://localhost:8080/
 
 
   return (
     <div className="App">
-      <Adminlogin/>
-    <div className="container">
+      <Adminlogin />
+      <div className="container">
 
-    {/* <Kysely urlit={urlit} /> */}
-    <Container maxWidth="md">
+        {/* <Kysely urlit={urlit} /> */}
+        <Container maxWidth="md">
 
-      <Router>
-        <Drawer>
-          <Switch>
-            {/* <Route exact path="/" component={Kysely}/>
+          <Router>
+            <Drawer>
+              <Switch>
+                {/* <Route exact path="/" component={Kysely}/>
             <Route path="/vastaukset"component={Vastaus}/> */}
-            <Route exact path="/"
-              render={(props) => <Kysely {...props} urlit={urlit} />} />
-              <Route exact path="/KyselyOneByOne"
-              render={(props) => <KyselyOneByOne {...props} urlit={urlit} />} />
-            <Route exact path="/vastaukset"
-              render={(props) => <Vastaus {...props} urlit={urlit}  />} />
-              <Route exact path="/uusikysely"
-              render={(props) => <Uusikysely {...props} urlit={urlit}  />} />
-                    <Route exact path="/tarkastelu"
-              render={(props) => <AdminTarkasteluSivu {...props} urlit={urlit}  />} />
-                        <Route exact path="/kyselynmuokkaus"
-              render={(props) => <EditointiKompo {...props} urlit={urlit}  />} />
-               <Route exact path="/uusitarkastelu"
-              render={(props) => <UusiTarkastelu {...props} urlit={urlit}  />} />
-          </Switch>
-        </Drawer>
-      </Router>
-      </Container>
+                <Route exact path="/"
+                  render={(props) => <Kysely {...props} urlit={urlit} />} />
+                <Route exact path="/KyselyOneByOne"
+                  render={(props) => <KyselyOneByOne {...props} urlit={urlit} />} />
+                <Route exact path="/vastaukset"
+                  render={(props) => <Vastaus {...props} urlit={urlit} />} />
+                <Route exact path="/uusikysely"
+                  render={(props) => <Uusikysely {...props} urlit={urlit} />} />
+                <Route exact path="/tarkastelu"
+                  render={(props) => <AdminTarkasteluSivu {...props} urlit={urlit} />} />
+                <Route exact path="/kyselynmuokkaus"
+                  render={(props) => <EditointiKompo {...props} urlit={urlit} />} />
+                <Route exact path="/uusitarkastelu"
+                  render={(props) => <UusiTarkastelu {...props} urlit={urlit} />} />
+              </Switch>
+            </Drawer>
+          </Router>
+        </Container>
+      </div>
     </div>
-  );
+  )
+
+
+ // export default App;
+
 }
-
-export default App;
-
-
-// https://medium.com/alturasoluciones/how-to-pass-props-to-routes-components-29f5443eee94
-{/* <Route exact path="/props-through-render"
-  render={(props) => <Kysely {...props} urlit={urlit} />} />
-  <Route exact path="/props-through-render"
-    render={(props) => <Vastaus {...props} urlit={urlit} />} /> */}
+// // https://medium.com/alturasoluciones/how-to-pass-props-to-routes-components-29f5443eee94
+// /* <Route exact path="/props-through-render"
+//   render={(props) => <Kysely {...props} urlit={urlit} />} />
+//   <Route exact path="/props-through-render"
+//     render={(props) => <Vastaus {...props} urlit={urlit} />} /> */
