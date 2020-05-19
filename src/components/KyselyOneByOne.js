@@ -55,6 +55,7 @@ export default function KyselyOneByOne(props) {
   //const [dis, setDis] = React.useState(['k1','y2','s3','y4','m4','y5','s6']);  //stepper test state
   const [palautteenData, setPalautteenData] = React.useState([]);
   const classes = useStyles();
+  const [kiinni, setKiinni] = React.useState(false);
 
 
   React.useEffect(() => {
@@ -279,8 +280,9 @@ export default function KyselyOneByOne(props) {
           {activeStep === kyssäri.length ? (
             <div>
               <Typography className={classes.instructions}>All steps completed</Typography>
-              <Button onClick={handleReset}>Reset</Button>
-              <Button variant="contained" onClick={() => postAnswer()} style={{ backgroundColor: '#045A89', color: 'white', outline: 'none' }}>Submit</Button>
+              <Button onClick={() => {handleReset(); setKiinni(false)}} hidden={kiinni==true}>Reset</Button>
+              <Button variant="contained" onClick={() => {postAnswer(); setKiinni(true)}}  hidden={kiinni==true} style={{ backgroundColor: '#045A89', color: 'white', outline: 'none' }}>Submit</Button>
+              <Typography hidden={kiinni==false}>Kiitos vastauksista</Typography>
             </div>
           ) : (
               <div>

@@ -28,7 +28,7 @@ export default function App() {
       <div className="container">
 
         {/* <Kysely urlit={urlit} /> */}
-        <Container maxWidth="md">
+        <Container /*maxWidth="md"*/>
 
           <Router>
             <Drawer>
