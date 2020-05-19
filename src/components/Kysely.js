@@ -129,7 +129,7 @@ export default function Kysely(props) {
     <div>
       <FormControl component="fieldset">
         <MappaaKysymykset2 lukittu={props.lukittu} kysely={kysely} MuokkaaKyselynVastauksiaTextfield={MuokkaaKyselynVastauksiaTextfield} MuokkaaKyselynVastauksia={MuokkaaKyselynVastauksia} />
-        <br /><br /><Button disabled={props.lukittu} variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
+        <br /><br /><Button hidden={true} disabled={props.lukittu} variant="contained" color="primary" onClick={() => postAnswer()}>Vastaa</Button>
         < SnackBarCompo />
       </FormControl>
     </div>

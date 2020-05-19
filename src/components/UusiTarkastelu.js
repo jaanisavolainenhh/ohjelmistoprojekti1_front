@@ -132,7 +132,7 @@ export default function UusiTarkastelu(props) {
 
                         return (
                             <div className="area-chart-wrapper" style={{ marginTop: 20 }}>
-                                <h2> {blaablaa.kysymys} </h2>
+                                <h4> {blaablaa.kysymys} </h4>
                                 <BarChart
                                     width={700}
                                     height={200}
@@ -154,7 +154,7 @@ export default function UusiTarkastelu(props) {
                     if (blaablaa.tyyppi == "Teksti") {
                         return (
                             <div>
-                                <h2> {blaablaa.kysymys} </h2>
+                                <h4> {blaablaa.kysymys} </h4>
                                 {
                                     blaablaa.lista.map((i)=>{
                                        return( <div>{i}</div> )
