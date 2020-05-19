@@ -117,7 +117,7 @@ export default function AdminTarkasteluSivu(props) {
                                      }
          
                                   })
-                                tempvastaukset =  {tyyppi: wa.tyyppi,vaihtoehdot: tempvaihtoehdot, vastaus: [{sessioid: va.sessioid, vastaus: va.vastaus, vastaus_id : va.vastaus_id}]};
+                                tempvastaukset =  {kysymys: wa.kysymys, tyyppi: wa.tyyppi,vaihtoehdot: tempvaihtoehdot, vastaus: [{sessioid: va.sessioid, vastaus: va.vastaus, vastaus_id : va.vastaus_id}]};
                                 valikysely.kysymykset.push(tempvastaukset)
 
                                 //valikysely.kysymykset.push(wa);
